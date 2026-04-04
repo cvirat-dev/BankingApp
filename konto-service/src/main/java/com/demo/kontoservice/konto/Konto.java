@@ -1,4 +1,4 @@
-package com.demo.kontoservice.model;
+package com.demo.kontoservice.konto;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,6 +17,6 @@ public class Konto {
 
     private String inhaber;
     private String iban;
-    private BigDecimal kontostcand;
+    private BigDecimal kontostand;
 }
 

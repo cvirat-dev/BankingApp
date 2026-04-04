@@ -1,4 +1,4 @@
-package com.demo.kontoservice.model;
+package com.demo.kontoservice.konto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

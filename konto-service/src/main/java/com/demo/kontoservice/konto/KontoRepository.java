@@ -1,4 +1,6 @@
 package com.demo.kontoservice.konto;
 
-public class KontoRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface KontoRepository extends JpaRepository<Konto, Long> {
 }
