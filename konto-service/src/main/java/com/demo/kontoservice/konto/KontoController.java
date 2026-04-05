@@ -41,6 +41,6 @@ public class KontoController {
 
     @DeleteMapping("/{id}")             // DELETE /api/konten/{id}
     public void deleteKonto(@PathVariable Long id) {
-        kontoRepository.deleteById(id);
+        kontoService.deleteById(id);
     }
 }
