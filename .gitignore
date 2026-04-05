@@ -1,0 +1,19 @@
+# Java / Maven
+target/
+*.class
+
+# Angular
+node_modules/
+dist/
+
+# IDE-Dateien
+.idea/
+*.iml
+.vscode/
+
+# Umgebungsvariablen
+.env
+*.env
+
+# txt-Dateien
+*.txt
