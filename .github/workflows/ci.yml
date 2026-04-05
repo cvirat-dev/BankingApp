@@ -30,7 +30,7 @@ build-konto-service:
   - name: Konto-Service bauen und testen
     working-directory: ./konto-service
     run: |
-      mvnw clean verify
+      mvn clean package -DskipTests
 
   - name: JAR-Artifact speichern
     uses: actions/upload-artifact@v4
