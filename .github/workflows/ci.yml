@@ -1,0 +1,39 @@
+# ───────────────────────────────────────────────────────────── 
+# CI Pipeline – Banking Demo Projekt # Wird ausgeführt bei jedem Push und Pull Request auf main 
+# ─────────────────────────────────────────────────────────────
+
+name : CI
+
+# Trigger: Bei jedem Push oder Pull Request auf den main Branch
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+# ── JOB 1: Konto-Service bauen und testen ──────────────────
+  build-konto-service:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Repository auschecken
+      uses: actions/checkout@v3
+
+    - name: Java 21 installieren
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Konto-Service bauen
+      working-directory: ./konto-service
+      run: |
+        mvn clean package -DskipTests
+
+    - name: JAR-Artifact speichern
+      uses: actions/upload-artifact@v4
+      with:
+        name: konto-service-jar
+        path: ./konto-service/target/*.jar

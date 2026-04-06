@@ -17,3 +17,6 @@ dist/
 
 # txt-Dateien
 *.txt
+
+# DB-Dateien
+*.db
