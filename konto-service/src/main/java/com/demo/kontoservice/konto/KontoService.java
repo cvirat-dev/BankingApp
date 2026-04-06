@@ -7,13 +7,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 public class KontoService {
     @Autowired private KontoRepository kontoRepository;
     @Autowired private TransaktionRepository transaktionRepository;
-    @Autowired private RestTemplate restTemplate;
+    // @Autowired private RestTemplate restTemplate;
 
     @Transactional
     public Transaktion buchung(Long kontoId, BigDecimal betrag, String beschreibung) {
