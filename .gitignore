@@ -15,8 +15,8 @@ dist/
 .env
 *.env
 
-# txt-Dateien
-*.txt
-
 # DB-Dateien
 *.db
+
+# misc
+notes.md
