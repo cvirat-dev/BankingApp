@@ -18,7 +18,7 @@ jobs:
 
     steps:
     - name: Repository auschecken
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Java 21 installieren
       uses: actions/setup-java@v4
@@ -27,12 +27,12 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Konto-Service bauen
+    - name: Bauen und Tests ausführen
       working-directory: ./konto-service
-      run: |
-        mvn clean package -DskipTests
+      run: mvn clean verify
 
     - name: JAR-Artifact speichern
+      if: success()
       uses: actions/upload-artifact@v4
       with:
         name: konto-service-jar
