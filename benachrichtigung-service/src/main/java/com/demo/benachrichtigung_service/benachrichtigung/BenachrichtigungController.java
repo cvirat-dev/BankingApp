@@ -1,11 +1,12 @@
 package com.demo.benachrichtigung_service.benachrichtigung;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
+
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/benachrichtigungen")
@@ -13,16 +14,17 @@ import java.util.Map;
 public class BenachrichtigungController {
 
     @Autowired
-    private BenachrichtigungRepository repo;
+    private BenachrichtigungRepository benachrichtigungRepository;
 
     @PostMapping
-    public Benachrichtigung empfangen(@RequestBody Map<String, String> body) {
-        Benachrichtigung b = new Benachrichtigung();
-        b.setNachricht(body.get("nachricht"));
-        b.setTimestamp(LocalDateTime.now());
-        return repo.save(b);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Benachrichtigung empfangen(@Valid @RequestBody BenachrichtigungRequest request) {
+        Benachrichtigung benachrichtigung = new Benachrichtigung();
+        benachrichtigung.setNachricht(request.getNachricht());
+        benachrichtigung.setTimestamp(LocalDateTime.now());
+        return benachrichtigungRepository.save(benachrichtigung);
     }
 
     @GetMapping
-    public List<Benachrichtigung> all() { return repo.findAll(); }
+    public List<Benachrichtigung> all() { return benachrichtigungRepository.findAll(); }
 }
