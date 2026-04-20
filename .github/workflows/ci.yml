@@ -37,3 +37,29 @@ jobs:
       with:
         name: konto-service-jar
         path: ./konto-service/target/*.jar
+
+# ── JOB 2: Benachrichtigung-Service bauen und testen ───────
+  build-benachrichtigung-service:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Repository auschecken
+      uses: actions/checkout@v4
+
+    - name: Java 21 installieren
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Bauen und Tests ausführen
+      working-directory: ./benachrichtigung-service
+      run: mvn clean verify
+
+    - name: JAR-Artifact speichern
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: benachrichtigung-service-jar
+        path: ./benachrichtigung-service/target/*.jar
