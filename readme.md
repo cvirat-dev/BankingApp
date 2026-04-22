@@ -27,7 +27,7 @@ An Angular SPA is planned as the UI layer but is not yet implemented.
 .\build-and-run.ps1
 ```
 
-## Option 2: Manually build JARs and start Docker Compose
+### Option 2: Manually build JARs and start Docker Compose
 
 ```bash
 # Build the JARs for both services
@@ -37,6 +37,6 @@ cd ..\benachrichtigung-service && .\mvnw.cmd clean package -DskipTests
 docker compose up --build
 ```
 
-### Access the application
+## Access the application
 
 Open [http://localhost:4200](http://localhost:4200)
