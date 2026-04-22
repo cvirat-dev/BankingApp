@@ -1,20 +1,27 @@
 package com.demo.kontoservice;
 
-import com.demo.kontoservice.konto.*;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import static org.mockito.ArgumentMatchers.any;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.client.RestTemplate;
+
+import com.demo.kontoservice.konto.Konto;
+import com.demo.kontoservice.konto.KontoRepository;
+import com.demo.kontoservice.konto.KontoService;
+import com.demo.kontoservice.konto.Transaktion;
+import com.demo.kontoservice.konto.TransaktionRepository;
 
 @ExtendWith(MockitoExtension.class)
 class KontoServiceTest {
@@ -24,6 +31,9 @@ class KontoServiceTest {
 
     @Mock
     private TransaktionRepository transaktionRepository;
+
+    @Mock
+    private RestTemplate restTemplate;
 
     @InjectMocks
     KontoService kontoService;

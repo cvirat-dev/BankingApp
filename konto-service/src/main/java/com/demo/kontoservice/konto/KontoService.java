@@ -3,18 +3,20 @@ package com.demo.kontoservice.konto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class KontoService {
     @Autowired private KontoRepository kontoRepository;
     @Autowired private TransaktionRepository transaktionRepository;
-    // @Autowired private RestTemplate restTemplate;
+    @Autowired private RestTemplate restTemplate;
 
     @Transactional
     public Transaktion buchung(Long kontoId, BigDecimal betrag, String beschreibung) {
@@ -32,12 +34,11 @@ public class KontoService {
         transaktion.setBeschreibung(beschreibung); transaktion.setDatum(LocalDateTime.now());
         transaktionRepository.save(transaktion);
 
-//         // Benachrichtung auslösen (Fire-and-Forget)
-//         restTemplate.postForObject(
-//             "http://benachrichtigung-service:8082/api/benachrichtigungen",
-//             Map.of("nachricht", "Buchung: " + betrag + "EUR auf Konto " + kontoId),
-//             Void.class
-//         );
+         restTemplate.postForObject(
+             "http://benachrichtigung-service:8082/api/benachrichtigungen",
+             Map.of("nachricht", "Buchung: " + betrag + "EUR auf Konto " + kontoId),
+             Void.class
+         );
         
         return transaktion;
     }
