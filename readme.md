@@ -3,19 +3,18 @@
 # Banking App – Microservices Demo
 A fullstack demo project showcasing a simple banking application
 built with Java/Spring Boot microservices and Angular.
+
+> **Note:** The Angular frontend is not yet implemented.
 ## Tech Stack
 - Backend: Java 21, Spring Boot 3, Spring Data JPA, H2
-- Frontend: Angular 17, TypeScript, Angular HttpClient
+- Frontend: Angular 17, TypeScript, Angular HttpClient _(not yet implemented)_
 - Infrastructure: Docker, Docker Compose
 ## Architecture
 Two independent Spring Boot microservices communicate via REST.
-An Angular SPA serves as the UI layer.
+An Angular SPA is planned as the UI layer but is not yet implemented.
 ## Getting Started
-```bash
-# Build backend services
-cd konto-service && mvn clean package -DskipTests && cd ..
-cd benachrichtigung-service && mvn clean package -DskipTests && cd ..
-# Start everything
-docker compose up --build
+```powershell
+# Build both services and start Docker Compose
+.\build-and-run.ps1
 ```
 Open http://localhost:4200
