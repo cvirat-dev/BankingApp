@@ -1,0 +1,98 @@
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background-color: #1a1a2e;
+  border-bottom: 1px solid #333;
+  font-family: Arial, sans-serif;
+  font-size: 13px;
+}
+
+.status-label {
+  color: #aaa;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.status-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Basis-Chip */
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.4s ease;
+}
+
+/* Zustände */
+.chip--up {
+  background-color: #1a3a1a;
+  border: 1px solid #2e7d32;
+  color: #81c784;
+}
+
+.chip--down {
+  background-color: #3a1a1a;
+  border: 1px solid #c62828;
+  color: #ef9a9a;
+}
+
+.chip--checking {
+  background-color: #2a2a1a;
+  border: 1px solid #f9a825;
+  color: #fff176;
+}
+
+/* Ampel-Punkt */
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.chip--up       .dot { background-color: #4caf50; box-shadow: 0 0 6px #4caf50; }
+.chip--down     .dot { background-color: #f44336; box-shadow: 0 0 6px #f44336; }
+.chip--checking .dot {
+  background-color: #ffc107;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.chip-name   { font-weight: bold; }
+.chip-status { color: inherit; opacity: 0.85; }
+
+/* Refresh-Button */
+.refresh-btn {
+  background: none;
+  border: 1px solid #444;
+  color: #aaa;
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, border-color 0.2s;
+  margin-left: auto;
+}
+
+.refresh-btn:hover {
+  color: #fff;
+  border-color: #888;
+}
