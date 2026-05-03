@@ -18,5 +18,8 @@ dist/
 # DB-Dateien
 *.db
 
+# Obsidian
+.obsidian/
+
 # misc
 notes.md
