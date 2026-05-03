@@ -10,5 +10,6 @@ Set-Location benachrichtigung-service
 .\mvnw.cmd clean package -DskipTests
 Set-Location ..
 
-Write-Host "`n>>> Starting Docker Compose..." -ForegroundColor Cyan
+
+Write-Host "`n>>> Starting Docker Compose (includes frontend)..." -ForegroundColor Cyan
 docker compose up --build

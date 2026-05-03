@@ -19,6 +19,16 @@ services:
     networks:
       - banking-net
 
+  banking-frontend:
+    build: ./banking-frontend
+    ports:
+      - "4200:80"
+    depends_on:
+      - konto-service
+      - benachrichtigung-service
+    networks:
+      - banking-net
+
 networks:
   banking-net:
     driver: bridge
