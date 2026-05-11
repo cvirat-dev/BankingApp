@@ -18,6 +18,11 @@ public class KontoService {
     @Autowired private TransaktionRepository transaktionRepository;
     @Autowired private RestTemplate restTemplate;
 
+    public Konto createKonto(Konto konto) {
+        konto.setId(null);
+        return kontoRepository.save(konto);
+    }
+
     @Transactional
     public Transaktion buchung(Long kontoId, BigDecimal betrag, String beschreibung) {
 

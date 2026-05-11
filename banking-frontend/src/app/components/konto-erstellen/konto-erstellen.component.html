@@ -1,0 +1,63 @@
+<div class="page-header">
+  <h2>Neues Konto erstellen</h2>
+  <p>Legen Sie ein neues Bankkonto an</p>
+</div>
+
+<div class="form-card">
+  <form #kontoForm="ngForm" (ngSubmit)="onSubmit()" novalidate>
+
+    <div class="form-group">
+      <label for="inhaber">Kontoinhaber</label>
+      <input
+        type="text"
+        id="inhaber"
+        name="inhaber"
+        [(ngModel)]="inhaber"
+        required
+        maxlength="100"
+        placeholder="Vor- und Nachname"
+        #inhaberField="ngModel"
+        [class.invalid]="inhaberField.invalid && inhaberField.touched" />
+      <span class="field-error" *ngIf="inhaberField.invalid && inhaberField.touched">
+        Bitte den Namen des Kontoinhabers eingeben.
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="kontostand">Startguthaben (€)</label>
+      <input
+        type="number"
+        id="kontostand"
+        name="kontostand"
+        [(ngModel)]="kontostand"
+        required
+        step="0.01"
+        min="0"
+        placeholder="0.00"
+        #kontostandField="ngModel"
+        [class.invalid]="kontostandField.invalid && kontostandField.touched" />
+      <span class="field-error" *ngIf="kontostandField.invalid && kontostandField.touched">
+        Bitte ein Startguthaben eingeben.
+      </span>
+    </div>
+
+    <!-- Feedback messages -->
+    <div class="alert alert--success" *ngIf="erfolgsMeldung">
+      ✓ {{ erfolgsMeldung }}
+    </div>
+    <div class="alert alert--error" *ngIf="fehlerMeldung">
+      ✗ {{ fehlerMeldung }}
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="kontoForm.invalid || laden">
+        <span *ngIf="!laden">Konto erstellen</span>
+        <span *ngIf="laden">Wird erstellt…</span>
+      </button>
+      <button type="button" class="btn-secondary" (click)="zuruecksetzen(kontoForm)">
+        Zurücksetzen
+      </button>
+    </div>
+
+  </form>
+</div>

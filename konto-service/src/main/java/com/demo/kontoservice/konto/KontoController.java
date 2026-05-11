@@ -26,7 +26,7 @@ public class KontoController {
 
     @PostMapping
     public Konto createKonto(@RequestBody Konto konto) {
-        return kontoRepository.save(konto);
+        return kontoService.createKonto(konto);
     }
 
     @PostMapping("/{id}/buchung")
