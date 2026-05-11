@@ -1,1 +1,26 @@
-<p>konto-liste works!</p>
+<div class="page-header">
+  <h2>Meine Konten</h2>
+  <p>Übersicht aller vorhandenen Bankkonten</p>
+</div>
+
+<div *ngIf="ladevorgang" class="loading-state">
+  <div class="spinner"></div>
+  <p>Konten werden geladen…</p>
+</div>
+
+<ng-container *ngIf="!ladevorgang">
+  <div *ngIf="konten.length > 0; else keineKonten" class="konto-grid">
+    <app-konto-karte
+      *ngFor="let konto of konten"
+      [konto]="konto">
+    </app-konto-karte>
+  </div>
+
+  <ng-template #keineKonten>
+    <div class="empty-state">
+      <span class="empty-icon">🏦</span>
+      <h3>Keine Konten vorhanden</h3>
+      <p>Erstellen Sie Ihr erstes Konto unter <a routerLink="/konto-erstellen">Neues Konto</a>.</p>
+    </div>
+  </ng-template>
+</ng-container>

@@ -51,7 +51,7 @@ class KontoControllerTest {
     void createKonto_should200_withSavedKonto() throws Exception {
         Konto konto = new Konto();
         konto.setKontostand(new BigDecimal("500.00"));
-        when(kontoRepository.save(any())).thenReturn(konto);
+        when(kontoService.createKonto(any())).thenReturn(konto);
 
         mockMvc.perform(post("/api/konten")
                         .contentType(MediaType.APPLICATION_JSON)

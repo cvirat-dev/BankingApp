@@ -1,0 +1,23 @@
+<div class="konto-karte">
+  <div class="konto-karte__header">
+    <span class="konto-karte__inhaber">{{ konto.inhaber }}</span>
+    <span class="konto-karte__id">#{{ konto.id }}</span>
+  </div>
+
+  <div class="konto-karte__body">
+    <div class="konto-karte__iban">
+      <span class="konto-karte__label">IBAN</span>
+      <span class="konto-karte__value">{{ konto.iban }}</span>
+    </div>
+
+    <div class="konto-karte__kontostand">
+      <span class="konto-karte__label">Kontostand</span>
+      <span
+        class="konto-karte__value konto-karte__betrag"
+        [class.konto-karte__betrag--negativ]="konto.kontostand < 0"
+      >
+        {{ konto.kontostand | currency:'EUR':'symbol':'1.2-2' }}
+      </span>
+    </div>
+  </div>
+</div>

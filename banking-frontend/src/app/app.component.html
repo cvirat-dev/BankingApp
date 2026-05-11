@@ -1,9 +1,17 @@
-<app-connection-status></app-connection-status>
+<div class="app-container">
 
-<nav>
-  <a routerLink="/konten" routerLinkActive="active">Konten</a>
-  <a routerLink="/buchung" routerLinkActive="active">Buchung</a>
-  <a routerLink="/log" routerLinkActive="active">Log</a>
-</nav>
+  <nav class="navbar">
+    <span class="brand">Banking App</span>
+    <div class="nav-links">
+      <a routerLink="/konten"             routerLinkActive="active">Konten</a>
+      <a routerLink="/konto-erstellen"    routerLinkActive="active">Neues Konto</a>
+      <a routerLink="/buchung"            routerLinkActive="active">Buchung</a>
+      <a routerLink="/benachrichtigungen" routerLinkActive="active">Benachrichtigungen</a>
+    </div>
+  </nav>
 
-<router-outlet></router-outlet>
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+
+</div>
