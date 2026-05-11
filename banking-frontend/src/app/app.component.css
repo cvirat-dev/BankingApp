@@ -144,3 +144,8 @@ input:focus, select:focus, textarea:focus {
   padding: 1.75rem;
   margin-bottom: 1.25rem;
 }
+
+/* ── Footer ── */
+.footer {
+  margin-top: auto;
+}

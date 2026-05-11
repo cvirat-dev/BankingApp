@@ -36,8 +36,7 @@ export class BuchungFormularComponent implements OnInit {
     this.kontoService.createBuchung(+this.kontoId, { betrag: this.betrag!, beschreibung: this.beschreibung }).subscribe({
       next: (updated) => {
         this.laden = false;
-        this.erfolgsMeldung =
-          `Buchung erfolgreich. Neuer Kontostand: ${new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(updated.kontostand)}`;
+        this.erfolgsMeldung = 'Buchung erfolgreich.';
         this.betrag = null;
         this.beschreibung = '';
       },

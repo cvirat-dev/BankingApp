@@ -1,0 +1,38 @@
+<div class="status-bar" *ngIf="status$ | async as statusList">
+
+  <span class="status-label">Backend-Status:</span>
+
+  <div class="status-chips">
+    <div
+      *ngFor="let service of statusList"
+      class="chip"
+      [ngClass]="{
+        'chip--up':       service.status === 'UP',
+        'chip--down':     service.status === 'DOWN',
+        'chip--checking': service.status === 'CHECKING'
+      }"
+      [title]="service.url"
+    >
+      <!-- Ampel-Punkt -->
+      <span class="dot"></span>
+
+      <!-- Service-Name -->
+      <span class="chip-name">{{ service.name }}</span>
+
+      <!-- Status-Text -->
+      <span class="chip-status">
+        <ng-container [ngSwitch]="service.status">
+          <span *ngSwitchCase="'UP'">      Verbunden    </span>
+          <span *ngSwitchCase="'DOWN'">    Nicht erreichbar </span>
+          <span *ngSwitchCase="'CHECKING'">Prüfe...     </span>
+        </ng-container>
+      </span>
+    </div>
+  </div>
+
+  <!-- Manueller Refresh-Button -->
+  <button class="refresh-btn" (click)="onRefresh()" title="Verbindung erneut prüfen">
+    &#x21BA;
+  </button>
+
+</div>

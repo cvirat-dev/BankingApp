@@ -10,6 +10,7 @@ import { BuchungFormularComponent } from './components/buchung-formular/buchung-
 import { BenachrichtigungsLogComponent } from './components/benachrichtigungs-log/benachrichtigungs-log.component';
 import { KontoErstellenComponent } from './components/konto-erstellen/konto-erstellen.component';
 import { KontoKarteComponent } from './components/konto-karte/konto-karte.component';
+import { ConnectionStatusComponent } from './components/connection-status/connection-status.component/connection-status.component.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { KontoKarteComponent } from './components/konto-karte/konto-karte.compon
     BuchungFormularComponent,
     BenachrichtigungsLogComponent,
     KontoErstellenComponent,
-    KontoKarteComponent
+    KontoKarteComponent,
+    ConnectionStatusComponent
   ],
   imports: [
     BrowserModule,
