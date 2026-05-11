@@ -19,27 +19,27 @@ public class KontoController {
     @Autowired private KontoService kontoService;
     @Autowired private KontoRepository kontoRepository;
 
-    @GetMapping                         // GET /api/konten
+    @GetMapping
     public List<Konto> getAllKonten() {
         return kontoRepository.findAll();
     }
 
-    @PostMapping                        // POST /api/konten
+    @PostMapping
     public Konto createKonto(@RequestBody Konto konto) {
         return kontoRepository.save(konto);
     }
 
-    @PostMapping("/{id}/buchung")       // POST /api/konten/{id}/buchung
+    @PostMapping("/{id}/buchung")
     public Transaktion createBuchung(@PathVariable Long id, @RequestBody Transaktion transaktion) {
         return kontoService.buchung(id, transaktion.getBetrag(), transaktion.getBeschreibung());
     }
 
-    @GetMapping("/{id}/transaktionen")   // GET /api/konten/{id}/transaktionen
+    @GetMapping("/{id}/transaktionen")
     public List<Transaktion> getTransaktionen(@PathVariable Long id) {
         return kontoService.getTransaktionen(id);
     }
 
-    @DeleteMapping("/{id}")             // DELETE /api/konten/{id}
+    @DeleteMapping("/{id}")
     public void deleteKonto(@PathVariable Long id) {
         kontoService.deleteById(id);
     }
