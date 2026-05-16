@@ -14,3 +14,13 @@
   color: #757575;
   font-size: 0.92rem;
 }
+
+/* Loading */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 3rem 0;
+  color: #757575;
+}
