@@ -4,7 +4,7 @@
 </div>
 
 <div class="form-card">
-  <form #buchungForm="ngForm" (ngSubmit)="onSubmit()" novalidate>
+  <form #buchungForm="ngForm" (ngSubmit)="onSubmit(buchungForm)" novalidate>
 
     <div class="form-group">
       <label for="kontoId">Konto</label>

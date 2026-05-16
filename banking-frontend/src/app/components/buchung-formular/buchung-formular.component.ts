@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Konto } from '../../models/konto.model';
 import { KontoService } from '../../services/konto.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-buchung-formular',
@@ -18,7 +19,7 @@ export class BuchungFormularComponent implements OnInit {
   erfolgsMeldung: string = '';
   fehlerMeldung: string = '';
 
-  constructor(private kontoService: KontoService) {}
+  constructor(private kontoService: KontoService, private router: Router) {}
 
   ngOnInit(): void {
     this.kontoService.getAll().subscribe({
@@ -27,7 +28,7 @@ export class BuchungFormularComponent implements OnInit {
     });
   }
 
-  onSubmit(): void {
+  onSubmit(form: NgForm): void {
     if (!this.kontoId || this.betrag === null || !this.beschreibung) return;
     this.laden = true;
     this.erfolgsMeldung = '';
@@ -39,6 +40,8 @@ export class BuchungFormularComponent implements OnInit {
         this.erfolgsMeldung = 'Buchung erfolgreich.';
         this.betrag = null;
         this.beschreibung = '';
+        form.resetForm();
+        setTimeout(() => this.router.navigate(['/konten']), 1800);
       },
       error: () => {
         this.laden = false;
