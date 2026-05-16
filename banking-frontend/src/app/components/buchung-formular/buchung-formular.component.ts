@@ -27,7 +27,7 @@ export class BuchungFormularComponent implements OnInit {
     });
   }
 
-  onSubmit(): void {
+  onSubmit(form: NgForm): void {
     if (!this.kontoId || this.betrag === null || !this.beschreibung) return;
     this.laden = true;
     this.erfolgsMeldung = '';
@@ -39,6 +39,7 @@ export class BuchungFormularComponent implements OnInit {
         this.erfolgsMeldung = 'Buchung erfolgreich.';
         this.betrag = null;
         this.beschreibung = '';
+        form.resetForm();
       },
       error: () => {
         this.laden = false;
