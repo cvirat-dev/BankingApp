@@ -12,7 +12,7 @@ export class KontoService {
 
   constructor(private http: HttpClient) { }
 
-  getKonten() : Observable<Konto[]> {
+  getAll() : Observable<Konto[]> {
     return this.http.get<Konto[]>(this.apiUrl); 
   }
 

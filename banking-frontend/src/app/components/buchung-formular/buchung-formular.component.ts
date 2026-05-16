@@ -21,7 +21,7 @@ export class BuchungFormularComponent implements OnInit {
   constructor(private kontoService: KontoService) {}
 
   ngOnInit(): void {
-    this.kontoService.getKonten().subscribe({
+    this.kontoService.getAll().subscribe({
       next: (data) => this.konten = data,
       error: () => this.fehlerMeldung = 'Konten konnten nicht geladen werden.'
     });

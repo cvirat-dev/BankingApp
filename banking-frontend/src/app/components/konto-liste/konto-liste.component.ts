@@ -15,16 +15,16 @@ export class KontoListeComponent implements OnInit {
   constructor(private kontoService: KontoService) { }
 
   ngOnInit(): void {
-    this.kontoService.getKonten().subscribe(
-      (data: Konto[]) => {
+    this.kontoService.getAll().subscribe({
+      next: (data: Konto[]) => {
         this.konten = data;
         this.ladevorgang = false;
       },
-      (error) => {
+      error: (error) => {
         this.ladevorgang = false;
         console.error('Fehler beim Laden der Konten:', error);
       }
-    );
+    });
   }
 
 }
