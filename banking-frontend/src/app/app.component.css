@@ -42,6 +42,13 @@ body {
   gap: 0.6rem;
   -webkit-user-select: none;
   user-select: none;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.brand:hover {
+  color: #fff;
+  opacity: 0.85;
 }
 
 .brand::before {
