@@ -19,7 +19,7 @@ export class BuchungFormularComponent implements OnInit {
   erfolgsMeldung: string = '';
   fehlerMeldung: string = '';
 
-  constructor(private kontoService: KontoService, private router: Router) {}
+  constructor(private kontoService: KontoService) {}
 
   ngOnInit(): void {
     this.kontoService.getAll().subscribe({
@@ -41,7 +41,6 @@ export class BuchungFormularComponent implements OnInit {
         this.betrag = null;
         this.beschreibung = '';
         form.resetForm();
-        setTimeout(() => this.router.navigate(['/konten']), 1800);
       },
       error: () => {
         this.laden = false;
