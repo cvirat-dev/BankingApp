@@ -1,1 +1,82 @@
-<p>buchung-formular works!</p>
+<div class="page-header">
+  <h2>Buchung durchführen</h2>
+  <p>Einzahlung oder Abbuchung auf einem bestehenden Konto</p>
+</div>
+
+<div class="form-card">
+  <form #buchungForm="ngForm" (ngSubmit)="onSubmit(buchungForm)" novalidate>
+
+    <div class="form-group">
+      <label for="kontoId">Konto</label>
+      <select
+        id="kontoId"
+        name="kontoId"
+        [(ngModel)]="kontoId"
+        required
+        #kontoIdField="ngModel"
+        [class.invalid]="kontoIdField.invalid && kontoIdField.touched">
+        <option value="" disabled selected>-- Konto auswählen --</option>
+        <option *ngFor="let k of konten" [value]="k.id">
+          {{ k.inhaber }} &mdash; {{ k.iban }}
+        </option>
+      </select>
+      <span class="field-error" *ngIf="kontoIdField.invalid && kontoIdField.touched">
+        Bitte ein Konto auswählen.
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="betrag">Betrag (€)</label>
+      <input
+        type="number"
+        id="betrag"
+        name="betrag"
+        [(ngModel)]="betrag"
+        required
+        step="0.01"
+        placeholder="z. B. 100.00 oder -50.00"
+        #betragField="ngModel"
+        [class.invalid]="betragField.invalid && betragField.touched" />
+      <span class="field-hint">Positiver Wert = Einzahlung &nbsp;|&nbsp; Negativer Wert = Abbuchung</span>
+      <span class="field-error" *ngIf="betragField.invalid && betragField.touched">
+        Bitte einen Betrag eingeben.
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="beschreibung">Beschreibung</label>
+      <input
+        type="text"
+        id="beschreibung"
+        name="beschreibung"
+        [(ngModel)]="beschreibung"
+        required
+        maxlength="200"
+        placeholder="z. B. Mietzahlung Juni"
+        #beschreibungField="ngModel"
+        [class.invalid]="beschreibungField.invalid && beschreibungField.touched" />
+      <span class="field-error" *ngIf="beschreibungField.invalid && beschreibungField.touched">
+        Bitte eine Beschreibung eingeben.
+      </span>
+    </div>
+
+    <!-- Feedback messages -->
+    <div class="alert alert--success" *ngIf="erfolgsMeldung">
+      ✓ {{ erfolgsMeldung }}
+    </div>
+    <div class="alert alert--error" *ngIf="fehlerMeldung">
+      ✗ {{ fehlerMeldung }}
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="buchungForm.invalid || laden">
+        <span *ngIf="!laden">Buchung ausführen</span>
+        <span *ngIf="laden">Wird gesendet…</span>
+      </button>
+      <button type="button" class="btn-secondary" (click)="zuruecksetzen(buchungForm)">
+        Zurücksetzen
+      </button>
+    </div>
+
+  </form>
+</div>

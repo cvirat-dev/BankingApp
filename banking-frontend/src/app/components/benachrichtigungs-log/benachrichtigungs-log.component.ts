@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Benachrichtigung } from '../../models/benachrichtigung.model';
+import { BenachrichtigungService } from '../../services/benachrichtigung.service';
 
 @Component({
   selector: 'app-benachrichtigungs-log',

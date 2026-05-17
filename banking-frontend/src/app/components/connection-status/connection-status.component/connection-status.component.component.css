@@ -1,0 +1,102 @@
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 2rem;
+  background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.15);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 13px;
+}
+
+.status-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 600;
+  white-space: nowrap;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-chips {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Basis-Chip */
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background-color 0.4s ease;
+}
+
+/* Zustände */
+.chip--up {
+  background-color: rgba(76, 175, 80, 0.15);
+  border: 1px solid rgba(76, 175, 80, 0.5);
+  color: #a5d6a7;
+}
+
+.chip--down {
+  background-color: rgba(244, 67, 54, 0.15);
+  border: 1px solid rgba(244, 67, 54, 0.5);
+  color: #ef9a9a;
+}
+
+.chip--checking {
+  background-color: rgba(255, 193, 7, 0.12);
+  border: 1px solid rgba(255, 193, 7, 0.45);
+  color: #fff176;
+}
+
+/* Ampel-Punkt */
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.chip--up       .dot { background-color: #66bb6a; box-shadow: 0 0 5px rgba(76, 175, 80, 0.8); }
+.chip--down     .dot { background-color: #ef5350; box-shadow: 0 0 5px rgba(244, 67, 54, 0.8); }
+.chip--checking .dot {
+  background-color: #ffc107;
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+
+.chip-name   { font-weight: 600; }
+.chip-status { color: inherit; opacity: 0.85; }
+
+/* Refresh-Button */
+.refresh-btn {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.18s, border-color 0.18s, background 0.18s;
+  margin-left: auto;
+}
+
+.refresh-btn:hover {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.1);
+}
