@@ -20,6 +20,8 @@ Two independent Spring Boot microservices communicate via REST.
 
 ## Getting Started
 
+Prerequisites: Docker is running
+
 ### Option 1: Run the build-and-run script (PowerShell)
 
 ```powershell
