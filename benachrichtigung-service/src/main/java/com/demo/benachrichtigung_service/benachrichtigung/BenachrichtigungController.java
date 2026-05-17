@@ -2,11 +2,20 @@ package com.demo.benachrichtigung_service.benachrichtigung;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/benachrichtigungen")
@@ -14,17 +23,28 @@ import org.springframework.web.bind.annotation.*;
 public class BenachrichtigungController {
 
     @Autowired
-    private BenachrichtigungRepository benachrichtigungRepository;
+    private BenachrichtigungRepository repository;
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Benachrichtigung empfangen(@Valid @RequestBody BenachrichtigungRequest request) {
+    public Benachrichtigung receive(@Valid @RequestBody BenachrichtigungRequest request) {
         Benachrichtigung benachrichtigung = new Benachrichtigung();
         benachrichtigung.setNachricht(request.getNachricht());
         benachrichtigung.setTimestamp(LocalDateTime.now());
-        return benachrichtigungRepository.save(benachrichtigung);
+        Benachrichtigung gespeichert = repository.save(benachrichtigung);
+
+        messagingTemplate.convertAndSend(
+                "/topic/benachrichtigungen",
+                (Object) Map.of("nachricht", gespeichert.getNachricht(),
+                        "zeitstempel", gespeichert.getTimestamp().toString())
+        );
+
+        return gespeichert;
     }
 
     @GetMapping
-    public List<Benachrichtigung> all() { return benachrichtigungRepository.findAll(); }
+    public List<Benachrichtigung> all() { return repository.findAll(); }
 }
