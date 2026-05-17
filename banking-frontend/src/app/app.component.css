@@ -85,23 +85,15 @@ body {
 }
 
 .badge {
-  position: absolute;
-  top: -6px;
-  right: -4px;
-  background: #e53935;
-  color: #fff;
+  background-color: #e74c3c;
+  color: white;
   border-radius: 10px;
-  min-width: 18px;
-  height: 18px;
+  padding: 2px 7px;
   font-size: 11px;
-  font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 4px;
-  line-height: 1;
-  pointer-events: none;
-  animation: badge-pop 0.2s ease-out;
+  font-weight: bold;
+  min-width: 18px;
+  text-align: center;
+  line-height: 1.4;
 }
 
 @keyframes badge-pop {

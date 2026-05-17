@@ -196,6 +196,21 @@
     "benachrichtigung-service/target/test-classes/com",
     "benachrichtigung-service/target/test-classes",
     "benachrichtigung-service/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst",
+    "banking-frontend/node_modules/sockjs-client/README.md",
+    "banking-frontend/node_modules/sockjs-client/Changelog.md",
+    "banking-frontend/node_modules/sockjs-client/CODE_OF_CONDUCT.md",
+    "banking-frontend/node_modules/@types/sockjs-client/README.md",
+    "banking-frontend/node_modules/node-addon-api/tools/README.md",
+    "banking-frontend/node_modules/node-addon-api/README.md",
+    "banking-frontend/node_modules/node-addon-api/LICENSE.md",
+    "banking-frontend/node_modules/node-gyp-build/SECURITY.md",
+    "banking-frontend/node_modules/node-gyp-build/README.md",
+    "banking-frontend/node_modules/@stomp/stompjs/README.md",
+    "banking-frontend/node_modules/eventsource/README.md",
+    "banking-frontend/node_modules/eventsource/HISTORY.md",
+    "banking-frontend/node_modules/eventsource/CONTRIBUTING.md",
+    "banking-frontend/node_modules/url-parse/README.md",
+    "banking-frontend/node_modules/node-addon-api/CHANGELOG.md",
     "banking-frontend/README.md"
   ]
 }

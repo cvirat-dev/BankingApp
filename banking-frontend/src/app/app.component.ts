@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { BenachrichtigungService } from './services/benachrichtigung.service';
+import { WebsocketService } from './services/websocket.service';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-root',
@@ -10,17 +10,27 @@ import { BenachrichtigungService } from './services/benachrichtigung.service';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'banking-frontend';
   unreadCount = 0;
-  private unreadSub?: Subscription;
 
-  constructor(private benachrichtigungService: BenachrichtigungService) {}
+  private unreadSubscription: Subscription = new Subscription();
+
+  constructor(
+    public websocketService: WebsocketService
+  ) {}
 
   ngOnInit(): void {
-    this.unreadSub = this.benachrichtigungService.unreadCount$.subscribe(count => {
+    this.websocketService.connect();
+
+    this.unreadSubscription = this.websocketService.unread$.subscribe(count => {
       this.unreadCount = count;
     });
   }
 
   ngOnDestroy(): void {
-    this.unreadSub?.unsubscribe();
+    this.websocketService.disconnect();
+    this.unreadSubscription.unsubscribe();
+  }
+
+  onBenachrichtigungenClick(): void {
+    this.websocketService.resetUnread();
   }
 }

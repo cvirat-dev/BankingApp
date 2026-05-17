@@ -19,7 +19,6 @@ export class BenachrichtigungsLogComponent implements OnInit {
       next: (data: Benachrichtigung[]) => {
         this.benachrichtigungen = data;
         this.ladevorgang = false;
-        this.benachrichtigungsService.markAllRead();
       },
       error: (error) => {
         this.ladevorgang = false;

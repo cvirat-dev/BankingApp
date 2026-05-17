@@ -3,12 +3,16 @@
   <nav class="navbar">
     <a class="brand" routerLink="/konten">Banking App</a>
     <div class="nav-links">
-      <a routerLink="/konten"             routerLinkActive="active">Konten</a>
-      <a routerLink="/konto-erstellen"    routerLinkActive="active">Neues Konto</a>
-      <a routerLink="/buchung"            routerLinkActive="active">Buchung</a>
-      <a routerLink="/benachrichtigungen" routerLinkActive="active">
+      <a routerLink="/konten" routerLinkActive="active">Konten</a>
+      <a routerLink="/konto-erstellen" routerLinkActive="active">Neues Konto</a>
+      <a routerLink="/buchung" routerLinkActive="active">Buchung</a>
+      <a routerLink="/benachrichtigungen" routerLinkActive="active" (click)="onBenachrichtigungenClick()">
+
         Benachrichtigungen
-        <span class="badge" *ngIf="unreadCount > 0">{{ unreadCount > 99 ? '99+' : unreadCount }}</span>
+
+        <span class="badge" *ngIf="unreadCount > 0">
+          {{ unreadCount > 99 ? '99+' : unreadCount }}
+        </span>
       </a>
     </div>
   </nav>
@@ -17,11 +21,6 @@
     <router-outlet></router-outlet>
   </main>
 
-  <nav class="footer">
-    <app-connection-status></app-connection-status>
-  </nav>
-
-</div>
   <nav class="footer">
     <app-connection-status></app-connection-status>
   </nav>
