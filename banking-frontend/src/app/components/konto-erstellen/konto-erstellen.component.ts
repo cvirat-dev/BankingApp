@@ -17,7 +17,7 @@ export class KontoErstellenComponent {
   erfolgsMeldung: string = '';
   fehlerMeldung: string = '';
 
-  constructor(private kontoService: KontoService, private router: Router) {}
+  constructor(private kontoService: KontoService) {}
 
   onSubmit(): void {
     if (!this.inhaber || this.kontostand === null) return;
@@ -31,7 +31,6 @@ export class KontoErstellenComponent {
       next: (konto) => {
         this.laden = false;
         this.erfolgsMeldung = `Konto für „${konto.inhaber}" wurde erfolgreich erstellt.`;
-        setTimeout(() => this.router.navigate(['/konten']), 1800);
       },
       error: () => {
         this.laden = false;
