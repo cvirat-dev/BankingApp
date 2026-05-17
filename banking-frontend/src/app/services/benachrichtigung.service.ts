@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, retry } from 'rxjs';
 import { Benachrichtigung } from '../models/benachrichtigung.model';
 import { HttpClient } from '@angular/common/http';
 
@@ -12,7 +12,9 @@ export class BenachrichtigungService {
   constructor(private http: HttpClient) { }
 
   getAll() : Observable<Benachrichtigung[]> {
-    return this.http.get<Benachrichtigung[]>(this.apiUrl); 
+    return this.http.get<Benachrichtigung[]>(this.apiUrl).pipe(
+      retry({count: 3, delay: 2000})
+    );
   }
 
 }

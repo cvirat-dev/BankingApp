@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Subscription, interval } from 'rxjs';
+import { BehaviorSubject, Subscription, catchError, interval, switchMap, timer, of } from 'rxjs';
 import { ServiceStatus } from '../models/connection-status.model';
 import { HttpClient } from '@angular/common/http';
 
@@ -17,6 +17,7 @@ export class ConnectionStatusService implements OnDestroy {
 
   private pollSubscription: Subscription;
   private readonly POLL_INTERVAL_MS = 15000; // 15 seconds
+  private subscriptions: Subscription[] = [];
 
   constructor(private http: HttpClient) {
     this.checkAll();
@@ -30,12 +31,17 @@ export class ConnectionStatusService implements OnDestroy {
   }
 
   checkOne(service: ServiceStatus, index: number): void {
-    this.http
-      .get<{ status: string }>(`${service.url}/actuator/health`)
-      .subscribe({
-        next: (response) => this.updateStatus(index, response.status === 'UP' ? 'UP' : 'DOWN'),
-        error: ()         => this.updateStatus(index, 'DOWN'),
-      });
+
+    this.subscriptions[index]?.unsubscribe();
+
+    this.subscriptions[index] = timer(3000, 10000).pipe(
+      switchMap(() => this.http.get<{ status: string }>(`${service.url}/actuator/health`).pipe(
+        catchError(() => of({ status: 'DOWN' }))
+      ))
+    ).subscribe({
+      next: (response) => this.updateStatus(index, response.status === 'UP' ? 'UP' : 'DOWN'),
+      error: ()         => this.updateStatus(index, 'DOWN'),
+    });
   }
 
   updateStatus(index: number, status: 'UP' | 'DOWN'): void {
@@ -48,5 +54,6 @@ export class ConnectionStatusService implements OnDestroy {
     if (this.pollSubscription) {
       this.pollSubscription.unsubscribe();
     }
+    this.subscriptions.forEach(sub => sub?.unsubscribe());
   }
 }

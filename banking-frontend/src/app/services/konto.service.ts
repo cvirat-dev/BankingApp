@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, retry } from 'rxjs';
 import { Konto } from '../models/konto.model';
 import { Transaktion } from '../models/transaktion.model';
 
@@ -13,7 +13,9 @@ export class KontoService {
   constructor(private http: HttpClient) { }
 
   getAll() : Observable<Konto[]> {
-    return this.http.get<Konto[]>(this.apiUrl); 
+    return this.http.get<Konto[]>(this.apiUrl).pipe(
+      retry({count: 3, delay: 2000})
+    ); 
   }
 
   createKonto(konto: Partial<Konto>): Observable<Konto> {

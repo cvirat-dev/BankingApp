@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConnectionStatusComponent } from './connection-status.component.component';
+import { ConnectionStatusComponent } from './connection-status.component';
 
-describe('ConnectionStatusComponentComponent', () => {
+describe('ConnectionStatusComponent', () => {
   let component: ConnectionStatusComponent;
   let fixture: ComponentFixture<ConnectionStatusComponent>;
 

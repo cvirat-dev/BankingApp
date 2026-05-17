@@ -20,7 +20,13 @@ public class KontoService {
 
     public Konto createKonto(Konto konto) {
         konto.setId(null);
-        return kontoRepository.save(konto);
+        Konto gespeichertesKonto = kontoRepository.save(konto);
+        restTemplate.postForObject(
+            "http://benachrichtigung-service:8082/api/benachrichtigungen",
+            Map.of("nachricht", "Neues Konto erstellt: " + konto.getInhaber()),
+            Void.class
+        );
+        return gespeichertesKonto;
     }
 
     @Transactional
