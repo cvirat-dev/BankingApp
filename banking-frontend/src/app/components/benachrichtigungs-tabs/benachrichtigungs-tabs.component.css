@@ -1,0 +1,69 @@
+:host {
+  display: block;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 2px solid #e5e7eb;
+  margin-bottom: 1.5rem;
+}
+
+.tabs__tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-family: "Manrope", "Segoe UI", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.tabs__tab::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #1d4ed8;
+  border-radius: 2px 2px 0 0;
+  transform: scaleX(0);
+  transition: transform 180ms ease;
+}
+
+.tabs__tab:hover {
+  color: #374151;
+}
+
+.tabs__tab--aktiv {
+  color: #1d4ed8;
+}
+
+.tabs__tab--aktiv::after {
+  transform: scaleX(1);
+}
+
+.tabs__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.4rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  transition: background 150ms ease;
+}
+
+.tabs__tab--aktiv .tabs__badge {
+  background: #dbeafe;
+}

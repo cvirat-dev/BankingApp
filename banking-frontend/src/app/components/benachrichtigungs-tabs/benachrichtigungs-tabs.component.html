@@ -1,0 +1,12 @@
+<nav class="tabs" role="tablist" aria-label="Benachrichtigungs-Typ auswählen">
+  <button
+    *ngFor="let tab of tabs"
+    role="tab"
+    class="tabs__tab"
+    [class.tabs__tab--aktiv]="tab.typ === aktiv"
+    [attr.aria-selected]="tab.typ === aktiv"
+    (click)="select(tab.typ)">
+    {{ tab.label }}
+    <span class="tabs__badge">{{ tab.anzahl }}</span>
+  </button>
+</nav>

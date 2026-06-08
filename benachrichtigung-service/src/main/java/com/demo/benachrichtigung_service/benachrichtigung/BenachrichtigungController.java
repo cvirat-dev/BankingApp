@@ -2,7 +2,6 @@ package com.demo.benachrichtigung_service.benachrichtigung;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,14 +31,21 @@ public class BenachrichtigungController {
     @ResponseStatus(HttpStatus.CREATED)
     public Benachrichtigung receive(@Valid @RequestBody BenachrichtigungRequest request) {
         Benachrichtigung benachrichtigung = new Benachrichtigung();
+        benachrichtigung.setTyp(request.getTyp());
+        benachrichtigung.setKontoId(request.getKontoId());
+        benachrichtigung.setInhaber(request.getInhaber());
         benachrichtigung.setNachricht(request.getNachricht());
         benachrichtigung.setTimestamp(LocalDateTime.now());
         Benachrichtigung gespeichert = repository.save(benachrichtigung);
 
         messagingTemplate.convertAndSend(
                 "/topic/benachrichtigungen",
-                (Object) Map.of("nachricht", gespeichert.getNachricht(),
-                        "zeitstempel", gespeichert.getTimestamp().toString())
+                new BenachrichtigungEvent(
+                        gespeichert.getKontoId(),
+                        gespeichert.getInhaber(),
+                        gespeichert.getNachricht(),
+                        gespeichert.getTimestamp()
+                )
         );
 
         return gespeichert;

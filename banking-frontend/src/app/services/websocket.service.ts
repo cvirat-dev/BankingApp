@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Client } from '@stomp/stompjs';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LoggerService } from './logger.service';
+import { Benachrichtigung } from '../models/benachrichtigung.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +24,8 @@ export class WebsocketService {
         this.logger.log('WebSocket connected');
 
         this.client.subscribe('/topic/benachrichtigungen', (message) => {
-          const benachrichtigung = JSON.parse(message.body);
-          this.logger.log('Neue Benachrichtigung:', benachrichtigung);
+          const event: Benachrichtigung = JSON.parse(message.body);
+          this.logger.log('Neue Benachrichtigung:', event);
           this.unreadCount$.next(this.unreadCount$.value + 1);
         });
       },

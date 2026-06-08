@@ -3,7 +3,6 @@ package com.demo.kontoservice.konto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.demo.kontoservice.benachrichtigung.BenachrichtigungRequest;
+import com.demo.kontoservice.benachrichtigung.BenachrichtigungTyp;
 
 @Service
 public class KontoService {
@@ -21,11 +23,20 @@ public class KontoService {
     public Konto createKonto(Konto konto) {
         konto.setId(null);
         Konto gespeichertesKonto = kontoRepository.save(konto);
-        restTemplate.postForObject(
-            "http://benachrichtigung-service:8082/api/benachrichtigungen",
-            Map.of("nachricht", "Neues Konto erstellt: " + konto.getInhaber()),
-            Void.class
+
+        BenachrichtigungRequest request = new BenachrichtigungRequest(
+                BenachrichtigungTyp.KONTO,
+                gespeichertesKonto.getId(),
+                gespeichertesKonto.getInhaber(),
+                "Neues Konto erstellt: " + konto.getInhaber()
         );
+
+        restTemplate.postForObject(
+                "http://benachrichtigung-service:8082/api/benachrichtigungen",
+                request,
+                Void.class
+        );
+        
         return gespeichertesKonto;
     }
 
@@ -45,11 +56,19 @@ public class KontoService {
         transaktion.setBeschreibung(beschreibung); transaktion.setDatum(LocalDateTime.now());
         transaktionRepository.save(transaktion);
 
-         restTemplate.postForObject(
-             "http://benachrichtigung-service:8082/api/benachrichtigungen",
-             Map.of("nachricht", "Buchung: " + betrag + "EUR auf Konto " + kontoId),
-             Void.class
-         );
+        String sign = betrag.signum() >= 0 ? "+" : "";
+        BenachrichtigungRequest request = new BenachrichtigungRequest(
+                BenachrichtigungTyp.TRANSAKTION,
+                konto.getId(),
+                konto.getInhaber(),
+                "Buchung: " + sign + betrag + " €"
+        );
+
+        restTemplate.postForObject(
+                "http://benachrichtigung-service:8082/api/benachrichtigungen",
+                request,
+                Void.class
+        );
         
         return transaktion;
     }
