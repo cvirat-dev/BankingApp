@@ -11,6 +11,8 @@ import { KontoErstellenComponent } from './components/konto-erstellen/konto-erst
 import { KontoKarteComponent } from './components/konto-karte/konto-karte.component';
 import { ConnectionStatusComponent } from './components/connection-status/connection-status.component';
 import { BenachrichtigungItemComponent } from './components/benachrichtigung-item/benachrichtigung-item.component';
+import { BenachrichtigungsTabsComponent } from './components/benachrichtigungs-tabs/benachrichtigungs-tabs.component';
+import { BenachrichtigungsListeComponent } from './components/benachrichtigungs-liste/benachrichtigungs-liste.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { BenachrichtigungItemComponent } from './components/benachrichtigung-ite
     KontoErstellenComponent,
     KontoKarteComponent,
     ConnectionStatusComponent,
-    BenachrichtigungItemComponent
+    BenachrichtigungItemComponent,
+    BenachrichtigungsTabsComponent,
+    BenachrichtigungsListeComponent
   ],
   imports: [
     BrowserModule,

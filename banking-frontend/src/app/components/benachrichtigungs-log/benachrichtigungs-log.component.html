@@ -9,18 +9,14 @@
 </div>
 
 <ng-container *ngIf="!ladevorgang">
-  <div *ngIf="benachrichtigungen.length > 0; else keineBenachrichtigungen" class="benachrichtigungs-list">
-    <app-benachrichtigung-item
-      *ngFor="let benachrichtigung of benachrichtigungen"
-      [benachrichtigung]="benachrichtigung">
-    </app-benachrichtigung-item>
-  </div>
+  <app-benachrichtigungs-tabs
+    [tabs]="tabs"
+    [aktiv]="aktuellerTyp"
+    (typGewaehlt)="onTypGewaehlt($event)">
+  </app-benachrichtigungs-tabs>
 
-  <ng-template #keineBenachrichtigungen>
-    <div class="empty-state">
-      <span class="empty-icon">🔔</span>
-      <h3>Keine Benachrichtigungen</h3>
-      <p>Es wurden noch keine Benachrichtigungen registriert.</p>
-    </div>
-  </ng-template>
+  <app-benachrichtigungs-liste
+    [benachrichtigungen]="gefilterteBenachrichtigungen"
+    [typLabel]="aktuellerTypLabel">
+  </app-benachrichtigungs-liste>
 </ng-container>

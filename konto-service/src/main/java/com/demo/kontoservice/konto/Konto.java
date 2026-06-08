@@ -14,9 +14,7 @@ public class Konto {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
-
     private String inhaber;
-    private String iban;
     private BigDecimal kontostand;
 }
 
