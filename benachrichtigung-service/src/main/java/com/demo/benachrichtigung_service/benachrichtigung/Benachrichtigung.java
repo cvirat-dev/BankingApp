@@ -15,6 +15,7 @@ public class Benachrichtigung {
     private Long id;
     private BenachrichtigungTyp typ;
     private Long kontoId;
+    private String iban;
     private String inhaber;
     private String nachricht;
     private LocalDateTime timestamp;

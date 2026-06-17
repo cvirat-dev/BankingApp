@@ -3,20 +3,14 @@
   <p>Aktivitätsprotokoll aller Kontobewegungen</p>
 </div>
 
-<div *ngIf="ladevorgang" class="loading-state">
-  <div class="spinner"></div>
-  <p>Benachrichtigungen werden geladen…</p>
-</div>
-
-<ng-container *ngIf="!ladevorgang">
+<div class="benachrichtigungs-log-container">
   <app-benachrichtigungs-tabs
     [tabs]="tabs"
     [aktiv]="aktuellerTyp"
-    (typGewaehlt)="onTypGewaehlt($event)">
+    (typChanged)="onBenachrichtigungTypChanged($event)">
   </app-benachrichtigungs-tabs>
 
   <app-benachrichtigungs-liste
-    [benachrichtigungen]="gefilterteBenachrichtigungen"
-    [typLabel]="aktuellerTypLabel">
+    [typFilter]="aktuellerTyp">
   </app-benachrichtigungs-liste>
-</ng-container>
+</div>

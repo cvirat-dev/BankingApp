@@ -13,6 +13,7 @@ import { ConnectionStatusComponent } from './components/connection-status/connec
 import { BenachrichtigungItemComponent } from './components/benachrichtigung-item/benachrichtigung-item.component';
 import { BenachrichtigungsTabsComponent } from './components/benachrichtigungs-tabs/benachrichtigungs-tabs.component';
 import { BenachrichtigungsListeComponent } from './components/benachrichtigungs-liste/benachrichtigungs-liste.component';
+import { FilterLeisteComponent } from './components/filter-leiste/filter-leiste.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { BenachrichtigungsListeComponent } from './components/benachrichtigungs-
     ConnectionStatusComponent,
     BenachrichtigungItemComponent,
     BenachrichtigungsTabsComponent,
-    BenachrichtigungsListeComponent
+    BenachrichtigungsListeComponent,
+    FilterLeisteComponent
   ],
   imports: [
     BrowserModule,

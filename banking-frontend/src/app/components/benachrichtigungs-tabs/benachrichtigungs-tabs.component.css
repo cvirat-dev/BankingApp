@@ -13,7 +13,6 @@
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
   padding: 0.65rem 1.25rem;
   border: none;
   background: transparent;
@@ -48,22 +47,4 @@
 
 .tabs__tab--aktiv::after {
   transform: scaleX(1);
-}
-
-.tabs__badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 1.4rem;
-  padding: 0.1rem 0.45rem;
-  border-radius: 999px;
-  background: #eff6ff;
-  color: #1d4ed8;
-  font-size: 0.75rem;
-  font-weight: 700;
-  transition: background 150ms ease;
-}
-
-.tabs__tab--aktiv .tabs__badge {
-  background: #dbeafe;
 }

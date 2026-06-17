@@ -17,23 +17,23 @@ import com.demo.kontoservice.benachrichtigung.BenachrichtigungTyp;
 @Service
 public class KontoService {
     @Autowired private KontoRepository kontoRepository;
+    @Autowired private KontoDbService kontoDbService;
     @Autowired private TransaktionRepository transaktionRepository;
     @Autowired private RestTemplate restTemplate;
 
     public Konto createKonto(Konto konto) {
-        konto.setId(null);
-        Konto gespeichertesKonto = kontoRepository.save(konto);
+        
+        Konto gespeichertesKonto = kontoDbService.erstelleKontoInDb(konto);
 
-        BenachrichtigungRequest request = new BenachrichtigungRequest(
-                BenachrichtigungTyp.KONTO,
-                gespeichertesKonto.getId(),
-                gespeichertesKonto.getInhaber(),
-                "Neues Konto erstellt: " + konto.getInhaber()
-        );
-
+        // FAT-Event (Microservices konform)
         restTemplate.postForObject(
                 "http://benachrichtigung-service:8082/api/benachrichtigungen",
-                request,
+                new BenachrichtigungRequest(
+                    BenachrichtigungTyp.KONTO,
+                    gespeichertesKonto.getId(),
+                    gespeichertesKonto.getIban(),
+                    gespeichertesKonto.getInhaber(),
+                    "Neues Konto erstellt: " + konto.getInhaber()),
                 Void.class
         );
         
@@ -60,6 +60,7 @@ public class KontoService {
         BenachrichtigungRequest request = new BenachrichtigungRequest(
                 BenachrichtigungTyp.TRANSAKTION,
                 konto.getId(),
+                konto.getIban(),
                 konto.getInhaber(),
                 "Buchung: " + sign + betrag + " €"
         );

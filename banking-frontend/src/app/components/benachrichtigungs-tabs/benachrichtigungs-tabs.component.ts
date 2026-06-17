@@ -4,7 +4,6 @@ import { BenachrichtigungTyp } from '../../models/benachrichtigung.model';
 export interface BenachrichtigungsTab {
   typ: BenachrichtigungTyp;
   label: string;
-  anzahl: number;
 }
 
 @Component({
@@ -15,9 +14,9 @@ export interface BenachrichtigungsTab {
 export class BenachrichtigungsTabsComponent {
   @Input() tabs: BenachrichtigungsTab[] = [];
   @Input() aktiv!: BenachrichtigungTyp;
-  @Output() typGewaehlt = new EventEmitter<BenachrichtigungTyp>();
+  @Output() typChanged = new EventEmitter<BenachrichtigungTyp>();
 
   select(typ: BenachrichtigungTyp): void {
-    this.typGewaehlt.emit(typ);
+    this.typChanged.emit(typ);
   }
 }

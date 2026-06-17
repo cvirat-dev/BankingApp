@@ -8,8 +8,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class BenachrichtigungEvent {
-    private Long kontoId;
     private String inhaber;
+    private String iban;
     private String nachricht;
     private LocalDateTime timestamp;
+    private BenachrichtigungTyp typ;
 }
