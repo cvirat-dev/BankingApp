@@ -9,6 +9,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -17,7 +18,9 @@ import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
 
+import com.demo.kontoservice.benachrichtigung.BenachrichtigungRequest;
 import com.demo.kontoservice.konto.Konto;
+import com.demo.kontoservice.konto.KontoDbService;
 import com.demo.kontoservice.konto.KontoRepository;
 import com.demo.kontoservice.konto.KontoService;
 import com.demo.kontoservice.konto.Transaktion;
@@ -27,7 +30,10 @@ import com.demo.kontoservice.konto.TransaktionRepository;
 class KontoServiceTest {
 
     @Mock
-    KontoRepository kontoRepository;
+    private KontoRepository kontoRepository;
+
+    @Mock
+    private KontoDbService kontoDbService;
 
     @Mock
     private TransaktionRepository transaktionRepository;
@@ -36,9 +42,48 @@ class KontoServiceTest {
     private RestTemplate restTemplate;
 
     @InjectMocks
-    KontoService kontoService;
+    private KontoService kontoService;
 
-    // ── buchung() ────────────────────────────────────────────────
+    @Test
+    void createKonto_sollteKontoErstellen_undBenachrichtigungSenden() {
+        // Arrange
+        Konto input = new Konto();
+        input.setId(1L);
+        String name = "Max Mustermann";
+        input.setInhaber(name);
+        String iban = "DE1234567890";
+        input.setIban(iban);
+        when(kontoDbService.erstelleKontoInDb(any(Konto.class))).thenReturn(input);
+
+        // Act
+        Konto result = kontoService.createKonto(input);
+
+        // Assert: result comes from KontoDbService
+        assertThat(result).isNotNull();
+        assertThat(result.getInhaber()).isEqualTo(name);
+        assertThat(result.getIban()).isEqualTo(iban);
+
+        // Assert: DB write path is delegated
+        verify(kontoDbService).erstelleKontoInDb(input);
+
+        // Assert: notification payload is correct
+        ArgumentCaptor<BenachrichtigungRequest> requestCaptor = 
+            ArgumentCaptor.forClass(BenachrichtigungRequest.class);
+
+        verify(restTemplate).postForObject(
+            ArgumentMatchers.eq("http://benachrichtigung-service:8082/api/benachrichtigungen"),
+            requestCaptor.capture(), 
+            ArgumentMatchers.eq(Void.class)
+        );
+
+        BenachrichtigungRequest req = requestCaptor.getValue();
+        assertThat(req.getTyp()).isEqualTo(com.demo.kontoservice.benachrichtigung.BenachrichtigungTyp.KONTO);
+        assertThat(req.getKontoId()).isEqualTo(1L);
+        assertThat(req.getIban()).isEqualTo(iban);
+        assertThat(req.getInhaber()).isEqualTo(name);
+        assertThat(req.getNachricht()).contains("Neues Konto erstellt");
+    }
+
     @Test
     void buchung_sollteKontostandErhoehen_undTransaktionSpeichern() {
         BigDecimal kontostand = new BigDecimal("100");
@@ -78,7 +123,6 @@ class KontoServiceTest {
                 .isInstanceOf(RuntimeException.class);
     }
 
-    // ── getTransaktionen() ───────────────────────────────────────
     @Test
     void getTransaktionen_shouldReturnList() {
         Transaktion t = new Transaktion();
@@ -91,7 +135,6 @@ class KontoServiceTest {
         assertThat(result.getFirst().getKontoId()).isEqualTo(1L);
     }
 
-    // ── deleteById() ─────────────────────────────────────────────
     @Test
     void deleteById_sollteKontoUndTransaktionenLoeschen() {
         Konto konto = new Konto();

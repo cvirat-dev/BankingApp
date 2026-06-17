@@ -16,6 +16,7 @@ services:
       - "8082:8082"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - TZ=Europe/Berlin
     networks:
       - banking-net
 
@@ -26,6 +27,8 @@ services:
     depends_on:
       - konto-service
       - benachrichtigung-service
+    environment:
+      - TZ=Europe/Berlin
     networks:
       - banking-net
 

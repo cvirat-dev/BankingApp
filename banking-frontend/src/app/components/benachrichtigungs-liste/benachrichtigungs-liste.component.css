@@ -2,6 +2,10 @@
   display: block;
 }
 
+.app-filter-leiste {
+  margin-bottom: 1rem;
+}
+
 .benachrichtigungs-liste {
   display: flex;
   flex-direction: column;

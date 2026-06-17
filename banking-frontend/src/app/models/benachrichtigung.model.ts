@@ -1,8 +1,8 @@
 export type BenachrichtigungTyp = 'KONTO' | 'TRANSAKTION';
 
 export interface Benachrichtigung {
-  kontoId: number;
   inhaber: string;
+  iban: string;
   nachricht: string;
   timestamp: Date;
   typ: BenachrichtigungTyp;
