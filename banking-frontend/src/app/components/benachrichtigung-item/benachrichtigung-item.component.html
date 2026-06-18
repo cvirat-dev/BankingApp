@@ -1,4 +1,20 @@
-<div class="benachrichtigung-item">
-  <span class="benachrichtigung-item__nachricht">{{ benachrichtigung.nachricht }}</span>
-  <span class="benachrichtigung-item__timestamp">{{ benachrichtigung.timestamp | date:'dd.MM.yyyy HH:mm' }}</span>
-</div>
+<article class="benachrichtigung-item" aria-label="Benachrichtigung">
+  <div class="benachrichtigung-item__accent" aria-hidden="true"></div>
+
+  <div class="benachrichtigung-item__avatar" aria-hidden="true">
+    {{ benachrichtigung.inhaber.charAt(0).toUpperCase() }}
+  </div>
+
+  <div class="benachrichtigung-item__content">
+    <div class="benachrichtigung-item__meta">
+      <span class="benachrichtigung-item__label">Kontoinhaber</span>
+      <strong class="benachrichtigung-item__kontoInhaber">{{ benachrichtigung.inhaber }}</strong>
+    </div>
+
+    <p class="benachrichtigung-item__nachricht">{{ benachrichtigung.nachricht }}</p>
+  </div>
+
+  <time class="benachrichtigung-item__timestamp" [attr.datetime]="benachrichtigung.timestamp | date:'yyyy-MM-ddTHH:mm:ss'">
+    {{ benachrichtigung.timestamp | date:'dd.MM.yyyy HH:mm' }}
+  </time>
+</article>

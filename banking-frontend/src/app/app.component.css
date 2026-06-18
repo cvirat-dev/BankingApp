@@ -69,6 +69,7 @@ body {
   font-size: 0.92rem;
   font-weight: 500;
   transition: background 0.18s, color 0.18s;
+  position: relative;
 }
 
 .nav-links a:hover {
@@ -81,6 +82,23 @@ body {
   background: rgba(255, 255, 255, 0.22);
   color: #fff;
   font-weight: 600;
+}
+
+.badge {
+  background-color: #e74c3c;
+  color: white;
+  border-radius: 10px;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: bold;
+  min-width: 18px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+@keyframes badge-pop {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
 }
 
 /* ── Main Content ── */

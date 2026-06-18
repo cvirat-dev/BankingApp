@@ -3,24 +3,14 @@
   <p>Aktivitätsprotokoll aller Kontobewegungen</p>
 </div>
 
-<div *ngIf="ladevorgang" class="loading-state">
-  <div class="spinner"></div>
-  <p>Benachrichtigungen werden geladen…</p>
+<div class="benachrichtigungs-log-container">
+  <app-benachrichtigungs-tabs
+    [tabs]="tabs"
+    [aktiv]="aktuellerTyp"
+    (typChanged)="onBenachrichtigungTypChanged($event)">
+  </app-benachrichtigungs-tabs>
+
+  <app-benachrichtigungs-liste
+    [typFilter]="aktuellerTyp">
+  </app-benachrichtigungs-liste>
 </div>
-
-<ng-container *ngIf="!ladevorgang">
-  <div *ngIf="benachrichtigungen.length > 0; else keineBenachrichtigungen" class="benachrichtigungs-list">
-    <app-benachrichtigung-item
-      *ngFor="let benachrichtigung of benachrichtigungen"
-      [benachrichtigung]="benachrichtigung">
-    </app-benachrichtigung-item>
-  </div>
-
-  <ng-template #keineBenachrichtigungen>
-    <div class="empty-state">
-      <span class="empty-icon">🔔</span>
-      <h3>Keine Benachrichtigungen</h3>
-      <p>Es wurden noch keine Benachrichtigungen registriert.</p>
-    </div>
-  </ng-template>
-</ng-container>

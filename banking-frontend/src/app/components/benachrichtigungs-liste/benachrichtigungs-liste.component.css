@@ -1,0 +1,33 @@
+:host {
+  display: block;
+}
+
+.app-filter-leiste {
+  margin-bottom: 1rem;
+}
+
+.benachrichtigungs-liste {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.leer-zustand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 3rem 1rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+.leer-zustand__icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.leer-zustand p {
+  margin: 0;
+  font-size: 0.95rem;
+}

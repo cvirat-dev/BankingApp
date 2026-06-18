@@ -1,7 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, retry } from 'rxjs';
 import { Benachrichtigung } from '../models/benachrichtigung.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
+
+export interface BenachrichtigungFilter {
+  typ?: 'KONTO' | 'TRANSAKTION';
+  iban?: string;
+  von?: string; // datetime-local string
+  bis?: string; // datetime-local string
+}
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +18,28 @@ export class BenachrichtigungService {
 
   constructor(private http: HttpClient) { }
 
-  getAll() : Observable<Benachrichtigung[]> {
-    return this.http.get<Benachrichtigung[]>(this.apiUrl); 
+  getAll(filters?: BenachrichtigungFilter): Observable<Benachrichtigung[]> {
+    let params = new HttpParams();
+
+    if (filters?.typ) {
+      params = params.set('typ', filters.typ);
+    }
+
+    if (filters?.iban) {
+      params = params.set('iban', filters.iban);
+    }
+
+    if (filters?.von) {
+      params = params.set('von', filters.von);
+    }
+
+    if (filters?.bis) {
+      params = params.set('bis', filters.bis);
+    }
+
+    return this.http.get<Benachrichtigung[]>(this.apiUrl, { params }).pipe(
+      retry({ count: 3, delay: 2000 })
+    );
   }
 
 }

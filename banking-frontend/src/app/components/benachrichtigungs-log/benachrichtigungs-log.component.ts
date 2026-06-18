@@ -1,30 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-import { Benachrichtigung } from '../../models/benachrichtigung.model';
-import { BenachrichtigungService } from '../../services/benachrichtigung.service';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { BenachrichtigungTyp } from '../../models/benachrichtigung.model';
+import { BenachrichtigungsTab } from '../benachrichtigungs-tabs/benachrichtigungs-tabs.component';
 
 @Component({
   selector: 'app-benachrichtigungs-log',
   templateUrl: './benachrichtigungs-log.component.html',
   styleUrl: './benachrichtigungs-log.component.css'
 })
-export class BenachrichtigungsLogComponent implements OnInit {
-  
-  benachrichtigungen: Benachrichtigung[] = [];
-  ladevorgang: boolean = true;
+export class BenachrichtigungsLogComponent {
 
-  constructor(private benachrichtigungsService: BenachrichtigungService) { }
+  aktuellerTyp: BenachrichtigungTyp = 'KONTO';
 
-  ngOnInit(): void {
-    this.benachrichtigungsService.getAll().subscribe({
-      next: (data: Benachrichtigung[]) => {
-        this.benachrichtigungen = data;
-        this.ladevorgang = false;
-      },
-      error: (error) => {
-        this.ladevorgang = false;
-        console.error('Fehler beim Laden der Benachrichtigungen:', error);
-      }
-    });
+  get tabs(): BenachrichtigungsTab[] {
+    return [
+      { typ: 'KONTO', label: 'Konto' },
+      { typ: 'TRANSAKTION', label: 'Transaktion' }
+    ];
+  }
+
+  get benachrichtigungTyp(): BenachrichtigungTyp {
+    return this.aktuellerTyp;
+  }
+
+  get aktuellerTypLabel(): string {
+    return this.aktuellerTyp === 'KONTO' ? 'Konto' : 'Transaktion';
+  }
+
+  onBenachrichtigungTypChanged(typ: BenachrichtigungTyp): void {
+    this.aktuellerTyp = typ;
   }
 
 }

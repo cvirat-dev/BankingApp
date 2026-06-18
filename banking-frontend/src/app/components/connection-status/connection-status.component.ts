@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ConnectionStatusService } from '../../../services/connection-status.service.service';
+import { ConnectionStatusService } from '../../services/connection-status.service';
 
 @Component({
   selector: 'app-connection-status',
-  templateUrl: './connection-status.component.component.html',
-  styleUrl: './connection-status.component.component.css'
+  templateUrl: './connection-status.component.html',
+  styleUrl: './connection-status.component.css'
 })
 export class ConnectionStatusComponent implements OnInit {
 
@@ -13,7 +13,6 @@ export class ConnectionStatusComponent implements OnInit {
   constructor(private connectionStatusService: ConnectionStatusService) { }
 
   ngOnInit(): void {
-    this.status$ = this.connectionStatusService.status$;
   }
 
   onRefresh(): void {
