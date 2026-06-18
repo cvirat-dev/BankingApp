@@ -12,4 +12,9 @@ public final class IbanGenerator {
     public static String generate(Long id) {
         return String.format("DE00370400440000%06d", id);
     }
+
+    public static String generateTemporary() {
+        long seed = Math.floorMod(System.nanoTime(), 1_000_000L);
+        return String.format("DE00370400440000%06d", seed);
+    }
 }
