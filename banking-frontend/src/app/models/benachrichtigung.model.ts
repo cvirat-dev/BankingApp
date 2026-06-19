@@ -1,4 +1,4 @@
-export type BenachrichtigungTyp = 'KONTO' | 'TRANSAKTION';
+export type BenachrichtigungTyp = 'KONTO' | 'BUCHUNG' | 'TRANSAKTION';
 
 export interface Benachrichtigung {
   inhaber: string;

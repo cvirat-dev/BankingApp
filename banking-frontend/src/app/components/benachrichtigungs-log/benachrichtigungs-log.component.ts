@@ -14,6 +14,7 @@ export class BenachrichtigungsLogComponent {
   get tabs(): BenachrichtigungsTab[] {
     return [
       { typ: 'KONTO', label: 'Konto' },
+      { typ: 'BUCHUNG', label: 'Buchung' },
       { typ: 'TRANSAKTION', label: 'Transaktion' }
     ];
   }
@@ -23,7 +24,16 @@ export class BenachrichtigungsLogComponent {
   }
 
   get aktuellerTypLabel(): string {
-    return this.aktuellerTyp === 'KONTO' ? 'Konto' : 'Transaktion';
+    switch (this.aktuellerTyp) {
+      case 'KONTO':
+        return 'Konto';
+      case 'BUCHUNG':
+        return 'Buchung';
+      case 'TRANSAKTION':
+        return 'Transaktion';
+      default:
+        return '';
+    }
   }
 
   onBenachrichtigungTypChanged(typ: BenachrichtigungTyp): void {

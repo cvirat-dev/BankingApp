@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Observable, retry } from 'rxjs';
-import { Benachrichtigung } from '../models/benachrichtigung.model';
+import { Benachrichtigung, BenachrichtigungTyp } from '../models/benachrichtigung.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
 export interface BenachrichtigungFilter {
-  typ?: 'KONTO' | 'TRANSAKTION';
+  typ?: BenachrichtigungTyp;
   iban?: string;
   von?: string; // datetime-local string
   bis?: string; // datetime-local string
