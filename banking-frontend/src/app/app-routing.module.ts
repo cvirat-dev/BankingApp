@@ -5,6 +5,7 @@ import { KontoKarteComponent } from './components/konto-karte/konto-karte.compon
 import { KontoErstellenComponent } from './components/konto-erstellen/konto-erstellen.component';
 import { BuchungFormularComponent } from './components/buchung-formular/buchung-formular.component';
 import { BenachrichtigungsLogComponent } from './components/benachrichtigungs-log/benachrichtigungs-log.component';
+import { TransaktionFormularComponent } from './components/transaktion-formular/transaktion-formular.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'konten', pathMatch: 'full' },
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'konten/:id', component: KontoKarteComponent },
   { path: 'konto-erstellen', component: KontoErstellenComponent },
   { path: 'buchung', component: BuchungFormularComponent },
+  { path: 'transaktion', component: TransaktionFormularComponent },
   { path: 'benachrichtigungen', component: BenachrichtigungsLogComponent },
   { path: '**', redirectTo: 'konten' }
 ];

@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { KontoListeComponent } from './components/konto-liste/konto-liste.component';
 import { BuchungFormularComponent } from './components/buchung-formular/buchung-formular.component';
+import { TransaktionFormularComponent } from './components/transaktion-formular/transaktion-formular.component';
 import { BenachrichtigungsLogComponent } from './components/benachrichtigungs-log/benachrichtigungs-log.component';
 import { KontoErstellenComponent } from './components/konto-erstellen/konto-erstellen.component';
 import { KontoKarteComponent } from './components/konto-karte/konto-karte.component';
@@ -27,7 +28,8 @@ import { FilterLeisteComponent } from './components/filter-leiste/filter-leiste.
     BenachrichtigungItemComponent,
     BenachrichtigungsTabsComponent,
     BenachrichtigungsListeComponent,
-    FilterLeisteComponent
+    FilterLeisteComponent,
+    TransaktionFormularComponent
   ],
   imports: [
     BrowserModule,

@@ -1,7 +1,8 @@
 export interface Transaktion {
   id?: number;
-  kontoId?: number;
+  quelleKontoId?: number;
+  zielKontoId?: number;
   betrag: number;
-  beschreibung?: string;
+  beschreibung: string;
   datum?: string;
 }
