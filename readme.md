@@ -20,16 +20,33 @@ Two independent Spring Boot microservices communicate via REST.
 
 ## Getting Started
 
-Prerequisites: Docker is running
+Prerequisites:
 
-### Option 1: Run the build-and-run script (PowerShell)
+- Docker is running
+- GNU Make is available (`make --version`)
 
-```powershell
-# Build both services and start Docker Compose
-.\build-and-run.ps1
+### Option 1: Start with Makefile (recommended)
+
+Builds both backend services and starts Docker Compose with the selected environment file.
+
+```bash
+# DEV profile
+make run-dev
+
+# PROD profile
+make run-prod
 ```
 
-### Option 2: Manually build JARs and start Docker Compose
+### Option 2: Start with PowerShell script
+
+If you prefer PowerShell, use the script in the new `scripts/` folder.
+
+```powershell
+# Interactive profile selection (DEV / PROD), then build + compose up
+.\scripts\build-and-run.ps1
+```
+
+### Option 3: Manually build JARs and start Docker Compose
 
 ```bash
 # Build the JARs for both services
@@ -42,3 +59,8 @@ docker compose up --build
 ## Access the application
 
 Open [http://localhost:4200](http://localhost:4200)
+
+## Workspace Notes
+
+- PowerShell helper scripts are located in `scripts/`
+- Frontend dev script: `./scripts/run-frontend.ps1`

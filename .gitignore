@@ -14,6 +14,7 @@ dist/
 # Umgebungsvariablen
 .env
 *.env
+.env.prod
 
 # DB-Dateien
 *.db
