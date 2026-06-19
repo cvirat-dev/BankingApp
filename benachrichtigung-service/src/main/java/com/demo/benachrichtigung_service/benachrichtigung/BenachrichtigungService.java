@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class BenachrichtigungService {
 
     @Autowired
@@ -19,6 +22,14 @@ public class BenachrichtigungService {
     private SimpMessagingTemplate messagingTemplate;
 
     public Benachrichtigung receive(BenachrichtigungRequest request) {
+        log.info(
+                "Empfange Benachrichtigung: typ={}, kontoId={}, iban={}",
+                request.getTyp(),
+                request.getKontoId(),
+                request.getIban()
+        );
+        log.debug("Eingehender Benachrichtigungs-Request: {}", request);
+
         Benachrichtigung benachrichtigung = new Benachrichtigung();
         benachrichtigung.setTyp(request.getTyp());
         benachrichtigung.setKontoId(request.getKontoId());
@@ -28,17 +39,28 @@ public class BenachrichtigungService {
 
         benachrichtigung.setTimestamp(LocalDateTime.now());
         Benachrichtigung gespeichert = repository.save(benachrichtigung);
+        log.info(
+                "Benachrichtigung gespeichert: id={}, typ={}, kontoId={}",
+                gespeichert.getId(),
+                gespeichert.getTyp(),
+                gespeichert.getKontoId()
+        );
+        log.debug("Persistierte Benachrichtigung: {}", gespeichert);
 
+        BenachrichtigungEvent event = new BenachrichtigungEvent(
+                gespeichert.getInhaber(),
+                gespeichert.getIban(),
+                gespeichert.getNachricht(),
+                gespeichert.getTimestamp(),
+                gespeichert.getTyp()
+        );
+        log.info("Sende WebSocket-Event fuer Benachrichtigung id={}", gespeichert.getId());
+        log.debug("WebSocket-Event Payload: {}", event);
         messagingTemplate.convertAndSend(
                 "/topic/benachrichtigungen",
-                new BenachrichtigungEvent(
-                        gespeichert.getInhaber(),
-                        gespeichert.getIban(),
-                        gespeichert.getNachricht(),
-                        gespeichert.getTimestamp(),
-                        gespeichert.getTyp()
-                )
+                event
         );
+        log.info("WebSocket-Event erfolgreich versendet fuer Benachrichtigung id={}", gespeichert.getId());
 
         return gespeichert;
     }
@@ -49,12 +71,21 @@ public class BenachrichtigungService {
             LocalDateTime von,
             LocalDateTime bis
     ) {
-        return repository.findAll().stream()
-                .filter(b -> typ == null || b.getTyp() == typ)
-                .filter(b -> iban == null || Objects.equals(b.getIban(), iban))
-                .filter(b -> von == null || !b.getTimestamp().isBefore(von))
-                .filter(b -> bis == null || !b.getTimestamp().isAfter(bis))
-                .collect(Collectors.toList());
+        log.info("Lese Benachrichtigungen mit Filtern: typ={}, iban={}, von={}, bis={}", typ, iban, von, bis);
+        List<Benachrichtigung> alleBenachrichtigungen = repository.findAll();
+        log.debug("Ungelesene Gesamtmenge aus Repository: {}", alleBenachrichtigungen.size());
+
+        List<Benachrichtigung> gefiltert = alleBenachrichtigungen.stream()
+        .filter(b -> typ == null || b.getTyp() == typ)
+        .filter(b -> iban == null || Objects.equals(b.getIban(), iban))
+        .filter(b -> von == null || !b.getTimestamp().isBefore(von))
+        .filter(b -> bis == null || !b.getTimestamp().isAfter(bis))
+        .collect(Collectors.toList());
+
+        log.info("Benachrichtigungen geladen: anzahl={}", gefiltert.size());
+        log.debug("Gefilterte Benachrichtigungen: {}", gefiltert);
+
+        return gefiltert;
     }
 
 }
