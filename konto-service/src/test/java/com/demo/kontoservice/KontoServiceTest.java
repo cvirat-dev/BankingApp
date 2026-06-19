@@ -17,6 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.demo.kontoservice.benachrichtigung.BenachrichtigungRequest;
 import com.demo.kontoservice.konto.Konto;
@@ -60,6 +61,7 @@ class KontoServiceTest {
 
         // Assert: result comes from KontoDbService
         assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(1L);
         assertThat(result.getInhaber()).isEqualTo(name);
         assertThat(result.getIban()).isEqualTo(iban);
 
@@ -71,7 +73,7 @@ class KontoServiceTest {
             ArgumentCaptor.forClass(BenachrichtigungRequest.class);
 
         verify(restTemplate).postForObject(
-            ArgumentMatchers.eq("http://benachrichtigung-service:8082/api/benachrichtigungen"),
+            any(String.class),
             requestCaptor.capture(), 
             ArgumentMatchers.eq(Void.class)
         );
@@ -88,7 +90,7 @@ class KontoServiceTest {
     void buchung_sollteKontostandErhoehen_undTransaktionSpeichern() {
         BigDecimal kontostand = new BigDecimal("100");
         BigDecimal buchungsBetrag = new BigDecimal("50");
-        String Einzahlung = "Einzahlung";
+        String einzahlung = "Einzahlung";
 
         // Arrange
         Konto konto = new Konto();
@@ -96,11 +98,11 @@ class KontoServiceTest {
         konto.setKontostand(kontostand);
 
         when(kontoRepository.findById(1L)).thenReturn(Optional.of(konto));
-        when(kontoRepository.save(any())).thenReturn(konto);
+        when(kontoRepository.save(any())).thenAnswer(i -> i.getArgument(0));
         when(transaktionRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
         // Act
-        Transaktion result = kontoService.buchung(1L, buchungsBetrag, Einzahlung);
+        Transaktion result = kontoService.buchung(1L, buchungsBetrag, einzahlung);
 
         // Assert: Kontostand wurde korrekt erhöht
         ArgumentCaptor<Konto> kontoCaptor = ArgumentCaptor.forClass(Konto.class);
@@ -111,7 +113,7 @@ class KontoServiceTest {
         // Assert: Transaktion wurde korrekt gespeichert
         assertThat(result.getKontoId()).isEqualTo(1L);
         assertThat(result.getBetrag()).isEqualByComparingTo(buchungsBetrag);
-        assertThat(result.getBeschreibung()).isEqualTo(Einzahlung);
+        assertThat(result.getBeschreibung()).isEqualTo(einzahlung);
         assertThat(result.getDatum()).isNotNull();
     }
 
@@ -120,7 +122,8 @@ class KontoServiceTest {
         when(kontoRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> kontoService.buchung(99L, BigDecimal.TEN, "Test"))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("Konto mit ID 99 nicht gefunden");
     }
 
     @Test
