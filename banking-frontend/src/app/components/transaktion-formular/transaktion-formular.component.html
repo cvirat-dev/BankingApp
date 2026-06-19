@@ -14,7 +14,7 @@
         [(ngModel)]="quelleKontoId"
         required
         #quelleKontoIdField="ngModel"
-        [class.invalid]="quelleKontoIdField.invalid && quelleKontoIdField.touched">
+        [class.invalid]="(quelleKontoIdField.invalid && quelleKontoIdField.touched) || (gleicheKontenAusgewaehlt && (quelleKontoIdField.touched || zielKontoIdField.touched))">
         <option value="" disabled selected>-- Konto auswählen --</option>
         <option *ngFor="let k of konten" [value]="k.id">
           {{ k.inhaber }} &mdash; {{ k.iban }}
@@ -22,6 +22,9 @@
       </select>
       <span class="field-error" *ngIf="quelleKontoIdField.invalid && quelleKontoIdField.touched">
         Bitte ein Quellkonto auswählen.
+      </span>
+      <span class="field-error" *ngIf="gleicheKontenAusgewaehlt && (quelleKontoIdField.touched || zielKontoIdField.touched)">
+        Quellkonto und Zielkonto dürfen nicht identisch sein.
       </span>
     </div>
 
@@ -33,7 +36,7 @@
         [(ngModel)]="zielKontoId"
         required
         #zielKontoIdField="ngModel"
-        [class.invalid]="zielKontoIdField.invalid && zielKontoIdField.touched">
+        [class.invalid]="(zielKontoIdField.invalid && zielKontoIdField.touched) || (gleicheKontenAusgewaehlt && (quelleKontoIdField.touched || zielKontoIdField.touched))">
         <option value="" disabled selected>-- Konto auswählen --</option>
         <option *ngFor="let k of konten" [value]="k.id">
           {{ k.inhaber }} &mdash; {{ k.iban }}
@@ -41,6 +44,9 @@
       </select>
       <span class="field-error" *ngIf="zielKontoIdField.invalid && zielKontoIdField.touched">
         Bitte ein Zielkonto auswählen.
+      </span>
+      <span class="field-error" *ngIf="gleicheKontenAusgewaehlt && (quelleKontoIdField.touched || zielKontoIdField.touched)">
+        Quellkonto und Zielkonto dürfen nicht identisch sein.
       </span>
     </div>
 
@@ -92,7 +98,7 @@
     </div>
 
     <div class="form-actions">
-      <button type="submit" [disabled]="buchungForm.invalid || laden">
+      <button type="submit" [disabled]="buchungForm.invalid || laden || gleicheKontenAusgewaehlt">
         <span *ngIf="!laden">Buchung ausführen</span>
         <span *ngIf="laden">Wird gesendet…</span>
       </button>

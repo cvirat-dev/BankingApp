@@ -30,14 +30,24 @@ export class TransaktionFormularComponent implements OnInit {
     });
   }
 
+  get gleicheKontenAusgewaehlt(): boolean {
+    return !!this.quelleKontoId && !!this.zielKontoId && Number(this.quelleKontoId) === Number(this.zielKontoId);
+  }
+
   onSubmit(form: NgForm): void {
     if (
       !this.quelleKontoId || 
       !this.zielKontoId || 
+      this.gleicheKontenAusgewaehlt ||
       this.betrag === null ||
       this.betrag <= 0 || 
       !this.beschreibung) 
-    return;
+    {
+      if (this.gleicheKontenAusgewaehlt) {
+        this.fehlerMeldung = 'Quellkonto und Zielkonto duerfen nicht identisch sein.';
+      }
+      return;
+    }
     
     this.laden = true;
     this.erfolgsMeldung = '';
