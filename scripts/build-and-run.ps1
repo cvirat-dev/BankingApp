@@ -1,5 +1,7 @@
 $ErrorActionPreference = "Stop"  # stop on any error
 
+$repoRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
+
 # ─── Profil-Auswahl ───────────────────────────────────────────
 Write-Host "`nUmgebung auswählen:" -ForegroundColor Yellow
 Write-Host "  [1] DEV  (H2 In-Memory, Debug-Logging)"
@@ -15,14 +17,14 @@ Write-Host "`n>>> Profil: $($profile.ToUpper())" -ForegroundColor Green
 
 # ─── Build ────────────────────────────────────────────────────
 Write-Host "`n>>> Building Konto-Service..." -ForegroundColor Cyan
-Set-Location konto-service
+Set-Location (Join-Path $repoRoot "konto-service")
 .\mvnw.cmd clean package -DskipTests
-Set-Location ..
+Set-Location $repoRoot
 
 Write-Host "`n>>> Building Benachrichtigung-Service..." -ForegroundColor Cyan
-Set-Location benachrichtigung-service
+Set-Location (Join-Path $repoRoot "benachrichtigung-service")
 .\mvnw.cmd clean package -DskipTests
-Set-Location ..
+Set-Location $repoRoot
 
 # ─── Docker Compose mit Profil ────────────────────────────────
 Write-Host "`n>>> Starting Docker Compose ($($profile.ToUpper()))..." -ForegroundColor Cyan
