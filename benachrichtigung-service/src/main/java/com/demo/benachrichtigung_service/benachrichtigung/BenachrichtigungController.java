@@ -33,10 +33,39 @@ public class BenachrichtigungController {
     @GetMapping
     public List<Benachrichtigung> all(
         @RequestParam(required = false) BenachrichtigungTyp typ,
+        @RequestParam(required = false) Long kontoId,
+        @RequestParam(required = false) Long buchungId,
+        @RequestParam(required = false) Long transaktionId,
+        @RequestParam(required = false) Long quelleKontoId,
+        @RequestParam(required = false) Long zielKontoId,
         @RequestParam(required = false) String iban,
+        @RequestParam(required = false) String quelleIban,
+        @RequestParam(required = false) String zielIban,
+        @RequestParam(required = false) String inhaber,
+        @RequestParam(required = false) String quelleInhaber,
+        @RequestParam(required = false) String zielInhaber,
+        @RequestParam(required = false) AktionTyp aktion,
+        @RequestParam(required = false) Double betrag,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime von,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime bis
     ) {
-        return benachrichtigungService.all(typ, iban, von, bis);
+        return benachrichtigungService.all(
+                typ,
+                kontoId,
+                buchungId,
+                transaktionId,
+                quelleKontoId,
+                zielKontoId,
+                iban,
+                quelleIban,
+                zielIban,
+                inhaber,
+                quelleInhaber,
+                zielInhaber,
+                aktion,
+                betrag,
+                von,
+                bis
+        );
     }
 }
