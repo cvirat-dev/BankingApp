@@ -1,4 +1,4 @@
-package com.demo.kontoservice.konto;
+package com.demo.kontoservice.buchung;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Transaktion {
+public class Buchung {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
