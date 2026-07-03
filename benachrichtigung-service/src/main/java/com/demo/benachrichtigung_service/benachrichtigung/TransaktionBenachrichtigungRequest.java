@@ -10,6 +10,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class TransaktionBenachrichtigungRequest extends BenachrichtigungRequest {
 
+    public TransaktionBenachrichtigungRequest() {
+        super(BenachrichtigungTyp.TRANSAKTION);
+    }
+
     @NotNull(message = "TransaktionId darf nicht leer sein!")
     private Long transaktionId;
 

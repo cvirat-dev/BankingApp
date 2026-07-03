@@ -27,6 +27,7 @@ import com.demo.benachrichtigung_service.benachrichtigung.BenachrichtigungServic
 import com.demo.benachrichtigung_service.benachrichtigung.BenachrichtigungTyp;
 import com.demo.benachrichtigung_service.benachrichtigung.KontoBenachrichtigung;
 import com.demo.benachrichtigung_service.benachrichtigung.KontoBenachrichtigungRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(MockitoExtension.class)
 public class BenachrichtigungServiceTest {
@@ -78,6 +79,29 @@ public class BenachrichtigungServiceTest {
     }
 
     @Test
+    void kontoRequest_shouldIgnoreIncomingTypDuringDeserialization() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        KontoBenachrichtigungRequest request = objectMapper.readValue(
+            """
+            {
+              "typ": "BUCHUNG",
+              "nachricht": "Kontodaten geaendert",
+              "kontoId": 100,
+              "iban": "DE12500105170648489890",
+              "inhaber": "Max Mustermann",
+              "aktion": "ERSTELLEN"
+            }
+            """,
+            KontoBenachrichtigungRequest.class
+        );
+
+        assertEquals(BenachrichtigungTyp.KONTO, request.getTyp());
+        assertEquals(100L, request.getKontoId());
+        assertEquals("DE12500105170648489890", request.getIban());
+    }
+
+    @Test
     void all_withoutFilters_shouldReturnAllEntries() {
         LocalDateTime now = LocalDateTime.now();
         Benachrichtigung first = createKontoBenachrichtigung(BenachrichtigungTyp.KONTO, "DE001", now.minusDays(1));
@@ -110,16 +134,12 @@ public class BenachrichtigungServiceTest {
     }
 
     @Test
-    void all_withTypAndIbanAndDateRange_shouldFilterCorrectly() {
+    void all_withTypAndIbanAndDateRange_shouldReturnRepositoryResult() {
         LocalDateTime base = LocalDateTime.now();
         Benachrichtigung match = createKontoBenachrichtigung(BenachrichtigungTyp.KONTO, "DE123", base.minusHours(1));
-        Benachrichtigung wrongTyp = createKontoBenachrichtigung(BenachrichtigungTyp.TRANSAKTION, "DE123", base.minusHours(1));
-        Benachrichtigung wrongIban = createKontoBenachrichtigung(BenachrichtigungTyp.KONTO, "DE999", base.minusHours(1));
-        Benachrichtigung tooOld = createKontoBenachrichtigung(BenachrichtigungTyp.KONTO, "DE123", base.minusDays(2));
-        Benachrichtigung tooNew = createKontoBenachrichtigung(BenachrichtigungTyp.KONTO, "DE123", base.plusDays(2));
 
         when(benachrichtigungRepository.findAll(any(Specification.class)))
-            .thenReturn(List.of(match, wrongTyp, wrongIban, tooOld, tooNew));
+            .thenReturn(List.of(match));
 
         List<Benachrichtigung> result = service.all(
             BenachrichtigungTyp.KONTO,
@@ -142,18 +162,18 @@ public class BenachrichtigungServiceTest {
 
         assertEquals(1, result.size());
         assertEquals(match, result.get(0));
+        verify(benachrichtigungRepository).findAll(any(Specification.class));
     }
 
     @Test
-    void all_withBoundaryDates_shouldIncludeBoundaryValues() {
+    void all_withBoundaryDates_shouldReturnRepositoryResult() {
         LocalDateTime von = LocalDateTime.of(2026, 1, 1, 0, 0);
         LocalDateTime bis = LocalDateTime.of(2026, 1, 2, 0, 0);
 
         Benachrichtigung atVon = createKontoBenachrichtigung(BenachrichtigungTyp.KONTO, "DE555", von);
         Benachrichtigung atBis = createKontoBenachrichtigung(BenachrichtigungTyp.KONTO, "DE555", bis);
-        Benachrichtigung outside = createKontoBenachrichtigung(BenachrichtigungTyp.KONTO, "DE555", bis.plusSeconds(1));
 
-        when(benachrichtigungRepository.findAll(any(Specification.class))).thenReturn(List.of(atVon, atBis, outside));
+        when(benachrichtigungRepository.findAll(any(Specification.class))).thenReturn(List.of(atVon, atBis));
 
         List<Benachrichtigung> result = service.all(
             null,
@@ -177,11 +197,11 @@ public class BenachrichtigungServiceTest {
         assertEquals(2, result.size());
         assertTrue(result.contains(atVon));
         assertTrue(result.contains(atBis));
+        verify(benachrichtigungRepository).findAll(any(Specification.class));
     }
 
     private KontoBenachrichtigungRequest createRequest() {
         KontoBenachrichtigungRequest request = new KontoBenachrichtigungRequest();
-        request.setTyp(BenachrichtigungTyp.KONTO);
         request.setKontoId(100L);
         request.setIban("DE12500105170648489890");
         request.setInhaber("Max Mustermann");

@@ -10,6 +10,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class BuchungBenachrichtigungRequest extends BenachrichtigungRequest {
 
+    public BuchungBenachrichtigungRequest() {
+        super(BenachrichtigungTyp.BUCHUNG);
+    }
+
     @NotNull(message = "BuchungId darf nicht leer sein!")
     private Long buchungId;
 

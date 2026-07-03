@@ -47,9 +47,16 @@ public class BenachrichtigungSpecs {
 	}
     
 	public static Specification<Benachrichtigung> hatIban(String iban) {
-		return (root, query, cb) -> (iban == null || iban.isBlank())
-				? cb.conjunction()
-				: cb.equal(root.get("iban"), iban);
+		return (root, query, cb) -> {
+			if (iban == null || iban.isBlank()) {
+				return cb.conjunction();
+			}
+
+			return cb.or(
+				cb.equal(cb.treat(root, KontoBenachrichtigung.class).get("iban"), iban),
+				cb.equal(cb.treat(root, BuchungBenachrichtigung.class).get("iban"), iban)
+			);
+		};
 	}
 
     public static Specification<Benachrichtigung> hatAktion(AktionTyp aktion) {

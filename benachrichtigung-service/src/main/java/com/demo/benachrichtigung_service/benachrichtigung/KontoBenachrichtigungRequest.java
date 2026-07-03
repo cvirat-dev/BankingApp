@@ -10,6 +10,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class KontoBenachrichtigungRequest extends BenachrichtigungRequest {
 
+    public KontoBenachrichtigungRequest() {
+        super(BenachrichtigungTyp.KONTO);
+    }
+
     @NotNull(message = "KontoId darf nicht leer sein!")
     private Long kontoId;
 
