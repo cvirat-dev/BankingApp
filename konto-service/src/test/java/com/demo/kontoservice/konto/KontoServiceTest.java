@@ -1,6 +1,5 @@
 package com.demo.kontoservice.konto;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,6 +16,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
 
+import com.demo.kontoservice.benachrichtigung.Aktion;
 import com.demo.kontoservice.benachrichtigung.BenachrichtigungTyp;
 import com.demo.kontoservice.benachrichtigung.KontoBenachrichtigungRequest;
 
@@ -44,13 +44,12 @@ class KontoServiceTest {
         input.setInhaber(name);
         String iban = "DE1234567890";
         input.setIban(iban);
-        when(kontoDbService.erstelleKontoInDb(any(KontoRequest.class))).thenReturn(input);
+        when(kontoDbService.erstelleKontoInDb(any(KontoCreateRequest.class))).thenReturn(input);
 
         // Act
-        KontoRequest kontoRequest = new KontoRequest();
-        kontoRequest.setInhaber(name);
-        kontoRequest.setIban(iban);
-        Konto result = kontoService.create(kontoRequest);
+        KontoCreateRequest kontoCreateRequest = new KontoCreateRequest();
+        kontoCreateRequest.setInhaber(name);
+        Konto result = kontoService.create(kontoCreateRequest);
 
         // Assert: result comes from KontoDbService
         assertThat(result).isNotNull();
@@ -59,7 +58,7 @@ class KontoServiceTest {
         assertThat(result.getIban()).isEqualTo(iban);
 
         // Assert: DB write path is delegated
-        verify(kontoDbService).erstelleKontoInDb(kontoRequest);
+        verify(kontoDbService).erstelleKontoInDb(kontoCreateRequest);
 
         // Assert: notification payload is correct
         ArgumentCaptor<KontoBenachrichtigungRequest> requestCaptor = 
@@ -73,6 +72,7 @@ class KontoServiceTest {
 
         KontoBenachrichtigungRequest req = requestCaptor.getValue();
         assertThat(req.getTyp()).isEqualTo(BenachrichtigungTyp.KONTO);
+        assertThat(req.getAktion()).isEqualTo(Aktion.ERSTELLEN);
         assertThat(req.getKontoId()).isEqualTo(1L);
         assertThat(req.getIban()).isEqualTo(iban);
         assertThat(req.getInhaber()).isEqualTo(name);

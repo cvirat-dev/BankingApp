@@ -122,4 +122,9 @@ public class BuchungService implements CrudService<Buchung, BuchungRequest> {
         buchungRepository.delete(buchung);
         log.info("Buchung geloescht: buchungId={}", id);
     }
+
+    public List<Buchung> getByKontoId(Long kontoId) {
+        return buchungRepository.findByKontoId(kontoId);
+    }
+
 }

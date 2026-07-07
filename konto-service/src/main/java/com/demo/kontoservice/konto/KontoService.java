@@ -6,14 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.demo.kontoservice.CrudService;
+import com.demo.kontoservice.UpdatableCrudService;
+import com.demo.kontoservice.benachrichtigung.Aktion;
 import com.demo.kontoservice.benachrichtigung.KontoBenachrichtigungRequest;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class KontoService implements CrudService<Konto, KontoRequest> {
+public class KontoService implements UpdatableCrudService<Konto, KontoCreateRequest, KontoUpdateRequest> {
     @Autowired 
     private KontoRepository kontoRepository;
     
@@ -50,11 +51,11 @@ public class KontoService implements CrudService<Konto, KontoRequest> {
     }
 
     @Override
-    public Konto create(KontoRequest kontoRequest) {
-        log.info("Starte Kontoerstellung fuer Inhaber={}", kontoRequest.getInhaber());
-        log.debug("Eingehendes Konto fuer Erstellung: {}", kontoRequest);
+    public Konto create(KontoCreateRequest kontoCreateRequest) {
+        log.info("Starte Kontoerstellung fuer Inhaber={}", kontoCreateRequest.getInhaber());
+        log.debug("Eingehendes Konto fuer Erstellung: {}", kontoCreateRequest);
 
-        Konto gespeichertesKonto = kontoDbService.erstelleKontoInDb(kontoRequest);
+        Konto gespeichertesKonto = kontoDbService.erstelleKontoInDb(kontoCreateRequest);
         log.info(
             "Konto erfolgreich erstellt: kontoId={}, iban={}, inhaber={}",
             gespeichertesKonto.getId(),
@@ -66,6 +67,7 @@ public class KontoService implements CrudService<Konto, KontoRequest> {
 
         // FAT-Event (Microservices konform)
         KontoBenachrichtigungRequest request = new KontoBenachrichtigungRequest();
+        request.setAktion(Aktion.ERSTELLEN);
         request.setKontoId(gespeichertesKonto.getId());
         request.setIban(gespeichertesKonto.getIban());
         request.setInhaber(gespeichertesKonto.getInhaber());
@@ -73,9 +75,9 @@ public class KontoService implements CrudService<Konto, KontoRequest> {
         log.info("Sende Konto-Benachrichtigung fuer kontoId={}", gespeichertesKonto.getId());
         log.debug("Konto-Benachrichtigung Request: {}", request);
         restTemplate.postForObject(
-            "http://benachrichtigung-service:8082/api/benachrichtigungen/konto",
+            "http://benachrichtigung-service:8082/api/benachrichtigungen/konten",
             request,
-                Void.class
+            Void.class
         );
         log.info("Konto-Benachrichtigung erfolgreich versendet fuer kontoId={}", gespeichertesKonto.getId());
         
@@ -93,5 +95,22 @@ public class KontoService implements CrudService<Konto, KontoRequest> {
 
         kontoRepository.deleteById(id);
         log.info("Konto erfolgreich geloescht: kontoId={}", id);
+    }
+
+    @Override
+    public Konto update(Long id, KontoUpdateRequest kontoUpdateRequest) {
+        log.info("Starte Update von kontoId={}", id);
+        log.debug("Eingehendes Konto fuer Update: {}", kontoUpdateRequest);
+
+        Konto konto = kontoRepository
+            .findById(id)
+            .orElseThrow(() -> new RuntimeException("Konto nicht gefunden"));
+        log.debug("Konto fuer Update gefunden: {}", konto);
+
+        konto.setInhaber(kontoUpdateRequest.getInhaber()); 
+        // Kontostand wird nicht direkt aktualisiert, da er durch Transaktionen beeinflusst wird
+        save(konto);
+
+        return konto;
     }
 }

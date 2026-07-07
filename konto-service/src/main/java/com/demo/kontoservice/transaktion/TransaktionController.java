@@ -3,13 +3,19 @@ package com.demo.kontoservice.transaktion;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.kontoservice.BaseController;
+import com.demo.kontoservice.CrudService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/transaktionen")
@@ -19,23 +25,44 @@ public class TransaktionController extends BaseController<Transaktion, Transakti
     @Autowired private TransaktionService transaktionService;
 
     @Override
-    protected List<Transaktion> findAll() {
-        return transaktionService.getAll();
+    protected CrudService<Transaktion, TransaktionRequest> service() {
+        return transaktionService;
     }
 
     @Override
-    protected Transaktion findById(Long id) {
-        return transaktionService.get(id);
+    @Operation(
+        operationId = "getAllTransaktionen",
+        summary = "Alle Transaktionen abrufen"
+    )
+    public ResponseEntity<List<Transaktion>> getAll() {
+        return super.getAll();
+    }
+    
+    @Override
+    @Operation(
+        operationId = "getTransaktionById",
+        summary = "Transaktion nach ID abrufen"
+    )
+    public ResponseEntity<Transaktion> getById(@PathVariable Long id) {
+        return super.getById(id);
     }
 
     @Override
-    protected Transaktion createEntity(TransaktionRequest request) {
-        return transaktionService.create(request);
+    @Operation(
+        operationId = "createTransaktion",
+        summary = "Neue Transaktion erstellen"
+    )
+    public ResponseEntity<Transaktion> create(@RequestBody @Valid TransaktionRequest request) {
+        return super.create(request);
     }
 
     @Override
-    protected void deleteById(Long id) {
-        transaktionService.delete(id);
+    @Operation(
+        operationId = "deleteTransaktion",
+        summary = "Transaktion löschen"
+    )
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        return super.delete(id);
     }
 
     @GetMapping("/konto/{kontoId}")

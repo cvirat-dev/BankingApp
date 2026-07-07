@@ -14,13 +14,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 
-public abstract class BaseController<TEntity, TRequest> {
+public abstract class BaseController<TEntity, TCreateRequest> {
+
+    protected abstract CrudService<TEntity, TCreateRequest> service();
 
     @Operation(summary = "Alle Einträge abrufen")
     @ApiResponse(responseCode = "200", description = "Erfolgreich abgerufen")
     @GetMapping
     public ResponseEntity<List<TEntity>> getAll() {
-        return ResponseEntity.ok(findAll());
+        return ResponseEntity.ok(service().getAll());
     }
     
     @Operation(summary = "Eintrag nach ID abrufen")
@@ -28,15 +30,15 @@ public abstract class BaseController<TEntity, TRequest> {
     @ApiResponse(responseCode = "404", description = "Eintrag nicht gefunden")
     @GetMapping("/{id}")
     public ResponseEntity<TEntity> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(findById(id));
+        return ResponseEntity.ok(service().get(id));
     }
 
     @Operation(summary = "Neuen Eintrag erstellen")
     @ApiResponse(responseCode = "201", description = "Erfolgreich erstellt")
     @ApiResponse(responseCode = "400", description = "Ungültige Eingabe")
     @PostMapping
-    public ResponseEntity<TEntity> create(@Valid @RequestBody TRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(createEntity(request));
+    public ResponseEntity<TEntity> create(@Valid @RequestBody TCreateRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service().create(request));
     }
     
     @Operation(summary = "Eintrag löschen")
@@ -44,13 +46,8 @@ public abstract class BaseController<TEntity, TRequest> {
     @ApiResponse(responseCode = "404", description = "Eintrag nicht gefunden")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        deleteById(id);
+        service().delete(id);
         return ResponseEntity.noContent().build();
     }
 
-    // Template-Method-Pattern: Subklassen liefern die Implementierung
-    protected abstract List<TEntity> findAll();
-    protected abstract TEntity findById(Long id);
-    protected abstract TEntity createEntity(TRequest request);
-    protected abstract void deleteById(Long id);
 }

@@ -54,14 +54,13 @@ class KontoControllerTest {
         konto.setKontostand(new BigDecimal("500.00"));
         when(kontoService.create(any())).thenReturn(konto);
 
-        KontoRequest kontoRequest = new KontoRequest();
-        kontoRequest.setInhaber("Max Mustermann");
-        kontoRequest.setIban("DE12345678901234567890");
-        kontoRequest.setKontostand(new BigDecimal("500.00"));
+        KontoCreateRequest kontoCreateRequest = new KontoCreateRequest();
+        kontoCreateRequest.setInhaber("Max Mustermann");
+        kontoCreateRequest.setKontostand(new BigDecimal("500.00"));
 
         mockMvc.perform(post("/api/konten")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(kontoRequest)))
+                        .content(objectMapper.writeValueAsString(kontoCreateRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.kontostand").value(500.00));
     }

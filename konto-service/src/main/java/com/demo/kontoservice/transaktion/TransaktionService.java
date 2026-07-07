@@ -86,7 +86,6 @@ public class TransaktionService implements CrudService<Transaktion, TransaktionR
         request.setZielKontoId(savedTransaktion.getZielKontoId());
         request.setBetrag(savedTransaktion.getBetrag());
         request.setNachricht(savedTransaktion.getBeschreibung());
-        request.setTimestamp(savedTransaktion.getTimestamp());
 
         log.info("Sende Transaktion-Benachrichtigung fuer transaktionId={}", savedTransaktion.getId());
         log.debug("Transaktion-Benachrichtigung Request: {}", request);
