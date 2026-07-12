@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@DiscriminatorValue("KONTOVERWALTUNG")
+@DiscriminatorValue("KONTO")
 @Getter @Setter @NoArgsConstructor
 public class KontoBenachrichtigung extends Benachrichtigung {
     private Long kontoId;

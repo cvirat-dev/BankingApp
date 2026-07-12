@@ -3,6 +3,7 @@ package com.demo.kontoservice.buchung;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -71,7 +72,7 @@ public class BuchungController extends BaseController<Buchung, BuchungRequest> {
         operationId = "getBuchungenByKontoId",
         summary = "Buchungen nach Konto-ID abrufen"
     )
-    @GetMapping("/konto/{kontoId}")
+    @GetMapping(value = "/konto/{kontoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Buchung> getByKontoId(@PathVariable Long kontoId) {
         return buchungService.getByKontoId(kontoId);
     }

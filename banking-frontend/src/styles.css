@@ -1,4 +1,76 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f0f2f5;
+  color: #333;
+  min-height: 100vh;
+}
+
+h1, h2, h3 {
+  color: #1a237e;
+  margin-bottom: 0.5rem;
+}
+
+a {
+  color: #3949ab;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  background-color: #3949ab;
+  color: #fff;
+  border: none;
+  padding: 0.55rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background 0.18s;
+}
+
+button:hover {
+  background-color: #283593;
+}
+
+button:disabled {
+  background-color: #9fa8da;
+  cursor: not-allowed;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #c5cae9;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.18s, box-shadow 0.18s;
+  outline: none;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #3949ab;
+  box-shadow: 0 0 0 3px rgba(57, 73, 171, 0.12);
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+  padding: 1.75rem;
+  margin-bottom: 1.25rem;
+}
+
 .page-header {
   margin-bottom: 1.75rem;
 }

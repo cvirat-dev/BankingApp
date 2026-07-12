@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Konto } from '../../models/konto.model';
-import { KontoService } from '../../services/konto.service';
+import { TransaktionRequest } from '../../models/transaktion.model';
 import { NgForm } from '@angular/forms';
-import { Transaktion } from '../../models/transaktion.model';
+import { Konto, KontoControllerService, TransaktionControllerService } from '../../api/konto-service';
 
 @Component({
   selector: 'app-transaktion-formular',
@@ -19,12 +18,15 @@ export class TransaktionFormularComponent implements OnInit {
   laden: boolean = false;
   erfolgsMeldung: string = '';
   fehlerMeldung: string = '';
-  transaktion: Transaktion | null = null;
+  transaktion: TransaktionRequest | null = null;
 
-  constructor(private kontoService: KontoService) {}
+  constructor(
+    private kontoService: KontoControllerService,
+    private transaktionService: TransaktionControllerService
+  ) {}
 
   ngOnInit(): void {
-    this.kontoService.getAll().subscribe({
+    this.kontoService.getAllKonten('body', false).subscribe({
       next: (data) => this.konten = data,
       error: () => this.fehlerMeldung = 'Konten konnten nicht geladen werden.'
     });
@@ -54,13 +56,13 @@ export class TransaktionFormularComponent implements OnInit {
     this.fehlerMeldung = '';
 
     this.transaktion = {
-      quelleKontoId: this.quelleKontoId,
-      zielKontoId: this.zielKontoId,
+      quelleKontoId: Number(this.quelleKontoId),
+      zielKontoId: Number(this.zielKontoId),
       betrag: this.betrag,
       beschreibung: this.beschreibung
     };
 
-    this.kontoService.createTransaktion(this.transaktion).subscribe({
+    this.transaktionService.createTransaktion(this.transaktion, 'body', false).subscribe({
       next: (updated) => {
         this.laden = false;
         this.erfolgsMeldung = 'Transaktion erfolgreich.';

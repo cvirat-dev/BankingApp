@@ -3,6 +3,7 @@ package com.demo.kontoservice.transaktion;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -65,7 +66,7 @@ public class TransaktionController extends BaseController<Transaktion, Transakti
         return super.delete(id);
     }
 
-    @GetMapping("/konto/{kontoId}")
+    @GetMapping(value = "/konto/{kontoId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Transaktion> getByKontoId(@PathVariable Long kontoId) {
         return transaktionService.getByKontoId(kontoId);
     }

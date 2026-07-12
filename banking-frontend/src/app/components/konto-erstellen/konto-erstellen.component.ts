@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Konto } from '../../models/konto.model';
-import { KontoService } from '../../services/konto.service';
+import { KontoControllerService } from '../../api/konto-service';
+import { KontoRequest } from '../../api/konto-service/model/kontoRequest';
 
 @Component({
   selector: 'app-konto-erstellen.component',
@@ -17,7 +16,7 @@ export class KontoErstellenComponent {
   erfolgsMeldung: string = '';
   fehlerMeldung: string = '';
 
-  constructor(private kontoService: KontoService) {}
+  constructor(private kontoService: KontoControllerService) {}
 
   onSubmit(): void {
     if (!this.inhaber || this.kontostand === null) return;
@@ -25,9 +24,9 @@ export class KontoErstellenComponent {
     this.erfolgsMeldung = '';
     this.fehlerMeldung = '';
 
-    const neuesKonto: Partial<Konto> = { inhaber: this.inhaber, kontostand: this.kontostand };
+    const neuesKonto: KontoRequest = { inhaber: this.inhaber, kontostand: this.kontostand };
 
-    this.kontoService.createKonto(neuesKonto).subscribe({
+    this.kontoService.createKonto(neuesKonto, 'body', false).subscribe({
       next: (konto) => {
         this.laden = false;
         this.erfolgsMeldung = `Konto für „${konto.inhaber}" wurde erfolgreich erstellt.`;

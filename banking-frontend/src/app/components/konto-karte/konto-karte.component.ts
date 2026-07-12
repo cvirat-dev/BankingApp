@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Konto } from '../../models/konto.model';
+import { Konto } from '../../api/konto-service';
 
 @Component({
   selector: 'app-konto-karte',

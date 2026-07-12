@@ -14,9 +14,9 @@
       <span class="konto-karte__label">Kontostand</span>
       <span
         class="konto-karte__value konto-karte__betrag"
-        [class.konto-karte__betrag--negativ]="konto.kontostand < 0"
+        [class.konto-karte__betrag--negativ]="(konto.kontostand ?? 0) < 0"
       >
-        {{ konto.kontostand | currency:'EUR':'symbol':'1.2-2' }}
+        {{ (konto.kontostand ?? 0) | currency:'EUR':'symbol':'1.2-2' }}
       </span>
     </div>
   </div>

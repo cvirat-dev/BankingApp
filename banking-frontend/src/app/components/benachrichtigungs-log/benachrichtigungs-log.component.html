@@ -10,7 +10,7 @@
     (typChanged)="onBenachrichtigungTypChanged($event)">
   </app-benachrichtigungs-tabs>
 
-  <app-benachrichtigungs-liste
-    [typFilter]="aktuellerTyp">
-  </app-benachrichtigungs-liste>
+  <app-konto-benachrichtigungen *ngIf="aktuellerTyp === 'KONTO'"></app-konto-benachrichtigungen>
+  <app-buchung-benachrichtigungen *ngIf="aktuellerTyp === 'BUCHUNG'"></app-buchung-benachrichtigungen>
+  <app-transaktion-benachrichtigungen *ngIf="aktuellerTyp === 'TRANSAKTION'"></app-transaktion-benachrichtigungen>
 </div>

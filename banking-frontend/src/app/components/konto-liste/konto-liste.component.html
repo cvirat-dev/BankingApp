@@ -9,6 +9,10 @@
 </div>
 
 <ng-container *ngIf="!ladevorgang">
+  <div class="error-state" *ngIf="fehlerMeldung">
+    {{ fehlerMeldung }}
+  </div>
+
   <div *ngIf="konten.length > 0; else keineKonten" class="konto-grid">
     <app-konto-karte
       *ngFor="let konto of konten"

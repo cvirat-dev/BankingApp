@@ -14,8 +14,8 @@ public class KontoBenachrichtigungRequest extends BenachrichtigungRequest {
         super(BenachrichtigungTyp.KONTO);
     }
 
-    @NotNull(message = "KontoId darf nicht leer sein!")
-    private Long kontoId;
+    @NotNull(message = "Aktion darf nicht leer sein!")
+    private AktionTyp aktion;
 
     @NotBlank(message = "IBAN darf nicht leer sein!")
     @Size(max = 22, message = "IBAN darf maximal 22 Zeichen lang sein!")
@@ -24,6 +24,7 @@ public class KontoBenachrichtigungRequest extends BenachrichtigungRequest {
     @NotBlank(message = "Inhaber darf nicht leer sein!")
     private String inhaber;
 
-    @NotNull(message = "Aktion darf nicht leer sein!")
-    private AktionTyp aktion;
+    @NotNull(message = "KontoId darf nicht leer sein!")
+    private Long kontoId;
+
 }

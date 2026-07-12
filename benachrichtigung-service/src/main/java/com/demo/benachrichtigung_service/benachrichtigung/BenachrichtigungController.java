@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/benachrichtigungen")
+@RequestMapping(
+        value = "/api/benachrichtigungen",
+        produces = MediaType.APPLICATION_JSON_VALUE
+)
 @CrossOrigin(origins = "*")
 public class BenachrichtigungController {
 
@@ -32,7 +36,11 @@ public class BenachrichtigungController {
         @ApiResponse(responseCode = "201", description = "Benachrichtigung erfolgreich empfangen und gespeichert."),
         @ApiResponse(responseCode = "400", description = "Ungültige Anfrage. Überprüfen Sie die übermittelten Daten.")
     })
-    @PostMapping("/konten")
+    @PostMapping(
+        value = "/konten",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @ResponseStatus(HttpStatus.CREATED)
     public KontoBenachrichtigung receiveKonto(@Valid @RequestBody KontoBenachrichtigungRequest request) {
         return benachrichtigungService.receive(request);
@@ -43,7 +51,11 @@ public class BenachrichtigungController {
         @ApiResponse(responseCode = "201", description = "Benachrichtigung erfolgreich empfangen und gespeichert."),
         @ApiResponse(responseCode = "400", description = "Ungültige Anfrage. Überprüfen Sie die übermittelten Daten.")
     })
-    @PostMapping("/buchungen")
+    @PostMapping(
+        value = "/buchungen",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @ResponseStatus(HttpStatus.CREATED)
     public BuchungBenachrichtigung receiveBuchung(@Valid @RequestBody BuchungBenachrichtigungRequest request) {
         return benachrichtigungService.receive(request);
@@ -54,7 +66,11 @@ public class BenachrichtigungController {
         @ApiResponse(responseCode = "201", description = "Benachrichtigung erfolgreich empfangen und gespeichert."),
         @ApiResponse(responseCode = "400", description = "Ungültige Anfrage. Überprüfen Sie die übermittelten Daten.")
     })
-    @PostMapping("/transaktionen")
+    @PostMapping(
+        value = "/transaktionen",
+        consumes = MediaType.APPLICATION_JSON_VALUE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     @ResponseStatus(HttpStatus.CREATED)
     public TransaktionBenachrichtigung receiveTransaktion(@Valid @RequestBody TransaktionBenachrichtigungRequest request) {
         return benachrichtigungService.receive(request);
@@ -65,7 +81,10 @@ public class BenachrichtigungController {
         @ApiResponse(responseCode = "200", description = "Erfolgreich alle Konto-Benachrichtigungen abgerufen."),
         @ApiResponse(responseCode = "400", description = "Ungültige Anfrage. Überprüfen Sie die übermittelten Parameter.")
     })
-    @GetMapping("/konten")
+    @GetMapping(
+        value = "/konten",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public List<KontoBenachrichtigung> allKonto(
         @RequestParam(required = false) Long kontoId,
         @RequestParam(required = false) String iban,
@@ -82,7 +101,10 @@ public class BenachrichtigungController {
         @ApiResponse(responseCode = "200", description = "Erfolgreich alle Buchung-Benachrichtigungen abgerufen."),
         @ApiResponse(responseCode = "400", description = "Ungültige Anfrage. Überprüfen Sie die übermittelten Parameter.")
     })
-    @GetMapping("/buchungen")
+    @GetMapping(
+        value = "/buchungen",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public List<BuchungBenachrichtigung> allBuchungen(
         @RequestParam(required = false) Long buchungId,
         @RequestParam(required = false) Long kontoId,
@@ -100,7 +122,10 @@ public class BenachrichtigungController {
         @ApiResponse(responseCode = "200", description = "Erfolgreich alle Transaktion-Benachrichtigungen abgerufen."),
         @ApiResponse(responseCode = "400", description = "Ungültige Anfrage. Überprüfen Sie die übermittelten Parameter.")
     })
-    @GetMapping("/transaktionen")
+    @GetMapping(
+        value = "/transaktionen",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public List<TransaktionBenachrichtigung> allTransaktionen(
         @RequestParam(required = false) Long transaktionId,
         @RequestParam(required = false) Long quelleKontoId,
@@ -132,7 +157,9 @@ public class BenachrichtigungController {
         @ApiResponse(responseCode = "200", description = "Erfolgreich alle Benachrichtigungen abgerufen."),
         @ApiResponse(responseCode = "400", description = "Ungültige Anfrage. Überprüfen Sie die übermittelten Parameter.")
     })
-    @GetMapping
+    @GetMapping(
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
     public List<Benachrichtigung> all(
         @RequestParam(required = false) BenachrichtigungTyp typ,
         @RequestParam(required = false) Long kontoId,
