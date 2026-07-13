@@ -1,0 +1,137 @@
+.benachrichtigungs-filter {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
+  gap: 0.75rem;
+  align-items: end;
+  margin-bottom: 1rem;
+  padding: 0.9rem 1rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.benachrichtigungs-filter__feld {
+  display: grid;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.benachrichtigungs-filter__feld span,
+.benachrichtigung-item__label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6b7280;
+}
+
+.benachrichtigungs-filter__feld :is(input, select) {
+  width: 100%;
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #c5cae9;
+  border-radius: 8px;
+  color: #1f2937;
+}
+
+.benachrichtigungs-filter__button {
+  padding: 0.5rem 0.85rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.benachrichtigungs-liste {
+  display: grid;
+  gap: 1rem;
+}
+
+.benachrichtigung-item {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid #f0e5d6;
+  border-radius: 8px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #fff8ea 0%, #fff 45%, #f4f9ff 100%);
+}
+
+.benachrichtigung-item__accent {
+  width: 6px;
+  height: 100%;
+  min-height: 60px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ff7a18, #ffb347);
+}
+
+.benachrichtigung-item__avatar,
+.leer-zustand__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: #fff;
+  background: #3949ab;
+  font-weight: 700;
+}
+
+.benachrichtigung-item__content {
+  min-width: 0;
+}
+
+.benachrichtigung-item__meta {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.benachrichtigung-item__kontoInhaber {
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+.benachrichtigung-item__nachricht {
+  margin: 0;
+  color: #4b5563;
+  line-height: 1.35;
+}
+
+.benachrichtigung-item__timestamp {
+  align-self: start;
+  padding: 6px 10px;
+  border: 1px solid #d7e7fb;
+  border-radius: 999px;
+  color: #1e3a8a;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.leer-zustand {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  padding: 3rem 1rem;
+  color: #6b7280;
+}
+
+.leer-zustand p {
+  margin: 0;
+}
+
+@media (max-width: 1100px) {
+  .benachrichtigungs-filter {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .benachrichtigungs-filter,
+  .benachrichtigung-item {
+    grid-template-columns: 1fr;
+  }
+
+  .benachrichtigung-item__timestamp {
+    justify-self: start;
+  }
+}

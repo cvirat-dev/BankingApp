@@ -1,0 +1,60 @@
+<section class="benachrichtigungs-filter" aria-label="Konto-Benachrichtigungen filtern">
+  <label class="benachrichtigungs-filter__feld">
+    <span>IBAN</span>
+    <input type="text" [(ngModel)]="ibanFilter" (change)="laden()" />
+  </label>
+
+  <label class="benachrichtigungs-filter__feld">
+    <span>Inhaber</span>
+    <input type="text" [(ngModel)]="inhaberFilter" (change)="laden()" />
+  </label>
+
+  <label class="benachrichtigungs-filter__feld">
+    <span>Aktion</span>
+    <select [(ngModel)]="aktionFilter" (change)="laden()">
+      <option value="">Alle Aktionen</option>
+      <option *ngFor="let aktion of aktionen" [value]="aktion">{{ aktion }}</option>
+    </select>
+  </label>
+
+  <label class="benachrichtigungs-filter__feld">
+    <span>Von</span>
+    <input type="datetime-local" [(ngModel)]="vonFilter" (change)="laden()" />
+  </label>
+
+  <label class="benachrichtigungs-filter__feld">
+    <span>Bis</span>
+    <input type="datetime-local" [(ngModel)]="bisFilter" (change)="laden()" />
+  </label>
+
+  <button type="button" class="benachrichtigungs-filter__button" (click)="zuruecksetzen()">
+    Zuruecksetzen
+  </button>
+</section>
+
+<div *ngIf="benachrichtigungen.length > 0; else leerZustand" class="benachrichtigungs-liste">
+  <article *ngFor="let benachrichtigung of benachrichtigungen" class="benachrichtigung-item" aria-label="Konto-Benachrichtigung">
+    <div class="benachrichtigung-item__accent" aria-hidden="true"></div>
+    <div class="benachrichtigung-item__avatar" aria-hidden="true">K</div>
+
+    <div class="benachrichtigung-item__content">
+      <div class="benachrichtigung-item__meta">
+        <span class="benachrichtigung-item__label">Kontoinhaber</span>
+        <strong class="benachrichtigung-item__kontoInhaber">{{ benachrichtigung.inhaber || 'Unbekannt' }}</strong>
+      </div>
+
+      <p class="benachrichtigung-item__nachricht">{{ benachrichtigung.nachricht }}</p>
+    </div>
+
+    <time class="benachrichtigung-item__timestamp" [attr.datetime]="benachrichtigung.timestamp || null">
+      {{ benachrichtigung.timestamp ? (benachrichtigung.timestamp | date:'dd.MM.yyyy HH:mm') : '-' }}
+    </time>
+  </article>
+</div>
+
+<ng-template #leerZustand>
+  <div class="leer-zustand">
+    <span class="leer-zustand__icon">K</span>
+    <p>Keine Konto-Benachrichtigungen vorhanden.</p>
+  </div>
+</ng-template>

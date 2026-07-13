@@ -1,0 +1,67 @@
+<section class="benachrichtigungs-filter" aria-label="Transaktion-Benachrichtigungen filtern">
+  <label class="benachrichtigungs-filter__feld">
+    <span>Quelle IBAN</span>
+    <input type="text" [(ngModel)]="quelleIbanFilter" (change)="laden()" />
+  </label>
+
+  <label class="benachrichtigungs-filter__feld">
+    <span>Ziel IBAN</span>
+    <input type="text" [(ngModel)]="zielIbanFilter" (change)="laden()" />
+  </label>
+
+  <label class="benachrichtigungs-filter__feld">
+    <span>Quelle Inhaber</span>
+    <input type="text" [(ngModel)]="quelleInhaberFilter" (change)="laden()" />
+  </label>
+
+  <label class="benachrichtigungs-filter__feld">
+    <span>Ziel Inhaber</span>
+    <input type="text" [(ngModel)]="zielInhaberFilter" (change)="laden()" />
+  </label>
+
+  <label class="benachrichtigungs-filter__feld">
+    <span>Betrag</span>
+    <input type="number" step="0.01" [(ngModel)]="betragFilter" (change)="laden()" />
+  </label>
+
+  <label class="benachrichtigungs-filter__feld">
+    <span>Von</span>
+    <input type="datetime-local" [(ngModel)]="vonFilter" (change)="laden()" />
+  </label>
+
+  <label class="benachrichtigungs-filter__feld">
+    <span>Bis</span>
+    <input type="datetime-local" [(ngModel)]="bisFilter" (change)="laden()" />
+  </label>
+
+  <button type="button" class="benachrichtigungs-filter__button" (click)="zuruecksetzen()">
+    Zuruecksetzen
+  </button>
+</section>
+
+<div *ngIf="benachrichtigungen.length > 0; else leerZustand" class="benachrichtigungs-liste">
+  <article *ngFor="let benachrichtigung of benachrichtigungen" class="benachrichtigung-item" aria-label="Transaktion-Benachrichtigung">
+    <div class="benachrichtigung-item__accent" aria-hidden="true"></div>
+    <div class="benachrichtigung-item__avatar" aria-hidden="true">T</div>
+
+    <div class="benachrichtigung-item__content">
+      <div class="benachrichtigung-item__meta">
+        <span class="benachrichtigung-item__label">Von / Zu</span>
+        <strong class="benachrichtigung-item__kontoInhaber">{{ route(benachrichtigung) }}</strong>
+      </div>
+
+      <p class="benachrichtigung-item__nachricht">{{ benachrichtigung.nachricht }}</p>
+    </div>
+
+    <time class="benachrichtigung-item__timestamp" [attr.datetime]="benachrichtigung.timestamp || null">
+      {{ benachrichtigung.timestamp ? (benachrichtigung.timestamp | date:'dd.MM.yyyy HH:mm') : '-' }}
+    </time>
+  </article>
+</div>
+
+<ng-template #leerZustand>
+  <div class="leer-zustand">
+    <span class="leer-zustand__icon">T</span>
+    <p>Keine Transaktion-Benachrichtigungen vorhanden.</p>
+  </div>
+</ng-template>

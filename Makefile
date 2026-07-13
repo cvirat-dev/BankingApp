@@ -1,4 +1,4 @@
-.PHONY: build run-dev run-prod clean
+.PHONY: build generate-api run-dev run-prod clean
 
 # OS-Erkennung: Windows_NT = Windows, sonst Linux/Mac
 ifeq ($(OS),Windows_NT)
@@ -6,6 +6,11 @@ ifeq ($(OS),Windows_NT)
 else
     MVNW = ./mvnw
 endif
+
+generate-api:
+	docker compose up -d konto-service benachrichtigung-service
+	docker compose --profile codegen run --rm api-generator
+	docker compose stop konto-service benachrichtigung-service
 
 build:
 	cd konto-service && $(MVNW) clean package -DskipTests

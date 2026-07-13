@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Konto } from '../../models/konto.model';
-import { KontoService } from '../../services/konto.service';
+import { Konto, KontoControllerService } from '../../api/konto-service';
 
 @Component({
   selector: 'app-konto-liste',
@@ -11,17 +10,19 @@ export class KontoListeComponent implements OnInit {
 
   konten: Konto[] = [];
   ladevorgang: boolean = true;
+  fehlerMeldung: string = '';
 
-  constructor(private kontoService: KontoService) { }
+  constructor(private kontoService: KontoControllerService) { }
 
   ngOnInit(): void {
-    this.kontoService.getAll().subscribe({
+    this.kontoService.getAllKonten('body', false).subscribe({
       next: (data: Konto[]) => {
-        this.konten = data;
+        this.konten = Array.isArray(data) ? data : [];
         this.ladevorgang = false;
       },
       error: (error) => {
         this.ladevorgang = false;
+        this.fehlerMeldung = 'Konten konnten nicht geladen werden.';
         console.error('Fehler beim Laden der Konten:', error);
       }
     });

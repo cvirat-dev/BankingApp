@@ -11,8 +11,14 @@ public class KontoDbService {
     private KontoRepository kontoRepository;
 
     @Transactional
-    public Konto erstelleKontoInDb(Konto konto) {
+    public Konto erstelleKontoInDb(KontoCreateRequest kontoCreateRequest) {
+
+        Konto konto = new Konto();
         konto.setId(null);
+
+        konto.setInhaber(kontoCreateRequest.getInhaber());
+        konto.setKontostand(kontoCreateRequest.getKontostand());
+
         // IDENTITY IDs are assigned on insert, but iban is non-null in DB.
         // Save first with a temporary value, then replace with the final IBAN based on ID.
         if (konto.getIban() == null || konto.getIban().isBlank()) {

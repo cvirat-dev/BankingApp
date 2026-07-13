@@ -1,0 +1,112 @@
+<div class="page-header">
+  <h2>Überweisung durchführen</h2>
+  <p>Transaktion von einem Quellkonto auf ein Zielkonto durchführen. Bitte geben Sie die Kontodaten und den Betrag ein.</p>
+</div>
+
+<div class="form-card">
+  <form #buchungForm="ngForm" (ngSubmit)="onSubmit(buchungForm)" novalidate>
+
+    <div class="form-group">
+      <label for="quelleKontoId">Quellkonto</label>
+      <select
+        id="quelleKontoId"
+        name="quelleKontoId"
+        [(ngModel)]="quelleKontoId"
+        required
+        #quelleKontoIdField="ngModel"
+        [class.invalid]="(quelleKontoIdField.invalid && quelleKontoIdField.touched) || (gleicheKontenAusgewaehlt && (quelleKontoIdField.touched || zielKontoIdField.touched))">
+        <option value="" disabled selected>-- Konto auswählen --</option>
+        <option *ngFor="let k of konten" [value]="k.id">
+          {{ k.inhaber }} &mdash; {{ k.iban }}
+        </option>
+      </select>
+      <span class="field-error" *ngIf="quelleKontoIdField.invalid && quelleKontoIdField.touched">
+        Bitte ein Quellkonto auswählen.
+      </span>
+      <span class="field-error" *ngIf="gleicheKontenAusgewaehlt && (quelleKontoIdField.touched || zielKontoIdField.touched)">
+        Quellkonto und Zielkonto dürfen nicht identisch sein.
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="zielKontoId">Zielkonto</label>
+      <select
+        id="zielKontoId"
+        name="zielKontoId"
+        [(ngModel)]="zielKontoId"
+        required
+        #zielKontoIdField="ngModel"
+        [class.invalid]="(zielKontoIdField.invalid && zielKontoIdField.touched) || (gleicheKontenAusgewaehlt && (quelleKontoIdField.touched || zielKontoIdField.touched))">
+        <option value="" disabled selected>-- Konto auswählen --</option>
+        <option *ngFor="let k of konten" [value]="k.id">
+          {{ k.inhaber }} &mdash; {{ k.iban }}
+        </option>
+      </select>
+      <span class="field-error" *ngIf="zielKontoIdField.invalid && zielKontoIdField.touched">
+        Bitte ein Zielkonto auswählen.
+      </span>
+      <span class="field-error" *ngIf="gleicheKontenAusgewaehlt && (quelleKontoIdField.touched || zielKontoIdField.touched)">
+        Quellkonto und Zielkonto dürfen nicht identisch sein.
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="betrag">Betrag (€)</label>
+      <input
+        type="number"
+        id="betrag"
+        name="betrag"
+        [(ngModel)]="betrag"
+        required
+        min="0.01"
+        step="0.01"
+        placeholder="z. B. 100.00"
+        #betragField="ngModel"
+        [class.invalid]="betragField.invalid && betragField.touched" />
+      <span class="field-hint">Geben Sie den Transferbetrag als positiven Wert ein.</span>
+      <span class="field-error" *ngIf="betragField.touched && betragField.errors?.['required']">
+        Bitte einen Betrag eingeben.
+      </span>
+      <span class="field-error" *ngIf="betragField.touched && betragField.errors?.['min']">
+        Der Betrag muss groesser als 0 sein.
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="beschreibung">Beschreibung</label>
+      <input
+        type="text"
+        id="beschreibung"
+        name="beschreibung"
+        [(ngModel)]="beschreibung"
+        required
+        maxlength="200"
+        placeholder="z. B. Mietzahlung Juni"
+        #beschreibungField="ngModel"
+        [class.invalid]="beschreibungField.invalid && beschreibungField.touched" />
+      <span class="field-error" *ngIf="beschreibungField.invalid && beschreibungField.touched">
+        Bitte eine Beschreibung eingeben.
+      </span>
+    </div>
+
+    <!-- Feedback messages -->
+    <div class="alert alert--success" *ngIf="erfolgsMeldung">
+      ✓ {{ erfolgsMeldung }}
+    </div>
+    <div class="alert alert--error" *ngIf="fehlerMeldung">
+      ✗ {{ fehlerMeldung }}
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="buchungForm.invalid || laden || gleicheKontenAusgewaehlt">
+        <span *ngIf="!laden">Buchung ausführen</span>
+        <span *ngIf="laden">Wird gesendet…</span>
+      </button>
+      <button type="button" class="btn-secondary" (click)="zuruecksetzen(buchungForm)">
+        Zurücksetzen
+      </button>
+    </div>
+
+  </form>
+</div>
+

@@ -35,6 +35,30 @@ services:
     networks:
       - banking-net
 
+  api-generator:
+    image: openapitools/openapi-generator-cli:v7.6.0
+    depends_on:
+      - konto-service
+      - benachrichtigung-service
+    networks:
+      - banking-net
+    volumes:
+      - ./banking-frontend/src/app/api:/local/out
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "
+      until wget -q -O- http://konto-service:8081/v3/api-docs > /dev/null 2>&1; do
+        echo 'waiting for konto-service...'; sleep 2;
+      done;
+      until wget -q -O- http://benachrichtigung-service:8082/v3/api-docs > /dev/null 2>&1; do
+        echo 'waiting for benachrichtigung-service...'; sleep 2;
+      done;
+      docker-entrypoint.sh generate -i http://konto-service:8081/v3/api-docs -g typescript-angular -o /local/out/konto-service --additional-properties=providedInRoot=true &&
+      docker-entrypoint.sh generate -i http://benachrichtigung-service:8082/v3/api-docs -g typescript-angular -o /local/out/benachrichtigung-service --additional-properties=providedInRoot=true
+      "
+    profiles:
+      - codegen
+
 networks:
   banking-net:
     driver: bridge

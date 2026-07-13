@@ -1,8 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Konto } from '../../models/konto.model';
-import { KontoService } from '../../services/konto.service';
-import { Router } from '@angular/router';
+import { BuchungRequest } from '../../models/buchung.model';
+import { BuchungControllerService, Konto, KontoControllerService } from '../../api/konto-service';
 
 @Component({
   selector: 'app-buchung-formular',
@@ -19,10 +18,13 @@ export class BuchungFormularComponent implements OnInit {
   erfolgsMeldung: string = '';
   fehlerMeldung: string = '';
 
-  constructor(private kontoService: KontoService) {}
+  constructor(
+    private kontoService: KontoControllerService, 
+    private buchungService: BuchungControllerService
+  ) {}
 
   ngOnInit(): void {
-    this.kontoService.getAll().subscribe({
+    this.kontoService.getAllKonten('body', false).subscribe({
       next: (data) => this.konten = data,
       error: () => this.fehlerMeldung = 'Konten konnten nicht geladen werden.'
     });
@@ -34,7 +36,13 @@ export class BuchungFormularComponent implements OnInit {
     this.erfolgsMeldung = '';
     this.fehlerMeldung = '';
 
-    this.kontoService.createBuchung(+this.kontoId, { betrag: this.betrag!, beschreibung: this.beschreibung }).subscribe({
+    const buchungRequest: BuchungRequest = {
+      betrag: this.betrag!,
+      beschreibung: this.beschreibung,
+      kontoId: +this.kontoId
+    };
+
+    this.buchungService.createBuchung(buchungRequest, 'body', false).subscribe({
       next: (updated) => {
         this.laden = false;
         this.erfolgsMeldung = 'Buchung erfolgreich.';
