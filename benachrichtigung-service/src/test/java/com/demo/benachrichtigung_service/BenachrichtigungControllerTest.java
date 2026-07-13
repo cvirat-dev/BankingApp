@@ -70,7 +70,7 @@ class BenachrichtigungControllerTest {
             return saved;
         });
 
-        mockMvc.perform(post("/api/benachrichtigungen/konto")
+        mockMvc.perform(post("/api/benachrichtigungen/konten")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
@@ -104,7 +104,7 @@ class BenachrichtigungControllerTest {
             return saved;
         });
 
-        mockMvc.perform(post("/api/benachrichtigungen/buchung")
+        mockMvc.perform(post("/api/benachrichtigungen/buchungen")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
@@ -139,7 +139,7 @@ class BenachrichtigungControllerTest {
             return saved;
         });
 
-        mockMvc.perform(post("/api/benachrichtigungen/transaktion")
+        mockMvc.perform(post("/api/benachrichtigungen/transaktionen")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
@@ -172,7 +172,7 @@ class BenachrichtigungControllerTest {
 
     @Test
     void postKonto_withInvalidPayload_shouldReturnBadRequest() throws Exception {
-        mockMvc.perform(post("/api/benachrichtigungen/konto")
+        mockMvc.perform(post("/api/benachrichtigungen/konten")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
@@ -189,7 +189,7 @@ class BenachrichtigungControllerTest {
 
     @Test
     void postBuchung_withInvalidPayload_shouldReturnBadRequest() throws Exception {
-        mockMvc.perform(post("/api/benachrichtigungen/buchung")
+        mockMvc.perform(post("/api/benachrichtigungen/buchungen")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
@@ -207,7 +207,7 @@ class BenachrichtigungControllerTest {
 
     @Test
     void postTransaktion_withInvalidPayload_shouldReturnBadRequest() throws Exception {
-        mockMvc.perform(post("/api/benachrichtigungen/transaktion")
+        mockMvc.perform(post("/api/benachrichtigungen/transaktionen")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {

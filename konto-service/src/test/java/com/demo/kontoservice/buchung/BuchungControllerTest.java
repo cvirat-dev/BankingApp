@@ -41,12 +41,12 @@ class BuchungControllerTest {
         result.setKontoId(1L);
         result.setBetrag(new BigDecimal("75.00"));
 
-        when(buchungService.create(any(BuchungRequest.class), org.mockito.ArgumentMatchers.eq(true))).thenReturn(result);
+        when(buchungService.create(any(BuchungRequest.class))).thenReturn(result);
 
         mockMvc.perform(post("/api/buchungen")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(buchungRequest)))
-            .andExpect(status().isCreated())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.kontoId").value(1L))
                 .andExpect(jsonPath("$.betrag").value(75.00));
     }
@@ -55,7 +55,7 @@ class BuchungControllerTest {
     void getBuchungen_should200_withListe() throws Exception {
         Buchung buchung = new Buchung();
         buchung.setKontoId(1L);
-        when(buchungService.getBuchungen(1L)).thenReturn(List.of(buchung));
+        when(buchungService.getByKontoId(1L)).thenReturn(List.of(buchung));
 
         mockMvc.perform(get("/api/buchungen/konto/1"))
                 .andExpect(status().isOk())

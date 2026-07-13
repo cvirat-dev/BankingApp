@@ -65,7 +65,7 @@ class KontoServiceTest {
             ArgumentCaptor.forClass(KontoBenachrichtigungRequest.class);
 
         verify(restTemplate).postForObject(
-            ArgumentMatchers.eq("http://benachrichtigung-service:8082/api/benachrichtigungen/konto"),
+            ArgumentMatchers.eq("http://benachrichtigung-service:8082/api/benachrichtigungen/konten"),
             requestCaptor.capture(), 
             ArgumentMatchers.eq(Void.class)
         );
