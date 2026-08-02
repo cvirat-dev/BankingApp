@@ -39,11 +39,10 @@ class BuchungServiceTest {
     private BuchungService buchungService;
 
     @Test
-    void buchung_sollteKontostandErhoehen_undTransaktionSpeichern() {
+    void buchung_sollteKontostandErhoehen_undBuchungSpeichern() {
         BigDecimal kontostand = new BigDecimal("100");
         BigDecimal buchungsBetrag = new BigDecimal("50");
         String beschreibung = "Einzahlung";
-        boolean benachrichtigen = true;
 
         Konto konto = new Konto();
         konto.setId(1L);
@@ -60,7 +59,7 @@ class BuchungServiceTest {
         when(buchungRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
         when(restTemplate.postForObject(any(String.class), any(), ArgumentMatchers.eq(Void.class))).thenReturn(null);
 
-        Buchung result = buchungService.create(buchungRequest, benachrichtigen);
+        Buchung result = buchungService.create(buchungRequest);
 
         ArgumentCaptor<Konto> kontoCaptor = ArgumentCaptor.forClass(Konto.class);
         verify(kontoService).save(kontoCaptor.capture());
@@ -75,7 +74,7 @@ class BuchungServiceTest {
         ArgumentCaptor<BuchungBenachrichtigungRequest> requestCaptor =
                 ArgumentCaptor.forClass(BuchungBenachrichtigungRequest.class);
         verify(restTemplate).postForObject(
-                ArgumentMatchers.eq("http://benachrichtigung-service:8082/api/benachrichtigungen/buchung"),
+                ArgumentMatchers.eq("http://benachrichtigung-service:8082/api/benachrichtigungen/buchungen"),
                 requestCaptor.capture(),
                 ArgumentMatchers.eq(Void.class)
         );
@@ -86,7 +85,8 @@ class BuchungServiceTest {
         assertThat(request.getIban()).isEqualTo("DE445566778899");
         assertThat(request.getInhaber()).isEqualTo("Erika Musterfrau");
         assertThat(request.getBetrag()).isEqualByComparingTo(buchungsBetrag);
-        assertThat(request.getNachricht()).contains("Buchung:");
+        assertThat(request.getNachricht()).contains("Buchung");
+        assertThat(request.getNachricht()).contains("Erika Musterfrau");
     }
 
     @Test
@@ -99,7 +99,7 @@ class BuchungServiceTest {
 
         when(kontoService.get(99L)).thenThrow(new RuntimeException("Konto nicht gefunden"));
 
-        assertThatThrownBy(() -> buchungService.create(buchungRequest, benachrichtigen))
+        assertThatThrownBy(() -> buchungService.create(buchungRequest))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Konto nicht gefunden");
     }

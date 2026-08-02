@@ -52,31 +52,29 @@ public class KontoService implements UpdatableCrudService<Konto, KontoCreateRequ
 
     @Override
     public Konto create(KontoCreateRequest kontoCreateRequest) {
+
+        if(kontoCreateRequest == null) {
+            throw new IllegalArgumentException("KontoCreateRequest darf nicht leer sein");
+        }
+
         log.info("Starte Kontoerstellung fuer Inhaber={}", kontoCreateRequest.getInhaber());
         log.debug("Eingehendes Konto fuer Erstellung: {}", kontoCreateRequest);
 
         Konto gespeichertesKonto = kontoDbService.erstelleKontoInDb(kontoCreateRequest);
-        log.info(
-            "Konto erfolgreich erstellt: kontoId={}, iban={}, inhaber={}",
-            gespeichertesKonto.getId(),
-            gespeichertesKonto.getIban(),
-
-            gespeichertesKonto.getInhaber()
-        );
-        log.debug("Persistiertes Kontoobjekt: {}", gespeichertesKonto);
+        log.debug("Persistiertes Konto-Objekt: {}", gespeichertesKonto);
 
         // FAT-Event (Microservices konform)
-        KontoBenachrichtigungRequest request = new KontoBenachrichtigungRequest();
-        request.setAktion(Aktion.ERSTELLEN);
-        request.setKontoId(gespeichertesKonto.getId());
-        request.setIban(gespeichertesKonto.getIban());
-        request.setInhaber(gespeichertesKonto.getInhaber());
-        request.setNachricht("Neues Konto erstellt: " + gespeichertesKonto.getInhaber());
+        KontoBenachrichtigungRequest benachrichtigungRequest = new KontoBenachrichtigungRequest();
+        benachrichtigungRequest.setAktion(Aktion.ERSTELLEN);
+        benachrichtigungRequest.setKontoId(gespeichertesKonto.getId());
+        benachrichtigungRequest.setIban(gespeichertesKonto.getIban());
+        benachrichtigungRequest.setInhaber(gespeichertesKonto.getInhaber());
+        benachrichtigungRequest.setNachricht("Neues Konto erstellt: " + gespeichertesKonto.getInhaber());
         log.info("Sende Konto-Benachrichtigung fuer kontoId={}", gespeichertesKonto.getId());
-        log.debug("Konto-Benachrichtigung Request: {}", request);
+        log.debug("Konto-Benachrichtigung Request: {}", benachrichtigungRequest);
         restTemplate.postForObject(
             "http://benachrichtigung-service:8082/api/benachrichtigungen/konten",
-            request,
+            benachrichtigungRequest,
             Void.class
         );
         log.info("Konto-Benachrichtigung erfolgreich versendet fuer kontoId={}", gespeichertesKonto.getId());
@@ -113,4 +111,5 @@ public class KontoService implements UpdatableCrudService<Konto, KontoCreateRequ
 
         return konto;
     }
+
 }

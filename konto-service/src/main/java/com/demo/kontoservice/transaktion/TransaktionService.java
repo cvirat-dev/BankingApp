@@ -2,6 +2,8 @@ package com.demo.kontoservice.transaktion;
 
 import java.util.List;
 
+import com.demo.kontoservice.konto.Konto;
+import com.demo.kontoservice.konto.KontoService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -20,9 +22,8 @@ import lombok.extern.slf4j.Slf4j;
 public class TransaktionService implements CrudService<Transaktion, TransaktionRequest> {
 
     private final TransaktionRepository transaktionRepository;
-    
     private final BuchungService buchungService;
-    
+    private final KontoService kontoService;
     private final RestTemplate restTemplate;
 
     @Override
@@ -43,53 +44,54 @@ public class TransaktionService implements CrudService<Transaktion, TransaktionR
 
     @Override
     @Transactional
-    public Transaktion create(TransaktionRequest transaktion) {
+    public Transaktion create(TransaktionRequest transaktionRequest) {
 
-        if (transaktion == null) {
+        if (transaktionRequest == null) {
             throw new IllegalArgumentException("Transaktion darf nicht null sein.");
         }
-        if (transaktion.getQuelleKontoId() == null || transaktion.getZielKontoId() == null) {
-            throw new IllegalArgumentException("Quell- und Zielkonto müssen gesetzt sein.");
-        }
-        if (transaktion.getQuelleKontoId().equals(transaktion.getZielKontoId())) {
-            throw new IllegalArgumentException("Quell- und Zielkonto dürfen nicht identisch sein.");
-        }
-        if (transaktion.getBetrag() == null || transaktion.getBetrag().signum() <= 0) {
-            throw new IllegalArgumentException("Betrag muss größer als 0 sein.");
-        }
 
-        log.info("Starte Transaktion von kontoId={} zu kontoId={} mit betrag={}", transaktion.getQuelleKontoId(), transaktion.getZielKontoId(), transaktion.getBetrag());
+        log.info("Starte Transaktion von kontoId={} zu kontoId={} mit betrag={}", transaktionRequest.getQuelleKontoId(), transaktionRequest.getZielKontoId(), transaktionRequest.getBetrag());
+        log.debug("Eingehende Transaktion: {}", transaktionRequest);
+
         Transaktion newTransaktion = new Transaktion();
-        newTransaktion.setQuelleKontoId(transaktion.getQuelleKontoId());
-        newTransaktion.setZielKontoId(transaktion.getZielKontoId());
-        newTransaktion.setBetrag(transaktion.getBetrag());
-        newTransaktion.setBeschreibung(transaktion.getBeschreibung());
+        newTransaktion.setQuelleKontoId(transaktionRequest.getQuelleKontoId());
+        newTransaktion.setZielKontoId(transaktionRequest.getZielKontoId());
+        newTransaktion.setBetrag(transaktionRequest.getBetrag());
+        newTransaktion.setBeschreibung(transaktionRequest.getBeschreibung());
         newTransaktion.setTimestamp(java.time.LocalDateTime.now());
+        log.debug("Persistiertes Transaktion-Objekt: {}", newTransaktion);
 
         BuchungRequest abbuchung = new BuchungRequest();
         abbuchung.setKontoId(newTransaktion.getQuelleKontoId());
         abbuchung.setBetrag(newTransaktion.getBetrag().negate());
         abbuchung.setBeschreibung("Überweisung an Konto " + newTransaktion.getZielKontoId() + ": " + newTransaktion.getBeschreibung());
-        buchungService.create(abbuchung, false);
+        buchungService.create(abbuchung);
 
         BuchungRequest gutschrift = new BuchungRequest();
         gutschrift.setKontoId(newTransaktion.getZielKontoId());
         gutschrift.setBetrag(newTransaktion.getBetrag());
         gutschrift.setBeschreibung("Überweisung von Konto " + newTransaktion.getQuelleKontoId() + ": " + newTransaktion.getBeschreibung());
-        buchungService.create(gutschrift, false);
+        buchungService.create(gutschrift);
 
         Transaktion savedTransaktion = transaktionRepository.save(newTransaktion);
         log.info("Transaktion mit id={} wurde erstellt", savedTransaktion.getId());
 
         TransaktionBenachrichtigungRequest request = new TransaktionBenachrichtigungRequest();
+        Konto quellKonto = kontoService.get(savedTransaktion.getQuelleKontoId());
+        Konto zielKonto = kontoService.get(savedTransaktion.getZielKontoId());
+        request.setTransaktionId(savedTransaktion.getId());
         request.setQuelleKontoId(savedTransaktion.getQuelleKontoId());
         request.setZielKontoId(savedTransaktion.getZielKontoId());
+        request.setQuelleIban(quellKonto.getIban());
+        request.setZielIban(zielKonto.getIban());
+        request.setQuelleInhaber(quellKonto.getInhaber());
+        request.setZielInhaber(zielKonto.getInhaber());
         request.setBetrag(savedTransaktion.getBetrag());
         request.setNachricht(savedTransaktion.getBeschreibung());
 
         log.info("Sende Transaktion-Benachrichtigung fuer transaktionId={}", savedTransaktion.getId());
         log.debug("Transaktion-Benachrichtigung Request: {}", request);
-        restTemplate.postForObject("http://benachrichtigung-service:8082/api/benachrichtigungen/transaktion",
+        restTemplate.postForObject("http://benachrichtigung-service:8082/api/benachrichtigungen/transaktionen",
             request,
             Void.class
         );

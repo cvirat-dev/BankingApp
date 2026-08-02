@@ -6,6 +6,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.closeTo;
 import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -102,5 +103,21 @@ class TransaktionControllerTest {
                 .andExpect(jsonPath("$.zielKontoId").value(20L))
                 .andExpect(jsonPath("$.betrag").value(closeTo(15.00, 0.0001)))
                 .andExpect(jsonPath("$.beschreibung").value("Test"));
+    }
+
+    @Test
+    void create_shouldReturnBadRequest_whenQuelleAndZielkontoAreEqual() throws Exception {
+        TransaktionRequest eingabe = new TransaktionRequest();
+        eingabe.setQuelleKontoId(10L);
+        eingabe.setZielKontoId(10L);
+        eingabe.setBetrag(new BigDecimal("15.00"));
+        eingabe.setBeschreibung("Test");
+
+        mockMvc.perform(post("/api/transaktionen")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(eingabe)))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(transaktionService);
     }
 }

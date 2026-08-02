@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.demo.kontoservice.benachrichtigung.Aktion;
+import com.demo.kontoservice.benachrichtigung.KontoBenachrichtigungRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,14 +57,14 @@ public class BuchungService implements CrudService<Buchung, BuchungRequest> {
     }
 
     @Override
-    public Buchung create(BuchungRequest request) {
-        Buchung buchung = new Buchung();
-        buchung.setKontoId(request.getKontoId());
-        buchung.setBetrag(request.getBetrag());
-        buchung.setBeschreibung(request.getBeschreibung());
+    public Buchung create(BuchungRequest buchungRequest) {
+        log.info("Starte Buchung fuer kontoId={} mit betrag={}", buchungRequest.getKontoId(), buchungRequest.getBetrag());
+        log.debug("Buchungsdetails: beschreibung={}", buchungRequest.getBeschreibung());
 
-        log.info("Starte Buchung fuer kontoId={} mit betrag={}", buchung.getKontoId(), buchung.getBetrag());
-        log.debug("Buchungsdetails: beschreibung={}", buchung.getBeschreibung());
+        Buchung buchung = new Buchung();
+        buchung.setKontoId(buchungRequest.getKontoId());
+        buchung.setBetrag(buchungRequest.getBetrag());
+        buchung.setBeschreibung(buchungRequest.getBeschreibung());
 
         Konto konto = kontoService.get(buchung.getKontoId());
         BigDecimal alterKontostand = konto.getKontostand();
@@ -82,33 +84,29 @@ public class BuchungService implements CrudService<Buchung, BuchungRequest> {
         log.info("Buchung gespeichert fuer kontoId={} mit buchungId={}", buchung.getKontoId(), buchung.getId());
         log.debug("Persistierte Buchung: {}", buchung);
 
-        return buchung;
-    }
-
-    @Transactional
-    public Buchung create(BuchungRequest buchungRequest, boolean benachrichtigen) {
-
-        Buchung buchung = BuchungService.this.create(buchungRequest);
-        if(benachrichtigen){
-            Konto konto = kontoService.get(buchung.getKontoId());
-            String sign = buchung.getBetrag().signum() >= 0 ? "+" : "";
-            BuchungBenachrichtigungRequest request = new BuchungBenachrichtigungRequest();
-            request.setBuchungId(buchung.getId());
-            request.setKontoId(konto.getId());
-            request.setIban(konto.getIban());
-            request.setInhaber(konto.getInhaber());
-            request.setBetrag(buchung.getBetrag());
-            request.setNachricht("Buchung: " + sign + buchung.getBetrag() + " €");
-
-            log.info("Sende Buchung-Benachrichtigung fuer kontoId={} und buchungId={}", buchung.getKontoId(), buchung.getId());
-            log.debug("Buchung-Benachrichtigung Request: {}", request);
-            restTemplate.postForObject(
-                "http://benachrichtigung-service:8082/api/benachrichtigungen/buchung",
-                request,
+        // FAT-Event (Microservices konform)
+        BuchungBenachrichtigungRequest benachrichtigungRequest = new BuchungBenachrichtigungRequest();
+        benachrichtigungRequest.setBuchungId(buchung.getId());
+        benachrichtigungRequest.setKontoId(konto.getId());
+        benachrichtigungRequest.setIban(konto.getIban());
+        benachrichtigungRequest.setInhaber(konto.getInhaber());
+        benachrichtigungRequest.setBetrag(buchung.getBetrag());
+        benachrichtigungRequest.setNachricht(
+                String.format(
+                        "Neue Buchung erstellt fuer Konto=%s und Betrag=%s",
+                        konto.getInhaber(),
+                        buchung.getBetrag()
+                )
+        );
+        log.info("Sende Buchung-Benachrichtigung fuer kontoId={}", konto.getId());
+        log.debug("Buchung-Benachrichtigung Request: {}", benachrichtigungRequest);
+        restTemplate.postForObject(
+                "http://benachrichtigung-service:8082/api/benachrichtigungen/buchungen",
+                benachrichtigungRequest,
                 Void.class
-            );
-            log.info("Buchung-Benachrichtigung erfolgreich versendet fuer kontoId={} und buchungId={}", buchung.getKontoId(), buchung.getId());
-        }
+
+        );
+        log.info("Buchung-Benachrichtigung erfolgreich versendet fuer kontoId={}", konto.getId());
 
         return buchung;
     }
