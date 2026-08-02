@@ -39,11 +39,10 @@ class BuchungServiceTest {
     private BuchungService buchungService;
 
     @Test
-    void buchung_sollteKontostandErhoehen_undTransaktionSpeichern() {
+    void buchung_sollteKontostandErhoehen_undBuchungSpeichern() {
         BigDecimal kontostand = new BigDecimal("100");
         BigDecimal buchungsBetrag = new BigDecimal("50");
         String beschreibung = "Einzahlung";
-        boolean benachrichtigen = true;
 
         Konto konto = new Konto();
         konto.setId(1L);
@@ -75,7 +74,7 @@ class BuchungServiceTest {
         ArgumentCaptor<BuchungBenachrichtigungRequest> requestCaptor =
                 ArgumentCaptor.forClass(BuchungBenachrichtigungRequest.class);
         verify(restTemplate).postForObject(
-                ArgumentMatchers.eq("http://benachrichtigung-service:8082/api/benachrichtigungen/buchung"),
+                ArgumentMatchers.eq("http://benachrichtigung-service:8082/api/benachrichtigungen/buchungen"),
                 requestCaptor.capture(),
                 ArgumentMatchers.eq(Void.class)
         );
@@ -86,7 +85,8 @@ class BuchungServiceTest {
         assertThat(request.getIban()).isEqualTo("DE445566778899");
         assertThat(request.getInhaber()).isEqualTo("Erika Musterfrau");
         assertThat(request.getBetrag()).isEqualByComparingTo(buchungsBetrag);
-        assertThat(request.getNachricht()).contains("Buchung:");
+        assertThat(request.getNachricht()).contains("Buchung");
+        assertThat(request.getNachricht()).contains("Erika Musterfrau");
     }
 
     @Test
