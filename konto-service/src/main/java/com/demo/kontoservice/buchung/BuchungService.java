@@ -111,34 +111,6 @@ public class BuchungService implements CrudService<Buchung, BuchungRequest> {
         return buchung;
     }
 
-//    @Transactional
-//    public Buchung create(BuchungRequest buchungRequest, boolean benachrichtigen) {
-//
-//        Buchung buchung = BuchungService.this.create(buchungRequest);
-//        if(benachrichtigen){
-//            Konto konto = kontoService.get(buchung.getKontoId());
-//            String sign = buchung.getBetrag().signum() >= 0 ? "+" : "";
-//            BuchungBenachrichtigungRequest request = new BuchungBenachrichtigungRequest();
-//            request.setBuchungId(buchung.getId());
-//            request.setKontoId(konto.getId());
-//            request.setIban(konto.getIban());
-//            request.setInhaber(konto.getInhaber());
-//            request.setBetrag(buchung.getBetrag());
-//            request.setNachricht("Buchung: " + sign + buchung.getBetrag() + " €");
-//
-//            log.info("Sende Buchung-Benachrichtigung fuer kontoId={} und buchungId={}", buchung.getKontoId(), buchung.getId());
-//            log.debug("Buchung-Benachrichtigung Request: {}", request);
-//            restTemplate.postForObject(
-//                "http://benachrichtigung-service:8082/api/benachrichtigungen/buchungen",
-//                request,
-//                Void.class
-//            );
-//            log.info("Buchung-Benachrichtigung erfolgreich versendet fuer kontoId={} und buchungId={}", buchung.getKontoId(), buchung.getId());
-//        }
-//
-//        return buchung;
-//    }
-
     @Override
     public void delete(Long id) {
         log.info("Starte Loeschen von buchungId={}", id);

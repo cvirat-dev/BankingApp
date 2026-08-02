@@ -20,12 +20,17 @@ import org.springframework.web.client.RestTemplate;
 
 import com.demo.kontoservice.buchung.BuchungRequest;
 import com.demo.kontoservice.buchung.BuchungService;
+import com.demo.kontoservice.konto.Konto;
+import com.demo.kontoservice.konto.KontoService;
 
 @ExtendWith(MockitoExtension.class)
 class TransaktionServiceTest {
 
     @Mock
     private TransaktionRepository transaktionRepository;
+
+    @Mock
+    private KontoService kontoService;
 
     @Mock
     private BuchungService buchungService;
@@ -81,6 +86,16 @@ class TransaktionServiceTest {
         transaktion.setBetrag(new BigDecimal("42.50"));
         transaktion.setBeschreibung("Miete");
 
+        Konto quellKonto = new Konto();
+        quellKonto.setId(10L);
+        quellKonto.setIban("DE00123456789012345678");
+        quellKonto.setInhaber("Max Mustermann");
+
+        Konto zielKonto = new Konto();
+        zielKonto.setId(20L);
+        zielKonto.setIban("DE00987654321098765432");
+        zielKonto.setInhaber("Erika Musterfrau");
+
         Transaktion gespeicherteTransaktion = new Transaktion();
         gespeicherteTransaktion.setId(99L);
         gespeicherteTransaktion.setQuelleKontoId(10L);
@@ -89,6 +104,8 @@ class TransaktionServiceTest {
         gespeicherteTransaktion.setBeschreibung("Miete");
 
         when(transaktionRepository.save(any(Transaktion.class))).thenReturn(gespeicherteTransaktion);
+        when(kontoService.get(10L)).thenReturn(quellKonto);
+        when(kontoService.get(20L)).thenReturn(zielKonto);
 
         Transaktion result = transaktionService.create(transaktion);
 
