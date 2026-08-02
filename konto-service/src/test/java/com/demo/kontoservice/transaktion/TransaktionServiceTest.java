@@ -93,7 +93,7 @@ class TransaktionServiceTest {
         Transaktion result = transaktionService.create(transaktion);
 
         ArgumentCaptor<BuchungRequest> buchungCaptor = ArgumentCaptor.forClass(BuchungRequest.class);
-        verify(buchungService, times(2)).create(buchungCaptor.capture(), org.mockito.ArgumentMatchers.eq(false));
+        verify(buchungService, times(2)).create(buchungCaptor.capture());
 
         List<BuchungRequest> buchungen = buchungCaptor.getAllValues();
         assertThat(buchungen).hasSize(2);
@@ -124,47 +124,6 @@ class TransaktionServiceTest {
         assertThatThrownBy(() -> transaktionService.create(null))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Transaktion darf nicht null sein.");
-
-        verifyNoInteractions(transaktionRepository, buchungService, restTemplate);
-    }
-
-    @Test
-    void create_shouldRejectMissingKonten() {
-        TransaktionRequest transaktion = new TransaktionRequest();
-        transaktion.setQuelleKontoId(1L);
-        transaktion.setBetrag(BigDecimal.ONE);
-
-        assertThatThrownBy(() -> transaktionService.create(transaktion))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Quell- und Zielkonto müssen gesetzt sein.");
-
-        verifyNoInteractions(transaktionRepository, buchungService, restTemplate);
-    }
-
-    @Test
-    void create_shouldRejectSameQuelleAndZielKonto() {
-        TransaktionRequest transaktion = new TransaktionRequest();
-        transaktion.setQuelleKontoId(1L);
-        transaktion.setZielKontoId(1L);
-        transaktion.setBetrag(BigDecimal.ONE);
-
-        assertThatThrownBy(() -> transaktionService.create(transaktion))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Quell- und Zielkonto dürfen nicht identisch sein.");
-
-        verifyNoInteractions(transaktionRepository, buchungService, restTemplate);
-    }
-
-    @Test
-    void create_shouldRejectNonPositiveBetrag() {
-        TransaktionRequest transaktion = new TransaktionRequest();
-        transaktion.setQuelleKontoId(1L);
-        transaktion.setZielKontoId(2L);
-        transaktion.setBetrag(BigDecimal.ZERO);
-
-        assertThatThrownBy(() -> transaktionService.create(transaktion))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("Betrag muss größer als 0 sein.");
 
         verifyNoInteractions(transaktionRepository, buchungService, restTemplate);
     }

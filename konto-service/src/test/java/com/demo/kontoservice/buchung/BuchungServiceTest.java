@@ -60,7 +60,7 @@ class BuchungServiceTest {
         when(buchungRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
         when(restTemplate.postForObject(any(String.class), any(), ArgumentMatchers.eq(Void.class))).thenReturn(null);
 
-        Buchung result = buchungService.create(buchungRequest, benachrichtigen);
+        Buchung result = buchungService.create(buchungRequest);
 
         ArgumentCaptor<Konto> kontoCaptor = ArgumentCaptor.forClass(Konto.class);
         verify(kontoService).save(kontoCaptor.capture());
@@ -99,7 +99,7 @@ class BuchungServiceTest {
 
         when(kontoService.get(99L)).thenThrow(new RuntimeException("Konto nicht gefunden"));
 
-        assertThatThrownBy(() -> buchungService.create(buchungRequest, benachrichtigen))
+        assertThatThrownBy(() -> buchungService.create(buchungRequest))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("Konto nicht gefunden");
     }

@@ -2,6 +2,7 @@ package com.demo.kontoservice.transaktion;
 
 import java.math.BigDecimal;
 
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -29,4 +30,12 @@ public class TransaktionRequest {
 
     @NotBlank(message = "Beschreibung darf nicht leer sein.")
     private String beschreibung;
+
+    @AssertTrue(message = "Quell- und Zielkonto dürfen nicht identisch sein.")
+    public boolean isQuelleUndZielkontoVerschieden() {
+        if (quelleKontoId == null || zielKontoId == null) {
+            return true;
+        }
+        return !quelleKontoId.equals(zielKontoId);
+    }
 }
