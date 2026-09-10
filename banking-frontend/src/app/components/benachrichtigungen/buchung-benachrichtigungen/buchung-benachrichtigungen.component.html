@@ -13,12 +13,18 @@
     <div class="filterleiste__felder">
       <label class="filterleiste__feld">
         <span>IBAN</span>
-        <input type="text" [(ngModel)]="ibanFilter" (change)="load()" />
+        <select [(ngModel)]="ibanFilter" (change)="load()">
+          <option value="">Alle IBANs</option>
+          <option *ngFor="let konto of konten" [value]="konto.iban">{{ konto.iban }}</option>
+        </select>
       </label>
 
       <label class="filterleiste__feld">
         <span>Inhaber</span>
-        <input type="text" [(ngModel)]="inhaberFilter" (change)="load()" />
+        <select [(ngModel)]="inhaberFilter" (change)="load()">
+          <option value="">Alle Inhaber</option>
+          <option *ngFor="let konto of konten" [value]="konto.inhaber">{{ konto.inhaber }}</option>
+        </select>
       </label>
 
       <label class="filterleiste__feld">
