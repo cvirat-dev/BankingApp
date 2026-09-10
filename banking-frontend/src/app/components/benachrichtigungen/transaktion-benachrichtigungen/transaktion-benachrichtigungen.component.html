@@ -13,22 +13,34 @@
     <div class="filterleiste__felder">
       <label class="filterleiste__feld">
         <span>Quelle IBAN</span>
-        <input type="text" [(ngModel)]="quelleIbanFilter" (change)="load()" />
+        <select [(ngModel)]="quelleIbanFilter" (change)="load()">
+          <option value="">Alle IBANs</option>
+          <option *ngFor="let konto of konten" [value]="konto.iban">{{ konto.iban }}</option>
+        </select>
       </label>
 
       <label class="filterleiste__feld">
         <span>Ziel IBAN</span>
-        <input type="text" [(ngModel)]="zielIbanFilter" (change)="load()" />
+        <select [(ngModel)]="zielIbanFilter" (change)="load()">
+          <option value="">Alle IBANs</option>
+          <option *ngFor="let konto of konten" [value]="konto.iban">{{ konto.iban }}</option>
+        </select>
       </label>
 
       <label class="filterleiste__feld">
         <span>Quelle Inhaber</span>
-        <input type="text" [(ngModel)]="quelleInhaberFilter" (change)="load()" />
+        <select [(ngModel)]="quelleInhaberFilter" (change)="load()">
+          <option value="">Alle Inhaber</option>
+          <option *ngFor="let konto of konten" [value]="konto.inhaber">{{ konto.inhaber }}</option>
+        </select>
       </label>
 
       <label class="filterleiste__feld">
         <span>Ziel Inhaber</span>
-        <input type="text" [(ngModel)]="zielInhaberFilter" (change)="load()" />
+        <select [(ngModel)]="zielInhaberFilter" (change)="load()">
+          <option value="">Alle Inhaber</option>
+          <option *ngFor="let konto of konten" [value]="konto.inhaber">{{ konto.inhaber }}</option>
+        </select>
       </label>
 
       <label class="filterleiste__feld">

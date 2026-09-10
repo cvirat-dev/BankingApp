@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { BuchungBenachrichtigung } from '../../../models/benachrichtigung.model';
 import { BenachrichtigungService } from '../../../services/benachrichtigung.service';
 import { filterSpeichern, getFilterVisibility, getStoredFilter, saveFilterVisibility } from '../shared/filter-storage.util';
+import { Konto } from '../../../api/konto-service/model/konto';
+import { KontoControllerService } from '../../../api/konto-service/api/kontoController.service';
 
 interface BuchungFilterZustand {
   ibanFilter: string;
@@ -27,12 +29,18 @@ export class BuchungBenachrichtigungenComponent implements OnInit {
 
   private readonly filterValueStorageKey = 'benachrichtigungen.filter.buchung';
   private readonly filterVisibilitySaveKey = 'benachrichtigungen.filter.buchung.visibility'; 
+  konten: Konto[] = [];
 
-  constructor(private benachrichtigungsService: BenachrichtigungService) {}
+  constructor(private benachrichtigungsService: BenachrichtigungService,
+              private kontoService: KontoControllerService) {}
 
   ngOnInit(): void {
     Object.assign(this, getStoredFilter<BuchungFilterZustand>(this.filterValueStorageKey));
     this.istFilterEingeklappt = getFilterVisibility(this.filterVisibilitySaveKey) ?? true;
+        this.kontoService.getAllKonten('body', false).subscribe({
+      next: (data) => this.konten = data,
+      error: () => console.error('Konten konnten nicht geladen werden.')
+    });
     this.load();
   }
 
