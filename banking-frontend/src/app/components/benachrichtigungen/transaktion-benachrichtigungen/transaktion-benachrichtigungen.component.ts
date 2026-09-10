@@ -1,6 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { TransaktionBenachrichtigung } from '../../../models/benachrichtigung.model';
 import { BenachrichtigungService } from '../../../services/benachrichtigung.service';
+import { filterSpeichern, getFilterVisibility, getStoredFilter, saveFilterVisibility } from '../shared/filter-storage.util';
+
+interface TransaktionFilterZustand {
+  quelleIbanFilter: string;
+  zielIbanFilter: string;
+  quelleInhaberFilter: string;
+  zielInhaberFilter: string;
+  betragFilter: number | undefined;
+  vonFilter: string;
+  bisFilter: string;
+}
 
 @Component({
   selector: 'app-transaktion-benachrichtigungen',
@@ -16,14 +27,29 @@ export class TransaktionBenachrichtigungenComponent implements OnInit {
   betragFilter: number | undefined;
   vonFilter = '';
   bisFilter = '';
+  istFilterEingeklappt = true;
+
+  private readonly filterValueStorageKey = 'benachrichtigungen.filter.transaktion';
+  private readonly filterVisibilitySaveKey = 'benachrichtigungen.filter.transaktion.visibility';
 
   constructor(private benachrichtigungsService: BenachrichtigungService) {}
 
   ngOnInit(): void {
-    this.laden();
+    Object.assign(this, getStoredFilter<TransaktionFilterZustand>(this.filterValueStorageKey));
+    this.istFilterEingeklappt = getFilterVisibility(this.filterVisibilitySaveKey) ?? true;
+    this.load();
   }
 
-  laden(): void {
+  load(): void {
+    filterSpeichern(this.filterValueStorageKey, {
+      quelleIbanFilter: this.quelleIbanFilter,
+      zielIbanFilter: this.zielIbanFilter,
+      quelleInhaberFilter: this.quelleInhaberFilter,
+      zielInhaberFilter: this.zielInhaberFilter,
+      betragFilter: this.betragFilter,
+      vonFilter: this.vonFilter,
+      bisFilter: this.bisFilter
+    });
     this.benachrichtigungsService.getTransaktionen({
       quelleIban: this.quelleIbanFilter,
       zielIban: this.zielIbanFilter,
@@ -43,7 +69,7 @@ export class TransaktionBenachrichtigungenComponent implements OnInit {
       .join(' -> ') || 'Unbekannt';
   }
 
-  zuruecksetzen(): void {
+  reset(): void {
     this.quelleIbanFilter = '';
     this.zielIbanFilter = '';
     this.quelleInhaberFilter = '';
@@ -51,6 +77,11 @@ export class TransaktionBenachrichtigungenComponent implements OnInit {
     this.betragFilter = undefined;
     this.vonFilter = '';
     this.bisFilter = '';
-    this.laden();
+    this.load();
+  }
+
+  toggleFilterVisibility(): void {
+    this.istFilterEingeklappt = !this.istFilterEingeklappt;
+    saveFilterVisibility(this.filterVisibilitySaveKey, this.istFilterEingeklappt);
   }
 }

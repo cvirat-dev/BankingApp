@@ -1,39 +1,55 @@
-<section class="benachrichtigungs-filter" aria-label="Konto-Benachrichtigungen filtern">
-  <label class="benachrichtigungs-filter__feld">
-    <span>IBAN</span>
-    <input type="text" [(ngModel)]="ibanFilter" (change)="laden()" />
-  </label>
+<section class="filterleiste" [class.filterleiste--eingeklappt]="istFilterEingeklappt" aria-label="Konto-Benachrichtigungen filtern">
+  <header class="filterleiste__kopf">
+    <button type="button" class="filterleiste__toggle" (click)="toggleFilterVisibility()" [attr.aria-expanded]="!istFilterEingeklappt">
+      <h3 class="filterleiste__titel">Filter</h3>
+      <span class="filterleiste__toggle-icon" [class.filterleiste__toggle-icon--eingeklappt]="istFilterEingeklappt">&#9662;</span>
+    </button>
+    <button type="button" class="filterleiste__reset" (click)="reset()">
+      Zuruecksetzen
+    </button>
+  </header>
 
-  <label class="benachrichtigungs-filter__feld">
-    <span>Inhaber</span>
-    <input type="text" [(ngModel)]="inhaberFilter" (change)="laden()" />
-  </label>
+  <ng-container *ngIf="!istFilterEingeklappt">
+    <div class="filterleiste__felder">
+      <label class="filterleiste__feld">
+        <span>IBAN</span>
+        <input type="text" [(ngModel)]="ibanFilter" (change)="load()" />
+      </label>
 
-  <label class="benachrichtigungs-filter__feld">
-    <span>Aktion</span>
-    <select [(ngModel)]="aktionFilter" (change)="laden()">
-      <option value="">Alle Aktionen</option>
-      <option *ngFor="let aktion of aktionen" [value]="aktion">{{ aktion }}</option>
-    </select>
-  </label>
+      <label class="filterleiste__feld">
+        <span>Inhaber</span>
+        <input type="text" [(ngModel)]="inhaberFilter" (change)="load()" />
+      </label>
 
-  <label class="benachrichtigungs-filter__feld">
-    <span>Von</span>
-    <input type="datetime-local" [(ngModel)]="vonFilter" (change)="laden()" />
-  </label>
+      <label class="filterleiste__feld">
+        <span>Aktion</span>
+        <select [(ngModel)]="aktionFilter" (change)="load()">
+          <option value="">Alle Aktionen</option>
+          <option *ngFor="let aktion of aktionen" [value]="aktion">{{ aktion }}</option>
+        </select>
+      </label>
 
-  <label class="benachrichtigungs-filter__feld">
-    <span>Bis</span>
-    <input type="datetime-local" [(ngModel)]="bisFilter" (change)="laden()" />
-  </label>
+    </div>
 
-  <button type="button" class="benachrichtigungs-filter__button" (click)="zuruecksetzen()">
-    Zuruecksetzen
-  </button>
+    <div class="filterleiste__zeitraum">
+      <label class="filterleiste__feld">
+        <span>Von</span>
+        <input type="datetime-local" [(ngModel)]="vonFilter" (change)="load()" />
+      </label>
+
+      <span class="filterleiste__zeitraum-trenner">&ndash;</span>
+
+      <label class="filterleiste__feld">
+        <span>Bis</span>
+        <input type="datetime-local" [(ngModel)]="bisFilter" (change)="load()" />
+      </label>
+    </div>
+  </ng-container>
 </section>
 
 <div *ngIf="benachrichtigungen.length > 0; else leerZustand" class="benachrichtigungs-liste">
-  <article *ngFor="let benachrichtigung of benachrichtigungen" class="benachrichtigung-item" aria-label="Konto-Benachrichtigung">
+  <article *ngFor="let benachrichtigung of benachrichtigungen" class="benachrichtigung-item"
+    aria-label="Konto-Benachrichtigung">
     <div class="benachrichtigung-item__accent" aria-hidden="true"></div>
     <div class="benachrichtigung-item__avatar" aria-hidden="true">K</div>
 
