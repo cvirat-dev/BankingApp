@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { TransaktionBenachrichtigung } from '../../models/benachrichtigung.model';
-import { BenachrichtigungService } from '../../services/benachrichtigung.service';
+import { TransaktionBenachrichtigung } from '../../../models/benachrichtigung.model';
+import { BenachrichtigungService } from '../../../services/benachrichtigung.service';
 
 @Component({
   selector: 'app-transaktion-benachrichtigungen',
   templateUrl: './transaktion-benachrichtigungen.component.html',
-  styleUrl: '../benachrichtigungen-shared/benachrichtigungen-shared.css'
+  styleUrl: '../shared/benachrichtigungen-shared.css'
 })
 export class TransaktionBenachrichtigungenComponent implements OnInit {
   benachrichtigungen: TransaktionBenachrichtigung[] = [];

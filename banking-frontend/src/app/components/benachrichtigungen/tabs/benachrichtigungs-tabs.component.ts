@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BenachrichtigungTyp } from '../../models/benachrichtigung.model';
+import { BenachrichtigungTyp } from '../../../models/benachrichtigung.model';
 
 export interface BenachrichtigungsTab {
   typ: BenachrichtigungTyp;

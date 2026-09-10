@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { BuchungBenachrichtigung } from '../../models/benachrichtigung.model';
-import { BenachrichtigungService } from '../../services/benachrichtigung.service';
+import { BuchungBenachrichtigung } from '../../../models/benachrichtigung.model';
+import { BenachrichtigungService } from '../../../services/benachrichtigung.service';
 
 @Component({
   selector: 'app-buchung-benachrichtigungen',
   templateUrl: './buchung-benachrichtigungen.component.html',
-  styleUrl: '../benachrichtigungen-shared/benachrichtigungen-shared.css'
+  styleUrl: '../shared/benachrichtigungen-shared.css'
 })
 export class BuchungBenachrichtigungenComponent implements OnInit {
   benachrichtigungen: BuchungBenachrichtigung[] = [];
