@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { BenachrichtigungTyp } from '../../models/benachrichtigung.model';
-import { BenachrichtigungsTab } from '../benachrichtigungs-tabs/benachrichtigungs-tabs.component';
+import { BenachrichtigungTyp } from '../../../models/benachrichtigung.model';
+import { BenachrichtigungsTab } from '../tabs/benachrichtigungs-tabs.component';
 
 @Component({
   selector: 'app-benachrichtigungs-log',
   templateUrl: './benachrichtigungs-log.component.html',
-  styleUrl: './benachrichtigungs-log.component.css'
+  styleUrl: '../shared/benachrichtigungs-log.component.css'
 })
 export class BenachrichtigungsLogComponent {
 
