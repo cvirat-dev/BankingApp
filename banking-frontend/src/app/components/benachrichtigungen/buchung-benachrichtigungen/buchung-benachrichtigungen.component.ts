@@ -1,6 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { BuchungBenachrichtigung } from '../../../models/benachrichtigung.model';
 import { BenachrichtigungService } from '../../../services/benachrichtigung.service';
+import { filterSpeichern, getFilterVisibility, getStoredFilter, saveFilterVisibility } from '../shared/filter-storage.util';
+
+interface BuchungFilterZustand {
+  ibanFilter: string;
+  inhaberFilter: string;
+  betragFilter: number | undefined;
+  vonFilter: string;
+  bisFilter: string;
+}
 
 @Component({
   selector: 'app-buchung-benachrichtigungen',
@@ -14,14 +23,27 @@ export class BuchungBenachrichtigungenComponent implements OnInit {
   betragFilter: number | undefined;
   vonFilter = '';
   bisFilter = '';
+  istFilterEingeklappt = true;
+
+  private readonly filterValueStorageKey = 'benachrichtigungen.filter.buchung';
+  private readonly filterVisibilitySaveKey = 'benachrichtigungen.filter.buchung.visibility'; 
 
   constructor(private benachrichtigungsService: BenachrichtigungService) {}
 
   ngOnInit(): void {
-    this.laden();
+    Object.assign(this, getStoredFilter<BuchungFilterZustand>(this.filterValueStorageKey));
+    this.istFilterEingeklappt = getFilterVisibility(this.filterVisibilitySaveKey) ?? true;
+    this.load();
   }
 
-  laden(): void {
+  load(): void {
+    filterSpeichern(this.filterValueStorageKey, {
+      ibanFilter: this.ibanFilter,
+      inhaberFilter: this.inhaberFilter,
+      betragFilter: this.betragFilter,
+      vonFilter: this.vonFilter,
+      bisFilter: this.bisFilter
+    });
     this.benachrichtigungsService.getBuchungen({
       iban: this.ibanFilter,
       inhaber: this.inhaberFilter,
@@ -33,12 +55,17 @@ export class BuchungBenachrichtigungenComponent implements OnInit {
     });
   }
 
-  zuruecksetzen(): void {
+  reset(): void {
     this.ibanFilter = '';
     this.inhaberFilter = '';
     this.betragFilter = undefined;
     this.vonFilter = '';
     this.bisFilter = '';
-    this.laden();
+    this.load();
+  }
+
+  toggleFilterVisibility(): void {
+    this.istFilterEingeklappt = !this.istFilterEingeklappt;
+    saveFilterVisibility(this.filterVisibilitySaveKey, this.istFilterEingeklappt);
   }
 }

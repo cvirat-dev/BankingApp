@@ -5,7 +5,7 @@ import { BenachrichtigungsTab } from '../tabs/benachrichtigungs-tabs.component';
 @Component({
   selector: 'app-benachrichtigungs-log',
   templateUrl: './benachrichtigungs-log.component.html',
-  styleUrl: '../shared/benachrichtigungs-log.component.css'
+  styleUrl: './benachrichtigungs-log.component.css'
 })
 export class BenachrichtigungsLogComponent {
 

@@ -1,8 +1,4 @@
-.benachrichtigungs-filter {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr)) auto;
-  gap: 0.75rem;
-  align-items: end;
+.filterleiste {
   margin-bottom: 1rem;
   padding: 0.9rem 1rem;
   background: #fff;
@@ -10,20 +6,79 @@
   border-radius: 8px;
 }
 
-.benachrichtigungs-filter__feld {
+.filterleiste__kopf {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.5rem;
+  border-bottom: 1px solid #f0f1f3;
+}
+
+.filterleiste--eingeklappt .filterleiste__kopf {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+
+.filterleiste__toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.filterleiste__toggle-icon {
+  display: inline-block;
+  font-size: 1rem;
+  color: #6b7280;
+  transition: transform 0.15s ease;
+}
+
+.filterleiste__toggle-icon--eingeklappt {
+  transform: rotate(-90deg);
+}
+
+.filterleiste__titel {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.filterleiste__reset {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  background: #1a237e;
+  cursor: pointer;
+}
+
+.filterleiste__felder {
   display: grid;
-  gap: 0.35rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.5rem 1rem;
+}
+
+.filterleiste__feld {
+  display: grid;
+  gap: 0.2rem;
   min-width: 0;
 }
 
-.benachrichtigungs-filter__feld span,
+.filterleiste__feld span,
 .benachrichtigung-item__label {
   font-size: 0.75rem;
   font-weight: 700;
   color: #6b7280;
 }
 
-.benachrichtigungs-filter__feld :is(input, select) {
+.filterleiste__feld :is(input, select) {
   width: 100%;
   min-width: 0;
   padding: 0.5rem 0.75rem;
@@ -32,12 +87,25 @@
   color: #1f2937;
 }
 
-.benachrichtigungs-filter__button {
-  padding: 0.5rem 0.85rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
+.filterleiste__zeitraum {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed #e5e7eb;
+}
+
+.filterleiste__zeitraum .filterleiste__feld {
+  flex: 1 1 160px;
+  min-width: 160px;
+}
+
+.filterleiste__zeitraum-trenner {
+  align-self: center;
+  color: #9ca3af;
+  flex: 0 0 auto;
 }
 
 .benachrichtigungs-liste {
@@ -119,19 +187,17 @@
   margin: 0;
 }
 
-@media (max-width: 1100px) {
-  .benachrichtigungs-filter {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
 @media (max-width: 720px) {
-  .benachrichtigungs-filter,
-  .benachrichtigung-item {
+  .filterleiste__felder {
     grid-template-columns: 1fr;
   }
 
-  .benachrichtigung-item__timestamp {
-    justify-self: start;
+  .filterleiste__feld--zeitraum {
+    grid-column: span 1;
+  }
+
+  .filterleiste__zeitraum {
+    flex-direction: column;
+    align-items: stretch;
   }
 }
