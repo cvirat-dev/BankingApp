@@ -49,16 +49,6 @@
   color: #1f2937;
 }
 
-.filterleiste__reset {
-  padding: 0.4rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.85rem;
-  background: #1a237e;
-  cursor: pointer;
-}
-
 .filterleiste__felder {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
