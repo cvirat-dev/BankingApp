@@ -1,5 +1,6 @@
 .gitignore
 README.md
+api.base.service.ts
 api.module.ts
 api/api.ts
 api/buchungController.service.ts
@@ -12,8 +13,11 @@ model/buchung.ts
 model/buchungRequest.ts
 model/konto.ts
 model/kontoCreateRequest.ts
+model/kontoUpdateRequest.ts
 model/models.ts
 model/transaktion.ts
 model/transaktionRequest.ts
 param.ts
+provide-api.ts
+query.params.ts
 variables.ts

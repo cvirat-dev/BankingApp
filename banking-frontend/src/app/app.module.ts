@@ -4,12 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from '../app-routing.module';
 import { AppComponent } from './app.component';
-import { KontoListeComponent } from './components/konto-liste/konto-liste.component';
-import { BuchungFormularComponent } from './components/buchung-formular/buchung-formular.component';
-import { TransaktionFormularComponent } from './components/transaktion-formular/transaktion-formular.component';
+import { KontoListeComponent } from './components/konto/konto-liste/konto-liste.component';
+import { BuchungFormularComponent } from './components/buchung/buchung-formular/buchung-formular.component';
+import { TransaktionFormularComponent } from './components/transaktion/transaktion-formular/transaktion-formular.component';
 import { BenachrichtigungsLogComponent } from './components/benachrichtigungen/log/benachrichtigungs-log.component';
-import { KontoErstellenComponent } from './components/konto-erstellen/konto-erstellen.component';
-import { KontoKarteComponent } from './components/konto-karte/konto-karte.component';
+import { KontoErstellenComponent } from './components/konto/konto-erstellen/konto-erstellen.component';
+import { KontoKarteComponent } from './components/konto/konto-karte/konto-karte.component';
 import { ConnectionStatusComponent } from './components/connection-status/connection-status.component';
 import { BenachrichtigungsTabsComponent } from './components/benachrichtigungen/tabs/benachrichtigungs-tabs.component';
 import { KontoBenachrichtigungenComponent } from './components/benachrichtigungen/konto-benachrichtigungen/konto-benachrichtigungen.component';
@@ -17,6 +17,7 @@ import { BuchungBenachrichtigungenComponent } from './components/benachrichtigun
 import { TransaktionBenachrichtigungenComponent } from './components/benachrichtigungen/transaktion-benachrichtigungen/transaktion-benachrichtigungen.component';
 import { ApiModule as KontoApiModule, Configuration as KontoConfiguration } from './api/konto-service';
 import { ApiModule as BenachrichtigungApiModule, Configuration as BenachrichtigungConfiguration } from './api/benachrichtigung-service';
+import { KontoEditComponent } from './components/konto/konto-edit/konto-edit.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { ApiModule as BenachrichtigungApiModule, Configuration as Benachrichtigu
     KontoBenachrichtigungenComponent,
     BuchungBenachrichtigungenComponent,
     TransaktionBenachrichtigungenComponent,
-    TransaktionFormularComponent
+    TransaktionFormularComponent,
+    KontoEditComponent
   ],
   imports: [
     BrowserModule,

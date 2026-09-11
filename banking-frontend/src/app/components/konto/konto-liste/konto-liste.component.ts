@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Konto, KontoControllerService } from '../../api/konto-service';
+import { Konto, KontoControllerService } from '../../../api/konto-service';
 
 @Component({
   selector: 'app-konto-liste',

@@ -87,12 +87,51 @@
 
 .main-content {
   flex: 1;
-  padding: 2.25rem 2rem;
+  padding: 2rem 0.5rem;
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.side-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 200px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 88px;
+}
+
+.side-nav a {
+  color: #283593;
+  text-decoration: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  transition: background 0.18s, color 0.18s;
+}
+
+.side-nav a:hover {
+  background: rgba(40, 53, 147, 0.08);
+  text-decoration: none;
+}
+
+.side-nav a.active {
+  background: rgba(40, 53, 147, 0.14);
+  font-weight: 600;
+}
+
+.content-area {
+  flex: 1;
+  min-width: 0;
 }
 
 .footer {
   margin-top: auto;
 }
+

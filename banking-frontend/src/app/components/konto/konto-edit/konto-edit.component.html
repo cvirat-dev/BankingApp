@@ -1,0 +1,76 @@
+<div class="page-header">
+  <h2>Konto bearbeiten</h2>
+</div>
+
+<div>
+  <label for="konto">Konto auswählen>
+    <span class="select-wrapper">
+      <select id="konto" name="konto" [(ngModel)]="selectedKontoId" (ngModelChange)="loadKonto($event)" required>
+        <option [ngValue]="null" disabled>Konto auswählen</option>
+        <option *ngFor="let konto of konten" [ngValue]="konto.id">
+          #{{ konto.id }} · {{ konto.inhaber }} · {{ konto.iban }}
+        </option>
+      </select>
+    </span>
+  </label>
+</div>
+
+<div *ngIf="load" class="loading-state">
+  <div class="spinner"></div>
+  <p>Konto wird geladen…</p>
+</div>
+
+<div class="error-state" *ngIf="!load && ladeFehler">
+  {{ ladeFehler }}
+</div>
+
+<div class="hinweis-state" *ngIf="!load && !ladeFehler && ladeHinweis">
+  {{ ladeHinweis }}
+</div>
+
+<div class="form-card" *ngIf="!load && !ladeFehler && !ladeHinweis">
+  <form #kontoForm="ngForm" (ngSubmit)="onSubmit()" novalidate>
+
+    <div class="form-group">
+      <label for="iban">IBAN</label>
+      <input type="text" id="iban" name="iban" [value]="iban" disabled />
+    </div>
+
+    <div class="form-group">
+      <label for="inhaber">Kontoinhaber</label>
+      <input type="text" id="inhaber" name="inhaber" [(ngModel)]="inhaber" required maxlength="100"
+        placeholder="Vor- und Nachname" #inhaberField="ngModel"
+        [class.invalid]="inhaberField.invalid && inhaberField.touched" />
+      <span class="field-error" *ngIf="inhaberField.invalid && inhaberField.touched">
+        Bitte den Namen des Kontoinhabers eingeben.
+      </span>
+    </div>
+
+    <div class="form-group">
+      <label for="kontostand">
+        Kontostand (€)
+        <span class="info-icon" tabindex="0" title="Der Kontostand kann nur durch Buchungen oder Transaktionen geändert werden.">ⓘ</span>
+      </label>
+      <input type="number" id="kontostand" name="kontostand" [value]="kontostand" disabled />
+    </div>
+
+    <!-- Feedback messages -->
+    <div class="alert alert--success" *ngIf="erfolgsMeldung">
+      ✓ {{ erfolgsMeldung }}
+    </div>
+    <div class="alert alert--error" *ngIf="fehlerMeldung">
+      ✗ {{ fehlerMeldung }}
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" [disabled]="kontoForm.invalid || speichern">
+        <span *ngIf="!speichern">Änderungen speichern</span>
+        <span *ngIf="speichern">Wird gespeichert…</span>
+      </button>
+      <button type="button" class="btn-secondary" (click)="abbrechen(kontoForm)">
+        Abbrechen
+      </button>
+    </div>
+
+  </form>
+</div>
