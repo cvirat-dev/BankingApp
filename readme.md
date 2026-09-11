@@ -15,6 +15,26 @@ built with Java/Spring Boot microservices and Angular.
 
 Two independent Spring Boot microservices communicate via REST.
 
+```text
++-------------------+      HTTP REST      +---------------------------+
+|                   | ------------------> |                           |
+| Angular Frontend  |                     |  Konto Service            |
+| localhost:4200    | <------------------ |  - accounts               |
+|                   |                     |  - transactions           |
++-------------------+                     |  - balances               |
+                                            +---------------------------+
+                                                        |
+                                                        | triggers events
+                                                        v
+                                            +---------------------------+
+                                            |                           |
+                                            | Benachrichtigung Service  |
+                                            |  - notifications          |
+                                            |  - account events         |
+                                            |                           |
+                                            +---------------------------+
+```
+
 - **Konto Service**: Manages bank accounts and transactions.
 - **Benachrichtigung Service**: Handles notifications for account events.
 
