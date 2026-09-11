@@ -92,6 +92,21 @@ public class KontoService implements UpdatableCrudService<Konto, KontoCreateRequ
         log.debug("Konto fuer Loeschung gefunden: kontoId={}", id);
 
         kontoRepository.deleteById(id);
+
+        // FAT-Event (Microservices konform)
+        KontoBenachrichtigungRequest benachrichtigungRequest = new KontoBenachrichtigungRequest();
+        benachrichtigungRequest.setAktion(Aktion.LOESCHEN);
+        benachrichtigungRequest.setKontoId(id);
+        benachrichtigungRequest.setNachricht("Konto gelöscht: " + id);
+        log.info("Sende Konto-Benachrichtigung fuer kontoId={}", id);
+        log.debug("Konto-Benachrichtigung Request: {}", benachrichtigungRequest);
+        restTemplate.postForObject(
+            "http://benachrichtigung-service:8082/api/benachrichtigungen/konten",
+            benachrichtigungRequest,
+            Void.class
+        );
+        log.info("Konto-Benachrichtigung erfolgreich versendet fuer kontoId={}", id);
+
         log.info("Konto erfolgreich geloescht: kontoId={}", id);
     }
 
