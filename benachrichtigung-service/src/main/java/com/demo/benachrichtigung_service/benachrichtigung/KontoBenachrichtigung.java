@@ -2,6 +2,8 @@ package com.demo.benachrichtigung_service.benachrichtigung;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,5 +15,6 @@ public class KontoBenachrichtigung extends Benachrichtigung {
     private Long kontoId;
     private String iban;
     private String inhaber;
+    @Enumerated(EnumType.STRING)
     private AktionTyp aktion;
 }
