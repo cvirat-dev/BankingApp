@@ -22,7 +22,7 @@ Two independent Spring Boot microservices communicate via REST.
 | localhost:4200    | <------------------ |  - accounts               |
 |                   |                     |  - transactions           |
 +-------------------+                     |  - balances               |
-                                            +---------------------------+
+                                          +---------------------------+
                                                         |
                                                         | triggers events
                                                         v
