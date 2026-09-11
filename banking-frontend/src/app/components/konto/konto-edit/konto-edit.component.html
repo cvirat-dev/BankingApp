@@ -74,3 +74,9 @@
 
   </form>
 </div>
+
+<div class="delete-konto" *ngIf="!load && !ladeFehler && !ladeHinweis">
+  <button type="button" class="btn-danger" (click)="loeschen(id)">
+    Konto löschen
+  </button>
+</div>

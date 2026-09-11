@@ -11,6 +11,7 @@ import { KontoRequest } from '../../../api/konto-service/model/kontoRequest';
 })
 export class KontoEditComponent implements OnInit {
 
+
   konten: Konto[] = [];
 
   konto!: KontoRequest;
@@ -104,5 +105,16 @@ export class KontoEditComponent implements OnInit {
   abbrechen(form: NgForm): void {
     form.resetForm();
     this.router.navigate(['/konten']);
+  }
+
+  loeschen(id: number) {
+    this.kontoService.deleteKonto(id, 'body', false).subscribe({
+      next: () => {
+        this.router.navigate(['/konten']);
+      },
+      error: () => {
+        this.fehlerMeldung = 'Konto konnte nicht gelöscht werden. Bitte erneut versuchen.';
+      }
+    });
   }
 }
