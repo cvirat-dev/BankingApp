@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { WebsocketService } from './services/websocket.service';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +16,9 @@ export class AppComponent implements OnInit, OnDestroy {
   private unreadSubscription: Subscription = new Subscription();
 
   constructor(
-    public websocketService: WebsocketService
+    public websocketService: WebsocketService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -22,6 +26,18 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.unreadSubscription = this.websocketService.unread$.subscribe(count => {
       this.unreadCount = count;
+    });
+
+    this.router.events.pipe(
+      filter(e => e instanceof NavigationEnd),
+      map(() => {
+        let r = this.route.firstChild;
+        while (r?.firstChild) r = r.firstChild;
+        return r?.snapshot.data ?? {};
+      })
+    ).subscribe(data => {
+      this.sideNavItems = data['sideNav'] ?? [];
+      this.currentSection = data['section'] ?? null;
     });
   }
 
@@ -33,4 +49,7 @@ export class AppComponent implements OnInit, OnDestroy {
   onBenachrichtigungenClick(): void {
     this.websocketService.resetUnread();
   }
+
+  sideNavItems: { label: string; link: string }[] = [];
+  currentSection: string | null = null;
 }

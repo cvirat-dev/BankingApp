@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { BuchungRequest } from '../../models/buchung.model';
-import { BuchungControllerService, Konto, KontoControllerService } from '../../api/konto-service';
+import { BuchungRequest } from '../../../models/buchung.model';
+import { BuchungControllerService, Konto, KontoControllerService } from '../../../api/konto-service';
 
 @Component({
   selector: 'app-buchung-formular',

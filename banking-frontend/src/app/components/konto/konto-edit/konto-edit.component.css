@@ -1,0 +1,36 @@
+.form-card {
+  max-width: 480px;
+}
+
+.error-state {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #991b1b;
+  background: #fef2f2;
+  font-weight: 600;
+}
+
+.hinweis-state {
+  margin-bottom: 1rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid #dbeafe;
+  border-radius: 8px;
+  color: #1e40af;
+  background: #eff6ff;
+  font-weight: 600;
+}
+
+input:disabled {
+  background: #f5f5f5;
+  color: #757575;
+  cursor: not-allowed;
+}
+
+.info-icon {
+  display: inline-block;
+  margin-left: 0.35rem;
+  color: #757575;
+  cursor: help;
+}

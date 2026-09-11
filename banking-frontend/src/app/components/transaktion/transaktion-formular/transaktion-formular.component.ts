@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { TransaktionRequest } from '../../models/transaktion.model';
+import { TransaktionRequest } from '../../../models/transaktion.model';
 import { NgForm } from '@angular/forms';
-import { Konto, KontoControllerService, TransaktionControllerService } from '../../api/konto-service';
+import { Konto, KontoControllerService, TransaktionControllerService } from '../../../api/konto-service';
 
 @Component({
   selector: 'app-transaktion-formular',

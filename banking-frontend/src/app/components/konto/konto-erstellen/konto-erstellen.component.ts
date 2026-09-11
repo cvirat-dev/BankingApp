@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { KontoControllerService } from '../../api/konto-service';
-import { KontoRequest } from '../../api/konto-service/model/kontoRequest';
+import { KontoControllerService } from '../../../api/konto-service';
+import { KontoRequest } from '../../../api/konto-service/model/kontoRequest';
 
 @Component({
   selector: 'app-konto-erstellen.component',

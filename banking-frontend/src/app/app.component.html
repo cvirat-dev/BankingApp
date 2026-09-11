@@ -3,11 +3,10 @@
   <nav class="navbar">
     <a class="brand" routerLink="/konten">Banking App</a>
     <div class="nav-links">
-      <a routerLink="/konten" routerLinkActive="active">Konten</a>
-      <a routerLink="/konto-erstellen" routerLinkActive="active">Neues Konto</a>
-      <a routerLink="/buchung" routerLinkActive="active">Buchung</a>
-      <a routerLink="/transaktion" routerLinkActive="active">Transaktion</a>
-      <a routerLink="/benachrichtigungen" routerLinkActive="active" (click)="onBenachrichtigungenClick()">
+      <a routerLink="/konten" [class.active]="currentSection === 'konten'">Konten</a>
+      <a routerLink="/buchung" [class.active]="currentSection === 'buchung'">Buchungen</a>
+      <a routerLink="/transaktion" [class.active]="currentSection === 'transaktion'">Transaktionen</a>
+      <a routerLink="/benachrichtigungen" [class.active]="currentSection === 'benachrichtigungen'" (click)="onBenachrichtigungenClick()">
 
         Benachrichtigungen
 
@@ -19,7 +18,14 @@
   </nav>
 
   <main class="main-content">
-    <router-outlet></router-outlet>
+    <aside class="side-nav">
+      <a *ngFor="let item of sideNavItems" [routerLink]="item.link" routerLinkActive="active">
+        {{ item.label }}
+      </a>
+    </aside>
+    <div class="content-area">
+      <router-outlet></router-outlet>
+    </div>
   </main>
 
   <nav class="footer">

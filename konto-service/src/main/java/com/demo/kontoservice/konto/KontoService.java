@@ -108,7 +108,6 @@ public class KontoService implements UpdatableCrudService<Konto, KontoCreateRequ
         konto.setInhaber(kontoUpdateRequest.getInhaber()); 
         // Kontostand wird nicht direkt aktualisiert, da er durch Transaktionen beeinflusst wird
         save(konto);
-
         return konto;
     }
 

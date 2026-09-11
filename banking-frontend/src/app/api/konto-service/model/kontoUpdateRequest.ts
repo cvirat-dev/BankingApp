@@ -9,8 +9,8 @@
  */
 
 
-export interface KontoCreateRequest { 
+export interface KontoUpdateRequest { 
+    id: number;
     inhaber: string;
-    kontostand: number;
 }
 
