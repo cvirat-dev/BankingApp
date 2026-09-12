@@ -76,11 +76,14 @@ cd ..\benachrichtigung-service && .\mvnw.cmd clean package -DskipTests
 docker compose up --build
 ```
 
-## Access the application
-
-Open [http://localhost:4200](http://localhost:4200)
-
 ## Workspace Notes
 
 - PowerShell helper scripts are located in `scripts/`
 - Frontend dev script: `./scripts/run-frontend.ps1`
+
+## Access the application
+
+Open [http://localhost:4200](http://localhost:4200)
+
+<img width="2535" height="1262" alt="image" src="https://github.com/user-attachments/assets/7500de71-fb1e-48b5-8c0f-4cd72ddf7c15" />
+
