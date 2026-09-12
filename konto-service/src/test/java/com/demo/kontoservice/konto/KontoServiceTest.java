@@ -99,4 +99,37 @@ class KontoServiceTest {
                 .hasMessage("Konto nicht gefunden");
     }
 
+    @Test
+    void update_sollteKontoAktualisieren_undBenachrichtigungSenden() {
+        Konto konto = new Konto();
+        konto.setId(1L);
+        konto.setIban("DE1234567890");
+        konto.setInhaber("Max Mustermann");
+        when(kontoRepository.findById(1L)).thenReturn(Optional.of(konto));
+
+        KontoUpdateRequest kontoUpdateRequest = new KontoUpdateRequest();
+        kontoUpdateRequest.setInhaber("Erika Mustermann");
+
+        Konto result = kontoService.update(1L, kontoUpdateRequest);
+
+        assertThat(result.getInhaber()).isEqualTo("Erika Mustermann");
+        verify(kontoRepository).save(konto);
+
+        ArgumentCaptor<KontoBenachrichtigungRequest> requestCaptor =
+            ArgumentCaptor.forClass(KontoBenachrichtigungRequest.class);
+        verify(restTemplate).postForObject(
+            ArgumentMatchers.eq("http://benachrichtigung-service:8082/api/benachrichtigungen/konten"),
+            requestCaptor.capture(),
+            ArgumentMatchers.eq(Void.class)
+        );
+
+        KontoBenachrichtigungRequest request = requestCaptor.getValue();
+        assertThat(request.getTyp()).isEqualTo(BenachrichtigungTyp.KONTO);
+        assertThat(request.getAktion()).isEqualTo(Aktion.AKTUALISIEREN);
+        assertThat(request.getKontoId()).isEqualTo(1L);
+        assertThat(request.getIban()).isEqualTo("DE1234567890");
+        assertThat(request.getInhaber()).isEqualTo("Erika Mustermann");
+        assertThat(request.getNachricht()).contains("Konto aktualisiert");
+    }
+
 }

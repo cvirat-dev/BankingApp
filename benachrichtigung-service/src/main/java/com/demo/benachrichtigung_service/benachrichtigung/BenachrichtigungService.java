@@ -58,42 +58,44 @@ public class BenachrichtigungService {
     private Benachrichtigung toEntity(BenachrichtigungRequest request) {
         Objects.requireNonNull(request, "request must not be null");
 
-        if (request instanceof KontoBenachrichtigungRequest kontoRequest) {
-            KontoBenachrichtigung benachrichtigung = new KontoBenachrichtigung();
-            benachrichtigung.setTyp(BenachrichtigungTyp.KONTO);
-            benachrichtigung.setNachricht(kontoRequest.getNachricht());
-            benachrichtigung.setKontoId(kontoRequest.getKontoId());
-            benachrichtigung.setIban(kontoRequest.getIban());
-            benachrichtigung.setInhaber(kontoRequest.getInhaber());
-            benachrichtigung.setAktion(kontoRequest.getAktion());
-            return benachrichtigung;
-        }
-
-        if (request instanceof BuchungBenachrichtigungRequest buchungRequest) {
-            BuchungBenachrichtigung benachrichtigung = new BuchungBenachrichtigung();
-            benachrichtigung.setTyp(BenachrichtigungTyp.BUCHUNG);
-            benachrichtigung.setNachricht(buchungRequest.getNachricht());
-            benachrichtigung.setBuchungId(buchungRequest.getBuchungId());
-            benachrichtigung.setKontoId(buchungRequest.getKontoId());
-            benachrichtigung.setIban(buchungRequest.getIban());
-            benachrichtigung.setInhaber(buchungRequest.getInhaber());
-            benachrichtigung.setBetrag(buchungRequest.getBetrag());
-            return benachrichtigung;
-        }
-
-        if (request instanceof TransaktionBenachrichtigungRequest transaktionRequest) {
-            TransaktionBenachrichtigung benachrichtigung = new TransaktionBenachrichtigung();
-            benachrichtigung.setTyp(BenachrichtigungTyp.TRANSAKTION);
-            benachrichtigung.setNachricht(transaktionRequest.getNachricht());
-            benachrichtigung.setTransaktionId(transaktionRequest.getTransaktionId());
-            benachrichtigung.setQuelleKontoId(transaktionRequest.getQuelleKontoId());
-            benachrichtigung.setZielKontoId(transaktionRequest.getZielKontoId());
-            benachrichtigung.setQuelleIban(transaktionRequest.getQuelleIban());
-            benachrichtigung.setZielIban(transaktionRequest.getZielIban());
-            benachrichtigung.setQuelleInhaber(transaktionRequest.getQuelleInhaber());
-            benachrichtigung.setZielInhaber(transaktionRequest.getZielInhaber());
-            benachrichtigung.setBetrag(transaktionRequest.getBetrag());
-            return benachrichtigung;
+        switch (request) {
+            case KontoBenachrichtigungRequest kontoRequest -> {
+                KontoBenachrichtigung benachrichtigung = new KontoBenachrichtigung();
+                benachrichtigung.setTyp(BenachrichtigungTyp.KONTO);
+                benachrichtigung.setNachricht(kontoRequest.getNachricht());
+                benachrichtigung.setKontoId(kontoRequest.getKontoId());
+                benachrichtigung.setIban(kontoRequest.getIban());
+                benachrichtigung.setInhaber(kontoRequest.getInhaber());
+                benachrichtigung.setAktion(kontoRequest.getAktion());
+                return benachrichtigung;
+            }
+            case BuchungBenachrichtigungRequest buchungRequest -> {
+                BuchungBenachrichtigung benachrichtigung = new BuchungBenachrichtigung();
+                benachrichtigung.setTyp(BenachrichtigungTyp.BUCHUNG);
+                benachrichtigung.setNachricht(buchungRequest.getNachricht());
+                benachrichtigung.setBuchungId(buchungRequest.getBuchungId());
+                benachrichtigung.setKontoId(buchungRequest.getKontoId());
+                benachrichtigung.setIban(buchungRequest.getIban());
+                benachrichtigung.setInhaber(buchungRequest.getInhaber());
+                benachrichtigung.setBetrag(buchungRequest.getBetrag());
+                return benachrichtigung;
+            }
+            case TransaktionBenachrichtigungRequest transaktionRequest -> {
+                TransaktionBenachrichtigung benachrichtigung = new TransaktionBenachrichtigung();
+                benachrichtigung.setTyp(BenachrichtigungTyp.TRANSAKTION);
+                benachrichtigung.setNachricht(transaktionRequest.getNachricht());
+                benachrichtigung.setTransaktionId(transaktionRequest.getTransaktionId());
+                benachrichtigung.setQuelleKontoId(transaktionRequest.getQuelleKontoId());
+                benachrichtigung.setZielKontoId(transaktionRequest.getZielKontoId());
+                benachrichtigung.setQuelleIban(transaktionRequest.getQuelleIban());
+                benachrichtigung.setZielIban(transaktionRequest.getZielIban());
+                benachrichtigung.setQuelleInhaber(transaktionRequest.getQuelleInhaber());
+                benachrichtigung.setZielInhaber(transaktionRequest.getZielInhaber());
+                benachrichtigung.setBetrag(transaktionRequest.getBetrag());
+                return benachrichtigung;
+            }
+            default -> {
+            }
         }
 
         throw new IllegalArgumentException("Unbekannter Benachrichtigungs-Request-Typ: " + request.getClass().getName());
