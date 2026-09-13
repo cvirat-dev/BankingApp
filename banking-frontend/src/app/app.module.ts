@@ -18,6 +18,7 @@ import { TransaktionBenachrichtigungenComponent } from './components/benachricht
 import { ApiModule as KontoApiModule, Configuration as KontoConfiguration } from './api/konto-service';
 import { ApiModule as BenachrichtigungApiModule, Configuration as BenachrichtigungConfiguration } from './api/benachrichtigung-service';
 import { KontoEditComponent } from './components/konto/konto-edit/konto-edit.component';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -40,8 +41,8 @@ import { KontoEditComponent } from './components/konto/konto-edit/konto-edit.com
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    KontoApiModule.forRoot(() => new KontoConfiguration({ basePath: 'http://localhost:8081' })),
-    BenachrichtigungApiModule.forRoot(() => new BenachrichtigungConfiguration({ basePath: 'http://localhost:8082' }))
+    KontoApiModule.forRoot(() => new KontoConfiguration({ basePath: environment.kontoServiceUrl })),
+    BenachrichtigungApiModule.forRoot(() => new BenachrichtigungConfiguration({ basePath: environment.benachrichtigungServiceUrl }))
   ],
   providers: [],
   bootstrap: [AppComponent]

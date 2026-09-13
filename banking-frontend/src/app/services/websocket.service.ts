@@ -3,6 +3,7 @@ import { Client } from '@stomp/stompjs';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { LoggerService } from './logger.service';
 import { Benachrichtigung } from '../models/benachrichtigung.model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class WebsocketService {
 
   connect(): void {
     this.client = new Client({
-      brokerURL: 'ws://localhost:8082/ws',
+      brokerURL: `${environment.benachrichtigungServiceUrl.replace(/^http/, 'ws')}/ws`,
 
       onConnect: () => {
         this.logger.log('WebSocket connected');

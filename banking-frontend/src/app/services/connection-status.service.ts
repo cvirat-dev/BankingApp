@@ -2,6 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription, catchError, interval, switchMap, timer, of } from 'rxjs';
 import { ServiceStatus } from '../models/connection-status.model';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,8 @@ import { HttpClient } from '@angular/common/http';
 export class ConnectionStatusService implements OnDestroy {
 
   private statusSubject = new BehaviorSubject<ServiceStatus[]>([
-    { name: 'KontoService', url: 'http://localhost:8081', status: 'CHECKING' },
-    { name: 'BenachrichtigungsService', url: 'http://localhost:8082', status: 'CHECKING' }
+    { name: 'KontoService', url: environment.kontoServiceUrl, status: 'CHECKING' },
+    { name: 'BenachrichtigungsService', url: environment.benachrichtigungServiceUrl, status: 'CHECKING' }
   ]);
 
   status$ = this.statusSubject.asObservable();
