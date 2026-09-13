@@ -21,5 +21,8 @@ dist/
 # Obsidian
 .obsidian/
 
-# misc
-notes.md
+# text
+*.txt
+
+# special folders
+notes/
