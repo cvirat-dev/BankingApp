@@ -3,6 +3,7 @@ package com.demo.kontoservice.konto;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,6 +24,9 @@ public class KontoService implements UpdatableCrudService<Konto, KontoCreateRequ
     
     @Autowired
     private RestTemplate restTemplate;
+
+    @Value("${benachrichtigung.service.url}")
+    private String benachrichtigungServiceUrl;
 
     public void save(Konto konto) {
         log.info("Aktualisiere Konto fuer kontoId={}", konto.getId());
@@ -73,7 +77,7 @@ public class KontoService implements UpdatableCrudService<Konto, KontoCreateRequ
         log.info("Sende Konto-Benachrichtigung fuer kontoId={}", konto.getId());
         log.debug("Konto-Benachrichtigung Request: {}", benachrichtigungRequest);
         restTemplate.postForObject(
-            "http://benachrichtigung-service:8082/api/benachrichtigungen/konten",
+            benachrichtigungServiceUrl + "/api/benachrichtigungen/konten",
             benachrichtigungRequest,
             Void.class
         );
@@ -103,7 +107,7 @@ public class KontoService implements UpdatableCrudService<Konto, KontoCreateRequ
         log.info("Sende Konto-Benachrichtigung fuer kontoId={}", id);
         log.debug("Konto-Benachrichtigung Request: {}", benachrichtigungRequest);
         restTemplate.postForObject(
-            "http://benachrichtigung-service:8082/api/benachrichtigungen/konten",
+            benachrichtigungServiceUrl + "/api/benachrichtigungen/konten",
             benachrichtigungRequest,
             Void.class
         );
@@ -135,7 +139,7 @@ public class KontoService implements UpdatableCrudService<Konto, KontoCreateRequ
         log.info("Sende Konto-Benachrichtigung fuer kontoId={}", konto.getId());
         log.debug("Konto-Benachrichtigung Request: {}", benachrichtigungRequest);
         restTemplate.postForObject(
-            "http://benachrichtigung-service:8082/api/benachrichtigungen/konten",
+            benachrichtigungServiceUrl + "/api/benachrichtigungen/konten",
             benachrichtigungRequest,
             Void.class
         );
