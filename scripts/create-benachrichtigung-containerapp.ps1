@@ -5,7 +5,7 @@ az containerapp create `
   --resource-group $RG `
   --environment $ENV `
   --image "$ACR.azurecr.io/benachrichtigung-service:latest" `
-  --target-port 8081 `
+  --target-port 8082 `
   --ingress external `
   --registry-server "$ACR.azurecr.io" `
   --registry-username $ACR_USER `

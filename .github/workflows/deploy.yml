@@ -25,18 +25,26 @@ jobs:
       - name: Build & Push konto-service
         run: |
           cd konto-service && ./mvnw clean package -DskipTests
-          docker build -t $ACR_NAME.azurecr.io/konto-service:latest .
-          docker push $ACR_NAME.azurecr.io/konto-service:latest
+          docker build -t $ACR_NAME.azurecr.io/konto-service:${{ github.sha }} .
+          docker push $ACR_NAME.azurecr.io/konto-service:${{ github.sha }}
       - name: Build & Push benachrichtigung-service
         run: |
           cd benachrichtigung-service && ./mvnw clean package -DskipTests
-          docker build -t $ACR_NAME.azurecr.io/benachrichtigung-service:latest .
-          docker push $ACR_NAME.azurecr.io/benachrichtigung-service:latest
+          docker build -t $ACR_NAME.azurecr.io/benachrichtigung-service:${{ github.sha }} .
+          docker push $ACR_NAME.azurecr.io/benachrichtigung-service:${{ github.sha }}
+      - name: Refresh ACR credentials on Container Apps
+        # Verhindert ImagePullBackOff, wenn das ACR-Admin-Passwort seit dem letzten Deploy rotiert wurde
+        run: |
+          ACR_PASSWORD=$(az acr credential show --name $ACR_NAME --query "passwords[0].value" -o tsv)
+          az containerapp registry set --name konto-service --resource-group $RESOURCE_GROUP \
+            --server $ACR_NAME.azurecr.io --username $ACR_NAME --password "$ACR_PASSWORD"
+          az containerapp registry set --name benachrichtigung-service --resource-group $RESOURCE_GROUP \
+            --server $ACR_NAME.azurecr.io --username $ACR_NAME --password "$ACR_PASSWORD"
       - name: Update Container Apps
         run: |
           az containerapp update --name konto-service \
             --resource-group $RESOURCE_GROUP \
-            --image $ACR_NAME.azurecr.io/konto-service:latest
+            --image $ACR_NAME.azurecr.io/konto-service:${{ github.sha }}
           az containerapp update --name benachrichtigung-service \
             --resource-group $RESOURCE_GROUP \
-            --image $ACR_NAME.azurecr.io/benachrichtigung-service:latest
+            --image $ACR_NAME.azurecr.io/benachrichtigung-service:${{ github.sha }}
