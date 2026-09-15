@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.demo.kontoservice.konto.Konto;
 import com.demo.kontoservice.konto.KontoService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -25,6 +26,9 @@ public class TransaktionService implements CrudService<Transaktion, TransaktionR
     private final BuchungService buchungService;
     private final KontoService kontoService;
     private final RestTemplate restTemplate;
+
+    @Value("${benachrichtigung.service.url}")
+    private String benachrichtigungServiceUrl;
 
     @Override
     public List<Transaktion> getAll() {
@@ -91,7 +95,7 @@ public class TransaktionService implements CrudService<Transaktion, TransaktionR
 
         log.info("Sende Transaktion-Benachrichtigung fuer transaktionId={}", savedTransaktion.getId());
         log.debug("Transaktion-Benachrichtigung Request: {}", request);
-        restTemplate.postForObject("http://benachrichtigung-service:8082/api/benachrichtigungen/transaktionen",
+        restTemplate.postForObject(benachrichtigungServiceUrl + "/api/benachrichtigungen/transaktionen",
             request,
             Void.class
         );

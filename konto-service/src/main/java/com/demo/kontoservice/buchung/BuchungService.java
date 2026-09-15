@@ -7,6 +7,7 @@ import java.util.List;
 import com.demo.kontoservice.benachrichtigung.Aktion;
 import com.demo.kontoservice.benachrichtigung.KontoBenachrichtigungRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -30,6 +31,9 @@ public class BuchungService implements CrudService<Buchung, BuchungRequest> {
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Value("${benachrichtigung.service.url}")
+    private String benachrichtigungServiceUrl;
 
     public List<Buchung> getBuchungen(Long kontoId) {
         log.debug("Lade Buchungen fuer kontoId={}", kontoId);
@@ -101,7 +105,7 @@ public class BuchungService implements CrudService<Buchung, BuchungRequest> {
         log.info("Sende Buchung-Benachrichtigung fuer kontoId={}", konto.getId());
         log.debug("Buchung-Benachrichtigung Request: {}", benachrichtigungRequest);
         restTemplate.postForObject(
-                "http://benachrichtigung-service:8082/api/benachrichtigungen/buchungen",
+                benachrichtigungServiceUrl + "/api/benachrichtigungen/buchungen",
                 benachrichtigungRequest,
                 Void.class
 
