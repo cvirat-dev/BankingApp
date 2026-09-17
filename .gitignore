@@ -26,3 +26,8 @@ dist/
 
 # special folders
 notes/
+
+# Scripts
+scripts/create-webapp.ps1
+scripts/create-benachrichtigung-containerapp.ps1
+scripts/create-konto-containerapp.ps1
