@@ -81,9 +81,12 @@ docker compose up --build
 - PowerShell helper scripts are located in `scripts/`
 - Frontend dev script: `./scripts/run-frontend.ps1`
 
-## Access the application
+## Access the application locally
 
 Open [http://localhost:4200](http://localhost:4200)
 
-<img width="2535" height="1262" alt="image" src="https://github.com/user-attachments/assets/7500de71-fb1e-48b5-8c0f-4cd72ddf7c15" />
+## Access the deployed application
+
+[https://icy-flower-0779f600f.5.azurestaticapps.net](https://icy-flower-0779f600f.5.azurestaticapps.net)
+
 
