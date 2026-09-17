@@ -84,9 +84,3 @@ docker compose up --build
 ## Access the application locally
 
 Open [http://localhost:4200](http://localhost:4200)
-
-## Access the deployed application
-
-[https://icy-flower-0779f600f.5.azurestaticapps.net](https://icy-flower-0779f600f.5.azurestaticapps.net)
-
-
