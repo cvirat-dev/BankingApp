@@ -12,5 +12,6 @@ az containerapp create `
   --registry-password $ACR_PASS `
   --cpu 0.5 `
   --memory 1.0Gi `
+  --env-vars SPRING_PROFILES_ACTIVE=prod `
   --min-replicas 0 `
   --max-replicas 1

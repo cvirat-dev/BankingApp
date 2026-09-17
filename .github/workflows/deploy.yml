@@ -44,7 +44,9 @@ jobs:
         run: |
           az containerapp update --name konto-service \
             --resource-group $RESOURCE_GROUP \
+            --set-env-vars SPRING_PROFILES_ACTIVE=prod \
             --image $ACR_NAME.azurecr.io/konto-service:${{ github.sha }}
           az containerapp update --name benachrichtigung-service \
             --resource-group $RESOURCE_GROUP \
+            --set-env-vars SPRING_PROFILES_ACTIVE=prod \
             --image $ACR_NAME.azurecr.io/benachrichtigung-service:${{ github.sha }}
