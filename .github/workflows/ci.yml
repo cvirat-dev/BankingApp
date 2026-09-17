@@ -2,7 +2,7 @@
 # CI Pipeline – Banking Demo Projekt # Wird ausgeführt bei jedem Push und Pull Request auf main 
 # ─────────────────────────────────────────────────────────────
 
-name : CI
+name : CI Pipeline
 
 # Trigger: Bei jedem Push oder Pull Request auf den main Branch
 on:
