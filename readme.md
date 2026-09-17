@@ -1,5 +1,7 @@
 [![CI](https://github.com/cvirat-dev/BankingApp/actions/workflows/ci.yml/badge.svg)](https://github.com/cvirat-dev/BankingApp/actions/workflows/ci.yml)
 
+[![CD](https://github.com/cvirat-dev/BankingApp/actions/workflows/deploy.yml/badge.svg)](https://github.com/cvirat-dev/BankingApp/actions/workflows/deploy.yml)
+
 # Banking App – Microservices Demo
 
 A fullstack demo project showcasing a simple banking application
