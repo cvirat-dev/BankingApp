@@ -21,7 +21,14 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Login to ACR
-        run: az acr login --name $ACR_NAME
+        # Retries to ride out transient network blips/outages reaching *.azurecr.io from the runner
+        run: |
+          for i in 1 2 3 4 5; do
+            az acr login --name $ACR_NAME && exit 0
+            echo "az acr login failed (attempt $i), retrying in 15s..."
+            sleep 15
+          done
+          exit 1
       - name: Build & Push konto-service
         run: |
           cd konto-service && ./mvnw clean package -DskipTests
