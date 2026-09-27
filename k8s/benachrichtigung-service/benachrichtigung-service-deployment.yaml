@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: benachrichtigung-service
+  labels:
+    app: benachrichtigung-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: benachrichtigung-service
+  template:
+    metadata:
+      labels:
+        app: benachrichtigung-service
+    spec:
+      containers:
+        - name: benachrichtigung-service
+          image: image-registry.openshift-image-registry.svc:5000/cvirat-dev-dev/benachrichtigung-service:latest
+          ports:
+            - containerPort: 8082
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8082
+            initialDelaySeconds: 15
+          resources:
+            requests: { cpu: '100m', memory: '256Mi' }
+            limits:   { cpu: '500m', memory: '512Mi' } 

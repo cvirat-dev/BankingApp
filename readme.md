@@ -1,6 +1,8 @@
 [![CI](https://github.com/cvirat-dev/BankingApp/actions/workflows/ci.yml/badge.svg)](https://github.com/cvirat-dev/BankingApp/actions/workflows/ci.yml)
 
-[![CD](https://github.com/cvirat-dev/BankingApp/actions/workflows/deploy.yml/badge.svg)](https://github.com/cvirat-dev/BankingApp/actions/workflows/deploy.yml)
+[![Azure CD](https://github.com/cvirat-dev/BankingApp/actions/workflows/deploy-azure.yml/badge.svg)](https://github.com/cvirat-dev/BankingApp/actions/workflows/deploy-azure.yml)
+
+[![OpenShift CD](https://github.com/cvirat-dev/BankingApp/actions/workflows/deploy-openshift.yml/badge.svg)](https://github.com/cvirat-dev/BankingApp/actions/workflows/deploy-openshift.yml)
 
 # Banking App – Microservices Demo
 
