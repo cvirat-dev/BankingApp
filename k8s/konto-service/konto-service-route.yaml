@@ -1,0 +1,12 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: konto-service
+spec:
+  to:
+    kind: Service
+    name: konto-service
+  port:
+    targetPort: 8081
+  tls:
+    termination: edge

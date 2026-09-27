@@ -9,7 +9,7 @@ env:
   # z.B. "http://localhost:4200,https://thankful-island-0968c520f.<region>.azurestaticapps.net"
   CORS_ALLOWED_ORIGINS: ${{ vars.CORS_ALLOWED_ORIGINS }}
 jobs:
-  build-and-deploy:
+  build-and-deploy-azure:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

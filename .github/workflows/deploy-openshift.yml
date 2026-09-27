@@ -1,0 +1,36 @@
+name: Build and Deploy to OpenShift
+
+on:
+    push:
+        branches: [ main ]
+
+jobs:
+    build-and-deploy-openshift:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Install oc CLI
+              uses: redhat-actions/oc-install@v1
+              with:
+                oc_version: '4.15'
+
+            - name: Login to OpenShift
+              run: |
+                oc login --token=${{ secrets.OPENSHIFT_TOKEN }} --server=${{ secrets.OPENSHIFT_SERVER }}
+
+            - name: Build & push images (via oc)
+              run: |
+                oc start-build konto-service --from-dir=./konto-service --follow
+                oc start-build benachrichtigung-service --from-dir=./benachrichtigung-service --follow
+                oc start-build banking-frontend --from-dir=./banking-frontend --follow
+            
+            - name: Apply manifests
+              run: oc apply -f k8s/
+
+            - name: Trigger rollout
+              run: |
+                oc rollout restart deployment/konto-service
+                oc rollout restart deployment/benachrichtigung-service
+                oc rollout restart deployment/banking-frontend
