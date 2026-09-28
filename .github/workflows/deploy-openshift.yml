@@ -12,7 +12,7 @@ jobs:
               uses: actions/checkout@v2
 
             - name: Install oc CLI
-              uses: redhat-actions/oc-install@v1
+              uses: redhat-actions/oc-installer@v1
               with:
                 oc_version: '4.15'
 
