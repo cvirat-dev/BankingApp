@@ -12,9 +12,10 @@ jobs:
               uses: actions/checkout@v2
 
             - name: Install oc CLI
-              uses: redhat-actions/oc-installer@v1
-              with:
-                oc_version: '4.15'
+              run: |
+                curl -fsSL https://mirror.openshift.com/pub/openshift-v4/x86_64/clients/ocp/stable-4.15/openshift-client-linux.tar.gz \
+                  | sudo tar -xz -C /usr/local/bin oc
+                oc version --client
 
             - name: Login to OpenShift
               run: |
