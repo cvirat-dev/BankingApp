@@ -25,7 +25,7 @@ services:
   banking-frontend:
     build: ./banking-frontend
     ports:
-      - "4200:80"
+      - "4200:8080"
     depends_on:
       - konto-service
       - benachrichtigung-service

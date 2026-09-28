@@ -13,7 +13,7 @@ spec:
       containers:
         - name: banking-frontend
           image: image-registry.openshift-image-registry.svc:5000/cvirat-dev-dev/banking-frontend:latest
-          ports: [{ containerPort: 80 }]
+          ports: [{ containerPort: 8080 }]
 ---
 apiVersion: v1
 kind: Service
@@ -21,7 +21,7 @@ metadata:
   name: banking-frontend
 spec:
   selector: { app: banking-frontend }
-  ports: [{ port: 80, targetPort: 80 }]
+  ports: [{ port: 80, targetPort: 8080 }]
 ---
 apiVersion: route.openshift.io/v1
 kind: Route
@@ -29,5 +29,5 @@ metadata:
   name: banking-frontend
 spec:
   to: { kind: Service, name: banking-frontend }
-  port: { targetPort: 80 }
+  port: { targetPort: 8080 }
   tls: { termination: edge }
