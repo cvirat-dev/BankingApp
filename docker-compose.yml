@@ -23,7 +23,12 @@ services:
       - banking-net
 
   banking-frontend:
-    build: ./banking-frontend
+    build:
+      context: ./banking-frontend
+      args:
+        # Lokal standardmäßig "docker" (Backends über localhost:8081/8082).
+        # Überschreibbar z.B. mit: FRONTEND_BUILD_CONFIG=development docker compose up --build
+        BUILD_CONFIG: ${FRONTEND_BUILD_CONFIG:-docker}
     ports:
       - "4200:8080"
     depends_on:
