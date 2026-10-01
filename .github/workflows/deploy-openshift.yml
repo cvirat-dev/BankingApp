@@ -38,7 +38,7 @@ jobs:
                 cd benachrichtigung-service && ./mvnw clean package -DskipTests && cd ..
                 oc start-build benachrichtigung-service --from-dir=./benachrichtigung-service --follow
                 
-                oc start-build banking-frontend --from-dir=./banking-frontend --build-arg=BUILD_CONFIG=openshift --follow
+                oc start-build banking-frontend --from-dir=./banking-frontend --follow
             
             - name: Apply manifests
               run: oc apply -R -f k8s/
