@@ -11,16 +11,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - name: Set up Java 21
         uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Login to ACR
         # Retries to ride out transient network blips/outages reaching *.azurecr.io from the runner
         run: |
@@ -30,16 +33,19 @@ jobs:
             sleep 15
           done
           exit 1
+
       - name: Build & Push konto-service
         run: |
           cd konto-service && ./mvnw clean package -DskipTests
           docker build -t $ACR_NAME.azurecr.io/konto-service:${{ github.sha }} .
           docker push $ACR_NAME.azurecr.io/konto-service:${{ github.sha }}
+
       - name: Build & Push benachrichtigung-service
         run: |
           cd benachrichtigung-service && ./mvnw clean package -DskipTests
           docker build -t $ACR_NAME.azurecr.io/benachrichtigung-service:${{ github.sha }} .
           docker push $ACR_NAME.azurecr.io/benachrichtigung-service:${{ github.sha }}
+
       - name: Refresh ACR credentials on Container Apps
         # Verhindert ImagePullBackOff, wenn das ACR-Admin-Passwort seit dem letzten Deploy rotiert wurde
         run: |
@@ -48,6 +54,7 @@ jobs:
             --server $ACR_NAME.azurecr.io --username $ACR_NAME --password "$ACR_PASSWORD"
           az containerapp registry set --name benachrichtigung-service --resource-group $RESOURCE_GROUP \
             --server $ACR_NAME.azurecr.io --username $ACR_NAME --password "$ACR_PASSWORD"
+
       - name: Update Container Apps
         run: |
           az containerapp update --name konto-service \
