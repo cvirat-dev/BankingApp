@@ -38,14 +38,11 @@ jobs:
                 cd benachrichtigung-service && ./mvnw clean package -DskipTests && cd ..
                 oc start-build benachrichtigung-service --from-dir=./benachrichtigung-service --follow
                 
-                oc start-build banking-frontend --from-dir=./banking-frontend --follow
+                oc start-build banking-frontend --from-dir=./banking-frontend --build-arg=BUILD_CONFIG=openshift --follow
             
             - name: Apply manifests
               run: oc apply -R -f k8s/
 
-            # Setting DEPLOY_REVISION changes the pod template on every push, so this
-            # single `oc set env` triggers exactly one rollout (picking up the new :latest image)
-            # even when CORS_ALLOWED_ORIGINS is unchanged — no separate restart needed.
             - name: Set env & trigger rollout (backend)
               run: |
                 oc set env deployment/konto-service CORS_ALLOWED_ORIGINS="$CORS_ALLOWED_ORIGINS" DEPLOY_REVISION="${{ github.sha }}"

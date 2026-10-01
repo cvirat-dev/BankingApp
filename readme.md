@@ -80,6 +80,20 @@ cd ..\benachrichtigung-service && .\mvnw.cmd clean package -DskipTests
 docker compose up --build
 ```
 
+## Deployment Platforms
+
+### Azure
+
+Both backend services are deployed as Azure Container Apps.
+The frontend is deployed as an Azure Static Web App.
+
+### OpenShift Developer Sandbox
+
+As an additional learning exercise, the app was also deployed in parallel to Kubernetes/OpenShift (Red Hat Developer Sandbox),
+to gain hands-on experience with a production-grade cluster platform used in enterprise environments.
+
+This deployment is not the primary showcase — it's a demonstration of working with the OpenShift Developer Sandbox specifically.
+
 ## Workspace Notes
 
 - PowerShell helper scripts are located in `scripts/`
