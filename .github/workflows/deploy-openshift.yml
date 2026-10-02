@@ -28,7 +28,10 @@ jobs:
 
             - name: Login to OpenShift
               run: |
-                oc login --token=${{ secrets.OPENSHIFT_TOKEN }} --server=${{ secrets.OPENSHIFT_SERVER }}
+                oc login \ 
+                  --token=${{ secrets.OPENSHIFT_TOKEN }} \ 
+                  --server=${{ secrets.OPENSHIFT_SERVER }}
+                oc project cvirat-dev-dev
 
             - name: Build & push images (via oc)
               run: |
