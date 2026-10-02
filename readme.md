@@ -80,6 +80,21 @@ cd ..\benachrichtigung-service && .\mvnw.cmd clean package -DskipTests
 docker compose up --build
 ```
 
+## OpenAPI
+
+Both backend services expose OpenAPI specifications through Springdoc. After starting the application, use Swagger UI to explore and try the REST endpoints:
+
+- Konto Service: [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html) ([OpenAPI JSON](http://localhost:8081/v3/api-docs))
+- Benachrichtigung Service: [http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html) ([OpenAPI JSON](http://localhost:8082/v3/api-docs))
+
+The Angular API clients are generated from these specifications with OpenAPI Generator. To regenerate both clients, run from the repository root:
+
+```bash
+make generate-api
+```
+
+This command requires Docker and GNU Make. It starts both backend services, generates the clients, and stops the services when generation finishes. Generated code is written to `banking-frontend/src/app/api/konto-service/` and `banking-frontend/src/app/api/benachrichtigung-service/`.
+
 ## Deployment Platforms
 
 ### Azure
