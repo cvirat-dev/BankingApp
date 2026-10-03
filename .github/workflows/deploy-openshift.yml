@@ -3,6 +3,11 @@ name: Build and Deploy to OpenShift
 on:
     push:
         branches: [ main ]
+    workflow_dispatch:
+      inputs:
+        branch:
+          description: 'Branch to deploy'
+          default: 'main'
 
 env:
   CORS_ALLOWED_ORIGINS: ${{ vars.CORS_ALLOWED_ORIGINS_OPENSHIFT }}
