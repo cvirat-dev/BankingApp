@@ -1,0 +1,26 @@
+# Binary-Docker-Build für das Frontend, gestartet über `oc start-build --from-dir` (siehe deploy-openshift.yml).
+# BUILD_CONFIG=openshift sorgt dafür, dass Angular environment.openshift.ts verwendet
+# (ohne dieses Argument fällt das Dockerfile auf "production" = Azure-URLs zurück).
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: banking-frontend
+  labels:
+    app: banking-frontend
+spec:
+  runPolicy: Serial
+  source:
+    type: Binary
+    binary: {}
+  strategy:
+    type: Docker
+    dockerStrategy:
+      buildArgs:
+        - name: BUILD_CONFIG
+          value: openshift
+  output:
+    to:
+      kind: ImageStreamTag
+      name: banking-frontend:latest
+  successfulBuildsHistoryLimit: 5
+  failedBuildsHistoryLimit: 5
