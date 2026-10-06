@@ -35,6 +35,9 @@ jobs:
               run: |
                 oc login --token=${{ secrets.OPENSHIFT_TOKEN }} --server=${{ secrets.OPENSHIFT_SERVER }}
 
+            - name: Apply manifests
+              run: oc apply -R -f k8s/
+
             - name: Build & push images (via oc)
               run: |
                 cd konto-service && ./mvnw clean package -DskipTests && cd ..
@@ -42,11 +45,8 @@ jobs:
 
                 cd benachrichtigung-service && ./mvnw clean package -DskipTests && cd ..
                 oc start-build benachrichtigung-service --from-dir=./benachrichtigung-service --follow
-                
+
                 oc start-build banking-frontend --from-dir=./banking-frontend --follow
-            
-            - name: Apply manifests
-              run: oc apply -R -f k8s/
 
             - name: Set env & trigger rollout (backend)
               run: |
