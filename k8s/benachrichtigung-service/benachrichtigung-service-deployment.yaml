@@ -17,6 +17,9 @@ spec:
       containers:
         - name: benachrichtigung-service
           image: image-registry.openshift-image-registry.svc:5000/cvirat-dev-dev/benachrichtigung-service:latest
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
           ports:
             - containerPort: 8082
           readinessProbe:
