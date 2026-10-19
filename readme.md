@@ -2,8 +2,6 @@
 
 [![Azure CD](https://github.com/cvirat-dev/BankingApp/actions/workflows/deploy-azure.yml/badge.svg)](https://github.com/cvirat-dev/BankingApp/actions/workflows/deploy-azure.yml)
 
-[![OpenShift CD](https://github.com/cvirat-dev/BankingApp/actions/workflows/deploy-openshift.yml/badge.svg)](https://github.com/cvirat-dev/BankingApp/actions/workflows/deploy-openshift.yml)
-
 # Banking App – Microservices Demo
 
 A fullstack demo project showcasing a simple banking application
@@ -108,6 +106,12 @@ As an additional learning exercise, the app was also deployed in parallel to Kub
 to gain hands-on experience with a production-grade cluster platform used in enterprise environments.
 
 This deployment is not the primary showcase — it's a demonstration of working with the OpenShift Developer Sandbox specifically.
+
+> **Status: inactive.** The free Red Hat Developer Sandbox has expired, so the OpenShift deployment is no longer running.
+> The setup is kept in the repository for reference:
+>
+> - Kubernetes/OpenShift manifests: [`k8s/`](k8s/) (`konto-service`, `benachrichtigung-service`, `frontend`)
+> - Deployment workflow: [`.github/workflows/deploy-openshift.yml`](.github/workflows/deploy-openshift.yml) — it no longer runs automatically and can only be triggered manually (`workflow_dispatch`), which requires an active OpenShift cluster and valid credentials.
 
 ## Workspace Notes
 
