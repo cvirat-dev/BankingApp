@@ -6,6 +6,9 @@ metadata:
     app: benachrichtigung-service
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
+    rollingUpdate: null
   selector:
     matchLabels:
       app: benachrichtigung-service
@@ -22,6 +25,9 @@ spec:
               value: prod
           ports:
             - containerPort: 8082
+          volumeMounts:
+            - name: h2-data
+              mountPath: /app/data
           readinessProbe:
             httpGet:
               path: /actuator/health
@@ -29,4 +35,8 @@ spec:
             initialDelaySeconds: 15
           resources:
             requests: { cpu: '100m', memory: '256Mi' }
-            limits:   { cpu: '500m', memory: '512Mi' } 
+            limits:   { cpu: '500m', memory: '512Mi' }
+      volumes:
+        - name: h2-data
+          persistentVolumeClaim:
+            claimName: benachrichtigung-service-data 
