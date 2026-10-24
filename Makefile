@@ -13,8 +13,8 @@ generate-api:
 	docker compose stop konto-service benachrichtigung-service
 
 build:
-	cd konto-service && $(MVNW) clean package -DskipTests
-	cd benachrichtigung-service && $(MVNW) clean package -DskipTests
+	cd konto-service && $(MVNW) clean package
+	cd benachrichtigung-service && $(MVNW) clean package
 
 check-env-local:
 	$(if $(wildcard .env.local),,$(error .env.local fehlt. Bitte .env.local.example nach .env.local kopieren und DEMO_PASSWORD setzen))
