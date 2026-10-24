@@ -15,7 +15,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.MediaType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -45,12 +44,10 @@ class BenachrichtigungControllerTest {
 
     @BeforeEach
     void setUp() {
-        BenachrichtigungService benachrichtigungService = new BenachrichtigungService();
-        ReflectionTestUtils.setField(benachrichtigungService, "repository", benachrichtigungRepository);
-        ReflectionTestUtils.setField(benachrichtigungService, "messagingTemplate", messagingTemplate);
+        BenachrichtigungService benachrichtigungService =
+                new BenachrichtigungService(benachrichtigungRepository, messagingTemplate);
 
-        BenachrichtigungController controller = new BenachrichtigungController();
-        ReflectionTestUtils.setField(controller, "benachrichtigungService", benachrichtigungService);
+        BenachrichtigungController controller = new BenachrichtigungController(benachrichtigungService);
 
         LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
         validator.afterPropertiesSet();

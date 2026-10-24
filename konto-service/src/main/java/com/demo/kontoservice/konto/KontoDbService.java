@@ -1,14 +1,15 @@
 package com.demo.kontoservice.konto;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class KontoDbService {
 
-    @Autowired
-    private KontoRepository kontoRepository;
+    private final KontoRepository kontoRepository;
 
     @Transactional
     public Konto erstelleKontoInDb(KontoCreateRequest kontoCreateRequest) {

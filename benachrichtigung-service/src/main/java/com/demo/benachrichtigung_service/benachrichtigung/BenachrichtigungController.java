@@ -3,7 +3,6 @@ package com.demo.benachrichtigung_service.benachrichtigung;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,15 +20,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping(
         value = "/api/benachrichtigungen",
         produces = MediaType.APPLICATION_JSON_VALUE
 )
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class BenachrichtigungController {
 
-    @Autowired private BenachrichtigungService benachrichtigungService;
+    private final BenachrichtigungService benachrichtigungService;
 
     @Operation(summary = "Empfängt eine Konto-Benachrichtigung und speichert sie in der Datenbank.")
     @ApiResponses(value = {

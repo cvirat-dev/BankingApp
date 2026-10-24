@@ -2,7 +2,6 @@ package com.demo.kontoservice.buchung;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,13 +17,15 @@ import com.demo.kontoservice.CrudService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/buchungen")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class BuchungController extends BaseController<Buchung, BuchungRequest> {
 
-    @Autowired
-    private BuchungService buchungService;
+    private final BuchungService buchungService;
 
     @Override
     protected CrudService<Buchung, BuchungRequest> service() {

@@ -4,21 +4,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class BenachrichtigungService {
 
-    @Autowired
-    private BenachrichtigungRepository repository;
+    private final BenachrichtigungRepository repository;
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
 
     public Benachrichtigung receive(BenachrichtigungRequest request) {
         log.info("Empfange Benachrichtigung: typ={}", request.getTyp());
