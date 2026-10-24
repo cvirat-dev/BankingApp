@@ -25,5 +25,8 @@ run-dev: check-env-local build
 run-prod: check-env-local build
 	docker compose --env-file .env.prod up --build
 
+test-auth:
+	pwsh -File scripts/auth-smoke-test.ps1
+
 clean:
 	docker compose down -v
