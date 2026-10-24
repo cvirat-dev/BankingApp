@@ -9,7 +9,7 @@ built with Java/Spring Boot microservices and Angular.
 
 ## Tech Stack
 
-- Backend: Java 21, Spring Boot 3, Spring Data JPA, H2
+- Backend: Java 21, Spring Boot 4, Spring Data JPA, H2
 - Frontend: Angular 17, TypeScript, Angular HttpClient
 - Infrastructure: Docker, Docker Compose
 
