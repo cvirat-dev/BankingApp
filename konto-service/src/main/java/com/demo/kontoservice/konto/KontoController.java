@@ -2,7 +2,6 @@ package com.demo.kontoservice.konto;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,12 +11,15 @@ import com.demo.kontoservice.CrudService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/konten")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class KontoController extends BaseController<Konto, KontoCreateRequest> {
     
-    @Autowired private KontoService kontoService;
+    private final KontoService kontoService;
 
     @Override
     protected CrudService<Konto, KontoCreateRequest> service() {

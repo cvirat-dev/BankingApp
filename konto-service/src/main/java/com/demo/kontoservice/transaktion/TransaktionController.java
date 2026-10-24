@@ -2,7 +2,6 @@ package com.demo.kontoservice.transaktion;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,12 +17,15 @@ import com.demo.kontoservice.CrudService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
 @RequestMapping("/api/transaktionen")
 @CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 public class TransaktionController extends BaseController<Transaktion, TransaktionRequest> {
 
-    @Autowired private TransaktionService transaktionService;
+    private final TransaktionService transaktionService;
 
     @Override
     protected CrudService<Transaktion, TransaktionRequest> service() {

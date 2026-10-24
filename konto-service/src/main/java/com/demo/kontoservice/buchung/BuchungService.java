@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.demo.kontoservice.benachrichtigung.Aktion;
 import com.demo.kontoservice.benachrichtigung.KontoBenachrichtigungRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,20 +16,19 @@ import com.demo.kontoservice.benachrichtigung.BuchungBenachrichtigungRequest;
 import com.demo.kontoservice.konto.Konto;
 import com.demo.kontoservice.konto.KontoService;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class BuchungService implements CrudService<Buchung, BuchungRequest> {
 
-    @Autowired
-    private KontoService kontoService;
+    private final KontoService kontoService;
 
-    @Autowired
-    private BuchungRepository buchungRepository;
+    private final BuchungRepository buchungRepository;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
 
     @Value("${benachrichtigung.service.url}")
     private String benachrichtigungServiceUrl;

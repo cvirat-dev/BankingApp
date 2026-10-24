@@ -8,6 +8,7 @@ services:
       - TZ=Europe/Berlin
     env_file:
       - .env.${ENV:-dev}
+      - .env.local
     networks:
       - banking-net
 
@@ -19,6 +20,7 @@ services:
       - TZ=Europe/Berlin
     env_file:
       - .env.${ENV:-dev}
+      - .env.local
     networks:
       - banking-net
 

@@ -1,4 +1,4 @@
-.PHONY: build generate-api run-dev run-prod clean
+.PHONY: build generate-api run-dev run-prod clean check-env-local
 
 # OS-Erkennung: Windows_NT = Windows, sonst Linux/Mac
 ifeq ($(OS),Windows_NT)
@@ -16,11 +16,17 @@ build:
 	cd konto-service && $(MVNW) clean package -DskipTests
 	cd benachrichtigung-service && $(MVNW) clean package -DskipTests
 
-run-dev: build
+check-env-local:
+	$(if $(wildcard .env.local),,$(error .env.local fehlt. Bitte .env.local.example nach .env.local kopieren und DEMO_PASSWORD setzen))
+
+run-dev: check-env-local build
 	docker compose --env-file .env.dev up --build
 
-run-prod: build
+run-prod: check-env-local build
 	docker compose --env-file .env.prod up --build
+
+test-auth:
+	pwsh -File scripts/auth-smoke-test.ps1
 
 clean:
 	docker compose down -v
