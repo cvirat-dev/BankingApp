@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.http.MediaType;
@@ -88,5 +89,12 @@ class KontoControllerTest {
 
         mockMvc.perform(delete("/api/konten/99"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithAnonymousUser
+    void shouldReturn401ForAnonymousUser() throws Exception {
+        mockMvc.perform(get("/api/konten"))
+                .andExpect(status().isUnauthorized());
     }
 }

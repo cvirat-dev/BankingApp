@@ -25,9 +25,12 @@ import com.demo.benachrichtigung_service.benachrichtigung.BenachrichtigungEvent;
 import com.demo.benachrichtigung_service.benachrichtigung.BenachrichtigungRepository;
 import com.demo.benachrichtigung_service.benachrichtigung.BenachrichtigungService;
 import com.demo.benachrichtigung_service.benachrichtigung.BenachrichtigungTyp;
+import com.demo.benachrichtigung_service.benachrichtigung.BuchungBenachrichtigung;
+import com.demo.benachrichtigung_service.benachrichtigung.BuchungBenachrichtigungRequest;
 import com.demo.benachrichtigung_service.benachrichtigung.KontoBenachrichtigung;
 import com.demo.benachrichtigung_service.benachrichtigung.KontoBenachrichtigungRequest;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.demo.benachrichtigung_service.benachrichtigung.TransaktionBenachrichtigung;
+import com.demo.benachrichtigung_service.benachrichtigung.TransaktionBenachrichtigungRequest;
 
 @ExtendWith(MockitoExtension.class)
 public class BenachrichtigungServiceTest {
@@ -42,7 +45,7 @@ public class BenachrichtigungServiceTest {
     private BenachrichtigungService service;
 
     @Test
-    void receive_shouldSaveAndPublishEvent() {
+    void receiveKonto_shouldSaveAndPublishEvent() {
         KontoBenachrichtigungRequest request = createRequest();
 
         when(benachrichtigungRepository.save(any(Benachrichtigung.class)))
@@ -79,26 +82,75 @@ public class BenachrichtigungServiceTest {
     }
 
     @Test
-    void kontoRequest_shouldIgnoreIncomingTypDuringDeserialization() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
+    void receiveBuchung_shouldSaveAndPublishEvent() {
+        BuchungBenachrichtigungRequest request = new BuchungBenachrichtigungRequest();
+        request.setBuchungId(200L);
+        request.setKontoId(100L);
+        request.setIban("DE12500105170648489890");
+        request.setInhaber("Max Mustermann");
+        request.setNachricht("Buchung erstellt");
+        request.setBetrag(42.5);
 
-        KontoBenachrichtigungRequest request = objectMapper.readValue(
-            """
-            {
-              "typ": "BUCHUNG",
-              "nachricht": "Kontodaten geaendert",
-              "kontoId": 100,
-              "iban": "DE12500105170648489890",
-              "inhaber": "Max Mustermann",
-              "aktion": "ERSTELLEN"
-            }
-            """,
-            KontoBenachrichtigungRequest.class
-        );
+        when(benachrichtigungRepository.save(any(Benachrichtigung.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
 
-        assertEquals(BenachrichtigungTyp.KONTO, request.getTyp());
-        assertEquals(100L, request.getKontoId());
-        assertEquals("DE12500105170648489890", request.getIban());
+        BuchungBenachrichtigung result = service.receive(request);
+
+        assertEquals(BenachrichtigungTyp.BUCHUNG, result.getTyp());
+        assertEquals(200L, result.getBuchungId());
+        assertEquals(100L, result.getKontoId());
+        assertEquals("DE12500105170648489890", result.getIban());
+        assertEquals("Max Mustermann", result.getInhaber());
+        assertEquals("Buchung erstellt", result.getNachricht());
+        assertEquals(42.5, result.getBetrag());
+        assertNotNull(result.getTimestamp());
+
+        ArgumentCaptor<BenachrichtigungEvent> eventCaptor = ArgumentCaptor.forClass(BenachrichtigungEvent.class);
+        verify(messagingTemplate).convertAndSend(eq("/topic/benachrichtigungen"), eventCaptor.capture());
+
+        BenachrichtigungEvent event = eventCaptor.getValue();
+        assertEquals("Max Mustermann", event.getInhaber());
+        assertEquals("DE12500105170648489890", event.getIban());
+        assertEquals(BenachrichtigungTyp.BUCHUNG, event.getTyp());
+    }
+
+    @Test
+    void receiveTransaktion_shouldSaveAndPublishEventWithQuelleDaten() {
+        TransaktionBenachrichtigungRequest request = new TransaktionBenachrichtigungRequest();
+        request.setTransaktionId(300L);
+        request.setQuelleKontoId(100L);
+        request.setZielKontoId(101L);
+        request.setQuelleIban("DE12500105170648489890");
+        request.setZielIban("DE12500105170648489891");
+        request.setQuelleInhaber("Max Mustermann");
+        request.setZielInhaber("Erika Musterfrau");
+        request.setNachricht("Transaktion ausgefuehrt");
+        request.setBetrag(99.99);
+
+        when(benachrichtigungRepository.save(any(Benachrichtigung.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        TransaktionBenachrichtigung result = service.receive(request);
+
+        assertEquals(BenachrichtigungTyp.TRANSAKTION, result.getTyp());
+        assertEquals(300L, result.getTransaktionId());
+        assertEquals(100L, result.getQuelleKontoId());
+        assertEquals(101L, result.getZielKontoId());
+        assertEquals("DE12500105170648489890", result.getQuelleIban());
+        assertEquals("DE12500105170648489891", result.getZielIban());
+        assertEquals("Max Mustermann", result.getQuelleInhaber());
+        assertEquals("Erika Musterfrau", result.getZielInhaber());
+        assertEquals(99.99, result.getBetrag());
+        assertNotNull(result.getTimestamp());
+
+        ArgumentCaptor<BenachrichtigungEvent> eventCaptor = ArgumentCaptor.forClass(BenachrichtigungEvent.class);
+        verify(messagingTemplate).convertAndSend(eq("/topic/benachrichtigungen"), eventCaptor.capture());
+
+        // Das Event einer Transaktion traegt die Daten des Quellkontos
+        BenachrichtigungEvent event = eventCaptor.getValue();
+        assertEquals("Max Mustermann", event.getInhaber());
+        assertEquals("DE12500105170648489890", event.getIban());
+        assertEquals(BenachrichtigungTyp.TRANSAKTION, event.getTyp());
     }
 
     @Test

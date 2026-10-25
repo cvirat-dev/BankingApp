@@ -2,76 +2,62 @@ package com.demo.benachrichtigung_service;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import static org.mockito.ArgumentMatchers.any;
-import org.mockito.Mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.security.test.context.support.WithAnonymousUser;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
-import com.demo.benachrichtigung_service.benachrichtigung.Benachrichtigung;
+import com.demo.benachrichtigung_service.benachrichtigung.AktionTyp;
 import com.demo.benachrichtigung_service.benachrichtigung.BenachrichtigungController;
-import com.demo.benachrichtigung_service.benachrichtigung.BenachrichtigungRepository;
 import com.demo.benachrichtigung_service.benachrichtigung.BenachrichtigungService;
+import com.demo.benachrichtigung_service.benachrichtigung.BenachrichtigungTyp;
 import com.demo.benachrichtigung_service.benachrichtigung.BuchungBenachrichtigung;
+import com.demo.benachrichtigung_service.benachrichtigung.BuchungBenachrichtigungRequest;
 import com.demo.benachrichtigung_service.benachrichtigung.KontoBenachrichtigung;
+import com.demo.benachrichtigung_service.benachrichtigung.KontoBenachrichtigungRequest;
 import com.demo.benachrichtigung_service.benachrichtigung.TransaktionBenachrichtigung;
-import com.demo.benachrichtigung_service.exception.GlobalExceptionHandler;
+import com.demo.benachrichtigung_service.benachrichtigung.TransaktionBenachrichtigungRequest;
+import com.demo.benachrichtigung_service.config.SecurityConfig;
 
-@ExtendWith({SpringExtension.class, MockitoExtension.class})
+@WebMvcTest(BenachrichtigungController.class)
+@Import(SecurityConfig.class)
+@TestPropertySource(properties = "demo.auth.password=test")
+@WithMockUser
 class BenachrichtigungControllerTest {
 
+    @Autowired
     private MockMvc mockMvc;
 
-    @Mock
-    private BenachrichtigungRepository benachrichtigungRepository;
-
-    @Mock
-    private SimpMessagingTemplate messagingTemplate;
-
-    @BeforeEach
-    void setUp() {
-        BenachrichtigungService benachrichtigungService =
-                new BenachrichtigungService(benachrichtigungRepository, messagingTemplate);
-
-        BenachrichtigungController controller = new BenachrichtigungController(benachrichtigungService);
-
-        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
-        validator.afterPropertiesSet();
-
-        mockMvc = MockMvcBuilders.standaloneSetup(controller)
-                .setControllerAdvice(new GlobalExceptionHandler())
-                .setValidator(validator)
-                .build();
-    }
+    @MockitoBean
+    private BenachrichtigungService benachrichtigungService;
 
     @Test
-    void postKonto_shouldForceTypAndReturnKontoResponse() throws Exception {
-        when(benachrichtigungRepository.save(any(Benachrichtigung.class))).thenAnswer(invocation -> {
-            Benachrichtigung saved = invocation.getArgument(0);
-            saved.setId(11L);
-            saved.setTimestamp(LocalDateTime.of(2026, 7, 2, 10, 0));
-            return saved;
-        });
+    void postKonto_should201_withKontoResponse() throws Exception {
+        KontoBenachrichtigung gespeichert = new KontoBenachrichtigung();
+        gespeichert.setId(11L);
+        gespeichert.setTyp(BenachrichtigungTyp.KONTO);
+        gespeichert.setTimestamp(LocalDateTime.of(2026, 7, 2, 10, 0));
+        gespeichert.setKontoId(100L);
+        gespeichert.setAktion(AktionTyp.ERSTELLEN);
+        when(benachrichtigungService.receive(any(KontoBenachrichtigungRequest.class))).thenReturn(gespeichert);
 
         mockMvc.perform(post("/api/benachrichtigungen/konten")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
-                          "typ": "KONTO",
                           "nachricht": "Kontodaten geaendert",
                           "kontoId": 100,
                           "iban": "DE12500105170648489890",
@@ -86,26 +72,22 @@ class BenachrichtigungControllerTest {
             .andExpect(jsonPath("$.aktion").value("ERSTELLEN"))
             .andExpect(jsonPath("$.buchungId").doesNotExist())
             .andExpect(jsonPath("$.transaktionId").doesNotExist());
-
-        ArgumentCaptor<Benachrichtigung> captor = ArgumentCaptor.forClass(Benachrichtigung.class);
-        verify(benachrichtigungRepository).save(captor.capture());
-        assertTrue(captor.getValue() instanceof KontoBenachrichtigung);
     }
 
     @Test
-    void postBuchung_shouldForceTypAndReturnBuchungResponse() throws Exception {
-        when(benachrichtigungRepository.save(any(Benachrichtigung.class))).thenAnswer(invocation -> {
-            Benachrichtigung saved = invocation.getArgument(0);
-            saved.setId(22L);
-            saved.setTimestamp(LocalDateTime.of(2026, 7, 2, 10, 15));
-            return saved;
-        });
+    void postBuchung_should201_withBuchungResponse() throws Exception {
+        BuchungBenachrichtigung gespeichert = new BuchungBenachrichtigung();
+        gespeichert.setId(22L);
+        gespeichert.setTyp(BenachrichtigungTyp.BUCHUNG);
+        gespeichert.setTimestamp(LocalDateTime.of(2026, 7, 2, 10, 15));
+        gespeichert.setBuchungId(200L);
+        gespeichert.setBetrag(42.5);
+        when(benachrichtigungService.receive(any(BuchungBenachrichtigungRequest.class))).thenReturn(gespeichert);
 
         mockMvc.perform(post("/api/benachrichtigungen/buchungen")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
-                          "typ": "BUCHUNG",
                           "nachricht": "Buchung erstellt",
                           "buchungId": 200,
                           "kontoId": 100,
@@ -121,26 +103,24 @@ class BenachrichtigungControllerTest {
             .andExpect(jsonPath("$.betrag").value(42.5))
             .andExpect(jsonPath("$.transaktionId").doesNotExist())
             .andExpect(jsonPath("$.aktion").doesNotExist());
-
-        ArgumentCaptor<Benachrichtigung> captor = ArgumentCaptor.forClass(Benachrichtigung.class);
-        verify(benachrichtigungRepository).save(captor.capture());
-        assertTrue(captor.getValue() instanceof BuchungBenachrichtigung);
     }
 
     @Test
-    void postTransaktion_shouldForceTypAndReturnTransaktionResponse() throws Exception {
-        when(benachrichtigungRepository.save(any(Benachrichtigung.class))).thenAnswer(invocation -> {
-            Benachrichtigung saved = invocation.getArgument(0);
-            saved.setId(33L);
-            saved.setTimestamp(LocalDateTime.of(2026, 7, 2, 10, 30));
-            return saved;
-        });
+    void postTransaktion_should201_withTransaktionResponse() throws Exception {
+        TransaktionBenachrichtigung gespeichert = new TransaktionBenachrichtigung();
+        gespeichert.setId(33L);
+        gespeichert.setTyp(BenachrichtigungTyp.TRANSAKTION);
+        gespeichert.setTimestamp(LocalDateTime.of(2026, 7, 2, 10, 30));
+        gespeichert.setTransaktionId(300L);
+        gespeichert.setQuelleKontoId(100L);
+        gespeichert.setZielKontoId(101L);
+        gespeichert.setBetrag(99.99);
+        when(benachrichtigungService.receive(any(TransaktionBenachrichtigungRequest.class))).thenReturn(gespeichert);
 
         mockMvc.perform(post("/api/benachrichtigungen/transaktionen")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
-                          "typ": "TRANSAKTION",
                           "nachricht": "Transaktion ausgefuehrt",
                           "transaktionId": 300,
                           "quelleKontoId": 100,
@@ -161,10 +141,6 @@ class BenachrichtigungControllerTest {
             .andExpect(jsonPath("$.betrag").value(99.99))
             .andExpect(jsonPath("$.aktion").doesNotExist())
             .andExpect(jsonPath("$.buchungId").doesNotExist());
-
-        ArgumentCaptor<Benachrichtigung> captor = ArgumentCaptor.forClass(Benachrichtigung.class);
-        verify(benachrichtigungRepository).save(captor.capture());
-        assertTrue(captor.getValue() instanceof TransaktionBenachrichtigung);
     }
 
     @Test
@@ -173,7 +149,6 @@ class BenachrichtigungControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
-                          "typ": "KONTO",
                           "nachricht": "Kontodaten geaendert",
                           "iban": "DE12500105170648489890",
                           "inhaber": "Max Mustermann",
@@ -182,6 +157,8 @@ class BenachrichtigungControllerTest {
                         """))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.kontoId").exists());
+
+        verifyNoInteractions(benachrichtigungService);
     }
 
     @Test
@@ -190,7 +167,6 @@ class BenachrichtigungControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
-                          "typ": "BUCHUNG",
                           "nachricht": "Buchung erstellt",
                           "buchungId": 200,
                           "kontoId": 100,
@@ -200,6 +176,8 @@ class BenachrichtigungControllerTest {
                         """))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.betrag").exists());
+
+        verifyNoInteractions(benachrichtigungService);
     }
 
     @Test
@@ -208,7 +186,6 @@ class BenachrichtigungControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("""
                         {
-                          "typ": "TRANSAKTION",
                           "nachricht": "Transaktion ausgefuehrt",
                           "transaktionId": 300,
                           "quelleKontoId": 100,
@@ -221,5 +198,14 @@ class BenachrichtigungControllerTest {
                         """))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.zielInhaber").exists());
+
+        verifyNoInteractions(benachrichtigungService);
+    }
+
+    @Test
+    @WithAnonymousUser
+    void ohneAnmeldungGibt401() throws Exception {
+        mockMvc.perform(get("/api/benachrichtigungen"))
+            .andExpect(status().isUnauthorized());
     }
 }

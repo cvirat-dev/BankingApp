@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.http.MediaType;
@@ -59,7 +60,7 @@ class BuchungControllerTest {
     }
 
     @Test
-    void getBuchungen_should200_withListe() throws Exception {
+    void getBuchungen_should200_withList() throws Exception {
         Buchung buchung = new Buchung();
         buchung.setKontoId(1L);
         when(buchungService.getByKontoId(1L)).thenReturn(List.of(buchung));
@@ -67,5 +68,12 @@ class BuchungControllerTest {
         mockMvc.perform(get("/api/buchungen/konto/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].kontoId").value(1));
+    }
+
+    @Test
+    @WithAnonymousUser
+    void shouldReturnUnauthorizedWithoutLogin() throws Exception {
+        mockMvc.perform(get("/api/buchungen/konto/1"))
+                .andExpect(status().isUnauthorized());
     }
 }
