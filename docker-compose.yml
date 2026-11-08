@@ -42,7 +42,7 @@ services:
       - banking-net
 
   api-generator:
-    image: openapitools/openapi-generator-cli:v7.6.0
+    image: openapitools/openapi-generator-cli:v7.23.0
     depends_on:
       - konto-service
       - benachrichtigung-service
