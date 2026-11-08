@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { AppRoutingModule } from '../app-routing.module';
 import { AppComponent } from './app.component';
 import { KontoListeComponent } from './components/konto/konto-liste/konto-liste.component';
@@ -19,6 +19,7 @@ import { ApiModule as KontoApiModule, Configuration as KontoConfiguration } from
 import { ApiModule as BenachrichtigungApiModule, Configuration as BenachrichtigungConfiguration } from './api/benachrichtigung-service';
 import { KontoEditComponent } from './components/konto/konto-edit/konto-edit.component';
 import { environment } from '../environments/environment';
+import { authInterceptor } from './services/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -40,11 +41,12 @@ import { environment } from '../environments/environment';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule,
     KontoApiModule.forRoot(() => new KontoConfiguration({ basePath: environment.kontoServiceUrl })),
     BenachrichtigungApiModule.forRoot(() => new BenachrichtigungConfiguration({ basePath: environment.benachrichtigungServiceUrl }))
   ],
-  providers: [],
+  providers: [
+    provideHttpClient(withInterceptors([authInterceptor]))
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -18,7 +18,9 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   login(username: string, password: string): Observable<void> {
-    const token = btoa(`${username}:${password}`);
+    // btoa akzeptiert nur Latin-1, Spring dekodiert Basic-Credentials als UTF-8.
+    const credentials = new TextEncoder().encode(`${username}:${password}`);
+    const token = btoa(String.fromCharCode(...credentials));
     const headers = new HttpHeaders({ Authorization: `Basic ${token}` });
     return this.http.get(`${environment.kontoServiceUrl}/api/me`, { headers }).pipe(
       tap(() => {
