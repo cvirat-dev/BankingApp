@@ -14,6 +14,9 @@
           {{ unreadCount > 99 ? '99+' : unreadCount }}
         </span>
       </a>
+      <button type="button" class="logout-button" *ngIf="auth.isLoggedIn()" (click)="logout()">
+        Abmelden
+      </button>
     </div>
   </nav>
 

@@ -1,0 +1,15 @@
+<form class="form-card auth-login-form" (ngSubmit)="submit()">
+    <h2>BankingApp Demo</h2>
+    <p class="hint">
+        Demo-Anwendung. Bitte keine echten personenbezogenen Daten eingeben.
+    </p>
+    <input name="username" [(ngModel)]="username" placeholder="Username" required>
+    <input name="password" [(ngModel)]="password" type="password" 
+        placeholder="Password" required>
+    <button type="submit">Login</button>
+    @if (errorMessage) {
+        <p class="alert alert--error">
+            {{ errorMessage }}
+        </p>
+    }
+</form>

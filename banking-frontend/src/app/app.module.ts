@@ -20,6 +20,7 @@ import { ApiModule as BenachrichtigungApiModule, Configuration as Benachrichtigu
 import { KontoEditComponent } from './components/konto/konto-edit/konto-edit.component';
 import { environment } from '../environments/environment';
 import { authInterceptor } from './services/auth.interceptor';
+import { AuthLoginComponent } from './components/auth-login/auth-login.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { authInterceptor } from './services/auth.interceptor';
     BuchungBenachrichtigungenComponent,
     TransaktionBenachrichtigungenComponent,
     TransaktionFormularComponent,
-    KontoEditComponent
+    KontoEditComponent,
+    AuthLoginComponent
   ],
   imports: [
     BrowserModule,

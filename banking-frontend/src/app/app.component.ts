@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, effect } from '@angular/core';
 import { WebsocketService } from './services/websocket.service';
+import { AuthService } from './services/auth.service';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter, map } from 'rxjs/operators';
@@ -17,13 +18,23 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     public websocketService: WebsocketService,
+    public auth: AuthService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) {
+    // WebSocket nur für eingeloggte Nutzer. Reagiert auch auf den Logout
+    // durch den authInterceptor (401), nicht nur auf den Abmelden-Button.
+    effect(() => {
+      if (this.auth.isLoggedIn()) {
+        this.websocketService.connect();
+      } else {
+        this.websocketService.disconnect();
+        this.websocketService.resetUnread();
+      }
+    });
+  }
 
   ngOnInit(): void {
-    this.websocketService.connect();
-
     this.unreadSubscription = this.websocketService.unread$.subscribe(count => {
       this.unreadCount = count;
     });
@@ -48,6 +59,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   onBenachrichtigungenClick(): void {
     this.websocketService.resetUnread();
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 
   sideNavItems: { label: string; link: string }[] = [];
