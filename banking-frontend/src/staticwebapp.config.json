@@ -1,0 +1,9 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "/media/*", "/*.{css,js,map,ico,png,jpg,jpeg,gif,svg,webp,woff,woff2,ttf,txt}"]
+  },
+  "globalHeaders": {
+    "X-Robots-Tag": "noindex, nofollow"
+  }
+}
